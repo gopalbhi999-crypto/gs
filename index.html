@@ -1,101 +1,269 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gopal's Education Hub</title>
-    <style>
-        /* Basic Styling */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
+<meta charset="utf-8">
+<title>Ultra PUBG FPS</title>
 
-        .main-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.2);
-            max-width: 400px;
-            width: 90%;
-        }
+<style>
+body{margin:0;overflow:hidden;font-family:Arial;}
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+#ui{
+position:absolute;top:10px;left:10px;
+color:white;font-size:18px;
+text-shadow:2px 2px 5px black;
+z-index:10;
+}
 
-        .tagline {
-            font-style: italic;
-            margin-bottom: 30px;
-            opacity: 0.8;
-        }
+#crosshair{
+position:absolute;
+top:50%;left:50%;
+width:20px;height:20px;
+border:2px solid red;
+border-radius:50%;
+transform:translate(-50%,-50%);
+}
 
-        /* Buttons Styling */
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+#joy{
+position:absolute;
+bottom:40px;left:40px;
+width:130px;height:130px;
+background:rgba(255,255,255,0.15);
+border-radius:50%;
+}
 
-        .subject-btn {
-            padding: 15px 25px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            display: block;
-            border: none;
-            cursor: pointer;
-        }
+#stick{
+width:60px;height:60px;
+background:white;
+border-radius:50%;
+position:absolute;
+left:35px;top:35px;
+}
 
-        /* Subject Colors */
-        .physics { background: #3498db; }
-        .chemistry { background: #f39c12; }
-        .maths { background: #27ae60; }
+#fire{
+position:absolute;
+bottom:60px;right:40px;
+width:90px;height:90px;
+border-radius:50%;
+background:red;
+color:white;
+border:none;
+font-size:18px;
+}
 
-        /* Hover Effects */
-        .subject-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            filter: brightness(1.1);
-        }
-
-        footer {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            opacity: 0.6;
-        }
-    </style>
+#reload{
+position:absolute;
+bottom:170px;right:55px;
+width:70px;height:70px;
+border-radius:50%;
+background:orange;
+color:white;
+border:none;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="main-card">
-        <h1>GOPAL</h1>
-        <p class="tagline">Digital Study Material</p>
+<div id="ui">
+❤️ HP: <span id="hp">100</span><br>
+🔫 Ammo: <span id="ammo">25</span><br>
+☠️ Kills: <span id="kills">0</span>
+</div>
 
-        <div class="btn-container">
-            <a href="CH1 Electric Charges and Fields.pdf"  class="subject-btn physics">Physics Notes</a>
-            <a href="chemistry.pdf" class="subject-btn chemistry">Chemistry Notes</a>
-            <a href="maths.pdf" class="subject-btn maths">Maths Notes</a>
-        </div>
+<div id="crosshair"></div>
 
-        <footer>Created by Gopal &copy; 2026</footer>
-    </div>
+<div id="joy">
+<div id="stick"></div>
+</div>
+
+<button id="fire">FIRE</button>
+<button id="reload">R</button>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<script>
+
+// ===== SCENE =====
+const scene = new THREE.Scene();
+scene.background = new THREE.Color("#87CEEB");
+scene.fog = new THREE.Fog(0x87CEEB, 30, 160);
+
+// CAMERA
+const camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+
+// RENDERER
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth,innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// ===== GROUND =====
+const ground = new THREE.Mesh(
+ new THREE.PlaneGeometry(400,400),
+ new THREE.MeshBasicMaterial({color:0x2e8b57})
+);
+ground.rotation.x = -Math.PI/2;
+scene.add(ground);
+
+// ===== OBJECTS (HOUSES + TREES) =====
+let objects = [];
+
+function addBox(x,z,color){
+ let b = new THREE.Mesh(
+  new THREE.BoxGeometry(4,4,4),
+  new THREE.MeshBasicMaterial({color})
+ );
+ b.position.set(x,2,z);
+ scene.add(b);
+ objects.push(b);
+}
+
+// buildings
+for(let i=0;i<10;i++){
+ addBox((Math.random()-0.5)*150,(Math.random()-0.5)*150,0x8b5a2b);
+}
+
+// trees
+for(let i=0;i<15;i++){
+ addBox((Math.random()-0.5)*180,(Math.random()-0.5)*180,0x228B22);
+}
+
+// PLAYER
+camera.position.set(0,2,5);
+
+// ===== ENEMIES =====
+let enemies=[];
+
+function spawnEnemy(){
+ let e = new THREE.Mesh(
+  new THREE.BoxGeometry(1,2,1),
+  new THREE.MeshBasicMaterial({color:"red"})
+ );
+
+ e.position.set(
+  (Math.random()-0.5)*120,
+  1,
+  (Math.random()-0.5)*120
+ );
+
+ scene.add(e);
+ enemies.push(e);
+}
+
+setInterval(spawnEnemy,1500);
+
+// ===== STATS =====
+let hp=100, ammo=25, kills=0;
+
+// ===== JOYSTICK =====
+let mx=0,my=0;
+
+const joy=document.getElementById("joy");
+const stick=document.getElementById("stick");
+
+joy.addEventListener("touchmove",(e)=>{
+ let t=e.touches[0];
+ let r=joy.getBoundingClientRect();
+
+ let x=t.clientX-r.left-65;
+ let y=t.clientY-r.top-65;
+
+ let d=Math.sqrt(x*x+y*y);
+ let max=40;
+
+ if(d>max){
+  x=x/d*max;
+  y=y/d*max;
+ }
+
+ stick.style.left=(x+35)+"px";
+ stick.style.top=(y+35)+"px";
+
+ mx=x/max;
+ my=y/max;
+});
+
+joy.addEventListener("touchend",()=>{
+ stick.style.left="35px";
+ stick.style.top="35px";
+ mx=0;my=0;
+});
+
+// ===== SHOOT =====
+document.getElementById("fire").onclick=()=>{
+
+ if(ammo<=0) return;
+ ammo--;
+ document.getElementById("ammo").innerText=ammo;
+
+ let ray=new THREE.Raycaster();
+ ray.set(camera.position,camera.getWorldDirection(new THREE.Vector3()));
+
+ let hit=ray.intersectObjects(enemies);
+
+ if(hit.length){
+  let e=hit[0].object;
+
+  scene.remove(e);
+  enemies=enemies.filter(x=>x!==e);
+
+  kills++;
+  document.getElementById("kills").innerText=kills;
+ }
+};
+
+// ===== RELOAD =====
+document.getElementById("reload").onclick=()=>{
+ ammo=25;
+ document.getElementById("ammo").innerText=ammo;
+};
+
+// ===== MOVE =====
+function move(){
+ let speed=0.25;
+
+ camera.position.x += mx*speed;
+ camera.position.z += my*speed;
+}
+
+// ===== AI SYSTEM =====
+function enemyAI(){
+
+ enemies.forEach(e=>{
+
+  let dir=new THREE.Vector3();
+  dir.subVectors(camera.position,e.position).normalize();
+
+  e.position.x += dir.x*0.06;
+  e.position.z += dir.z*0.06;
+
+  let d=e.position.distanceTo(camera.position);
+
+  if(d<2){
+   hp-=0.4;
+   document.getElementById("hp").innerText=Math.floor(hp);
+
+   if(hp<=0){
+    alert("💀 You Died!");
+    location.reload();
+   }
+  }
+
+ });
+
+}
+
+// ===== LOOP =====
+function animate(){
+ requestAnimationFrame(animate);
+
+ move();
+ enemyAI();
+
+ renderer.render(scene,camera);
+}
+animate();
+
+</script>
 
 </body>
 </html>
