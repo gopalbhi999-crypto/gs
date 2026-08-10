@@ -3,821 +3,1062 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Virtual Chemistry Lab</title>
+<title>Class 12 Virtual Chemistry Lab</title>
+
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,Helvetica,sans-serif;background:#07111c;color:#edf7ff}
-button,select{font:inherit}button{cursor:pointer}
-#app{width:100vw;height:100vh;height:100dvh;display:grid;grid-template-columns:270px minmax(0,1fr) 320px;grid-template-rows:60px minmax(0,1fr);overflow:hidden}
-header{grid-column:1/4;height:60px;display:flex;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(90deg,#0a1b2d,#102b43,#0a1b2d);border-bottom:1px solid #284b63;z-index:100}
-.logo{width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:11px;background:linear-gradient(145deg,#00cfff,#376cff);font-size:22px}
-.title{min-width:0}.title h1{margin:0;font-size:16px;white-space:nowrap}.title small{color:#83a7c0;font-size:10px}
-.top-buttons{margin-left:auto;display:flex;gap:6px}
-.top-btn{border:1px solid #34546c;background:#122a3e;color:#d9ecf8;border-radius:8px;padding:7px 10px}
-.top-btn:hover{background:#19415e}
-#sidebar,#panel{min-width:0;min-height:0;overflow-y:auto;overflow-x:hidden;background:linear-gradient(180deg,#091a29,#07121e);z-index:50}
-#sidebar{border-right:1px solid #29475d;padding:12px}
-#panel{border-left:1px solid #29475d;padding:12px}
-.sidebar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.sidebar-head strong{font-size:13px}
-.close-btn{display:none;width:32px;height:32px;border-radius:8px;border:1px solid #38576d;background:#102638;color:#fff}
-#workspace{position:relative;min-width:0;min-height:0;overflow:hidden;background:radial-gradient(circle at 50% 30%,#193b55 0%,#0b1b2a 45%,#050c13 100%)}
-#scene{width:100%;height:100%;touch-action:none}
-#hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:5;max-width:80%;text-align:center;padding:7px 12px;border:1px solid #31536a;border-radius:20px;background:#06111dcc;color:#a9c7da;font-size:10px;pointer-events:none}
-#dropMessage{position:absolute;inset:0;z-index:20;display:none;place-items:center;background:#00bfff12;border:3px dashed #00d7ff;color:#6eeaff;font-weight:bold;font-size:22px;pointer-events:none}
-#workspace.dragover #dropMessage{display:grid}
-.float-btn{position:absolute;z-index:30;width:43px;height:43px;border-radius:12px;border:1px solid #3a6079;background:#071827dd;color:white;box-shadow:0 5px 20px #0008;display:none}
-#leftToggle{left:10px;bottom:12px}#rightToggle{right:10px;bottom:12px}
-.section-title{margin:12px 0 8px;color:#6f9dbc;font-size:10px;letter-spacing:1px;text-transform:uppercase}
-.lab-item{display:flex;align-items:center;gap:9px;width:100%;margin-bottom:7px;padding:8px;border:1px solid #2a485e;border-radius:10px;background:linear-gradient(145deg,#142d42,#0c1d2d);user-select:none;-webkit-user-select:none;cursor:grab;touch-action:none;transition:.15s}
-.lab-item:active{cursor:grabbing;transform:scale(.97)}
-.lab-item:hover{border-color:#00cfff}
-.icon{width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;background:#07111c;border:1px solid #315269;font-size:19px}
-.lab-item strong{display:block;font-size:11px}.lab-item span{display:block;margin-top:2px;color:#7898ad;font-size:9px}
-.card{background:#0d2031;border:1px solid #2b4a61;border-radius:11px;padding:11px;margin-bottom:10px}
-.card h3{margin:0 0 8px;font-size:12px}
-.select{width:100%;padding:8px;background:#071520;color:#fff;border:1px solid #38566c;border-radius:8px;outline:none}
-.step{display:flex;align-items:center;gap:7px;padding:7px;margin:4px 0;border-radius:7px;color:#718fa4;font-size:10px}
-.step.current{background:#12314a;color:#9de8ff;border:1px solid #27789d}.step.done{background:#0c322c;color:#67e8c0}
-.dot{width:20px;height:20px;flex:none;display:grid;place-items:center;border-radius:50%;background:#162c40;font-size:9px}.done .dot{background:#00a77b;color:white}
-#reaction{min-height:70px;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;border-radius:8px;background:linear-gradient(145deg,#172e40,#0b1c2a)}
-.eq{font-family:"Times New Roman",serif;color:#bdeeff;font-size:14px;line-height:1.5}.note{color:#809db0;font-size:10px;line-height:1.45}
-.action{width:100%;padding:9px;margin-top:5px;border:0;border-radius:8px;background:linear-gradient(90deg,#008fbd,#006bd0);color:white;font-weight:bold;font-size:11px}
-.reset{background:#351923;border:1px solid #70394d}
-#drawerOverlay{position:fixed;inset:0;z-index:40;background:#0008;display:none}
-body.drawer-open #drawerOverlay{display:block}
-body.left-hidden #sidebar{display:none}body.right-hidden #panel{display:none}
-body.left-hidden #app{grid-template-columns:0 minmax(0,1fr) 320px}
-body.right-hidden #app{grid-template-columns:270px minmax(0,1fr) 0}
-body.left-hidden.right-hidden #app{grid-template-columns:0 minmax(0,1fr) 0}
-@media(max-width:800px){
-#app{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:54px minmax(0,1fr)}
-header{grid-column:1;height:54px;padding:6px 8px}.logo{width:38px;height:38px;font-size:19px}.title h1{font-size:13px}.title small{font-size:8px}.top-buttons{display:none}
-#sidebar,#panel{position:fixed;top:54px;bottom:0;width:min(82vw,310px);transition:transform .25s ease;box-shadow:0 0 35px #000b;z-index:60}
-#sidebar{left:0;transform:translateX(-105%);border-right:1px solid #31536b}
-#panel{right:0;transform:translateX(105%);border-left:1px solid #31536b}
-body.mobile-left-open #sidebar{transform:translateX(0)}
-body.mobile-right-open #panel{transform:translateX(0)}
-body.mobile-left-open #panel,body.mobile-right-open #sidebar{transform:translateX(105%)}
-#workspace{grid-column:1;grid-row:2}.close-btn{display:block}.float-btn{display:grid;place-items:center}
-#hint{top:7px;font-size:9px;padding:6px 9px}.lab-item{padding:10px;margin-bottom:8px}.icon{width:40px;height:40px}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071018;color:#fff;font-family:Arial,sans-serif}
+#app{width:100%;height:100%;position:relative}
+#lab{position:absolute;inset:0}
+#top{
+position:absolute;top:0;left:0;right:0;height:55px;z-index:20;
+display:flex;align-items:center;padding:7px 12px;
+background:linear-gradient(90deg,#081a2a,#12354d,#081a2a);
+border-bottom:1px solid #31546b
 }
-@media(max-width:420px){.title h1{font-size:11px}.title small{display:none}.float-btn{width:40px;height:40px}#leftToggle{left:7px;bottom:8px}#rightToggle{right:7px;bottom:8px}}
-@media(max-width:800px) and (orientation:landscape){
-header{height:48px}#sidebar,#panel{top:48px}#app{grid-template-rows:48px minmax(0,1fr)}
+.logo{font-size:25px;margin-right:10px}
+.title{font-size:15px;font-weight:bold}
+.title small{display:block;color:#7fa5bb;font-size:9px;margin-top:3px}
+#mobileHelp{
+margin-left:auto;padding:7px 10px;border-radius:8px;
+border:1px solid #31556d;background:#0b2234;color:#bcecff;font-size:10px
+}
+#reactionScreen{
+position:absolute;right:15px;top:75px;width:310px;height:245px;z-index:15;
+border:9px solid #26323a;border-radius:8px;
+background:#04100d;box-shadow:0 0 25px #000, inset 0 0 20px #001d12;
+padding:13px
+}
+#screenTitle{font-size:11px;color:#55ffbd;margin-bottom:8px}
+#reaction{font-family:"Times New Roman",serif;font-size:17px;line-height:1.5;color:#d6fff1}
+#screenStatus{margin-top:12px;padding:7px;border-radius:5px;background:#08231a;color:#67e8b4;font:10px Arial}
+#instruction{
+position:absolute;bottom:13px;left:50%;transform:translateX(-50%);
+z-index:15;padding:8px 13px;background:#061522dd;border:1px solid #31576d;
+border-radius:20px;color:#a9c7d9;font-size:10px;pointer-events:none
+}
+#stepBox{
+position:absolute;left:15px;top:75px;z-index:15;width:255px;
+padding:10px;border-radius:10px;background:#071723dd;border:1px solid #294b61
+}
+#stepBox b{font-size:11px;color:#6fe5ff}
+#stepText{font-size:10px;color:#a4bac9;margin-top:5px;line-height:1.5}
+#controls{
+position:absolute;left:15px;bottom:15px;z-index:20;display:flex;gap:7px
+}
+.btn{
+border:1px solid #356077;background:#0b2538;color:white;
+border-radius:8px;padding:9px 12px;font-size:10px
+}
+.btn:hover{background:#123a54}
+#toast{
+position:absolute;left:50%;top:65px;transform:translateX(-50%);
+z-index:50;background:#071b2a;border:1px solid #35c8f0;
+padding:10px 16px;border-radius:9px;font-size:11px;
+opacity:0;pointer-events:none;transition:.25s
+}
+#toast.show{opacity:1}
+@media(max-width:800px){
+#reactionScreen{right:8px;top:62px;width:235px;height:190px;padding:9px}
+#reaction{font-size:13px}
+#screenTitle{font-size:9px}
+#stepBox{left:8px;top:62px;width:190px}
+#stepText{font-size:9px}
+#instruction{font-size:8px;bottom:8px;max-width:90%;white-space:nowrap}
+#controls{left:8px;bottom:8px}
+.btn{padding:7px 9px;font-size:9px}
 }
 </style>
 </head>
+
 <body>
+
 <div id="app">
-<header>
+
+<div id="top">
 <div class="logo">⚗️</div>
-<div class="title"><h1>Virtual Chemistry Lab</h1><small>Class XII • K₂Cr₂O₇ & KMnO₄</small></div>
-<div class="top-buttons">
-<button class="top-btn" onclick="toggleDesktopLeft()">◀ Equipment</button>
-<button class="top-btn" onclick="toggleDesktopRight()">Procedure ▶</button>
+<div class="title">
+Class 12 Virtual Chemistry Lab
+<small>Preparation of K₂Cr₂O₇ & KMnO₄</small>
 </div>
-</header>
-
-<aside id="sidebar">
-<div class="sidebar-head"><strong>🔬 Equipment & Reagents</strong><button class="close-btn" onclick="closeDrawers()">✕</button></div>
-
-<div class="section-title">Glassware</div>
-<div class="lab-item" draggable="true" data-item="beaker"><div class="icon">🥛</div><div><strong>Beaker</strong><span>100 / 250 mL</span></div></div>
-<div class="lab-item" draggable="true" data-item="flask"><div class="icon">⚗️</div><div><strong>Conical Flask</strong><span>250 mL</span></div></div>
-<div class="lab-item" draggable="true" data-item="testtube"><div class="icon">🧪</div><div><strong>Test Tube</strong><span>Heat resistant</span></div></div>
-<div class="lab-item" draggable="true" data-item="funnel"><div class="icon">🔻</div><div><strong>Funnel</strong><span>Filtration</span></div></div>
-<div class="lab-item" draggable="true" data-item="glassrod"><div class="icon">│</div><div><strong>Glass Rod</strong><span>Stirring</span></div></div>
-
-<div class="section-title">Equipment</div>
-<div class="lab-item" draggable="true" data-item="burner"><div class="icon">🔥</div><div><strong>Bunsen Burner</strong><span>Heating</span></div></div>
-<div class="lab-item" draggable="true" data-item="tripod"><div class="icon">♜</div><div><strong>Tripod Stand</strong><span>Support</span></div></div>
-<div class="lab-item" draggable="true" data-item="filter"><div class="icon">◯</div><div><strong>Filter Paper</strong><span>Separation</span></div></div>
-
-<div class="section-title">K₂Cr₂O₇ Reagents</div>
-<div class="lab-item" draggable="true" data-item="chromite"><div class="icon" style="color:#67a26f">●</div><div><strong>Chromite Ore</strong><span>FeCr₂O₄</span></div></div>
-<div class="lab-item" draggable="true" data-item="na2co3"><div class="icon">◆</div><div><strong>Sodium Carbonate</strong><span>Na₂CO₃</span></div></div>
-<div class="lab-item" draggable="true" data-item="h2so4"><div class="icon" style="color:#ffc000">💧</div><div><strong>Sulfuric Acid</strong><span>H₂SO₄</span></div></div>
-<div class="lab-item" draggable="true" data-item="kcl"><div class="icon">◇</div><div><strong>Potassium Chloride</strong><span>KCl</span></div></div>
-
-<div class="section-title">KMnO₄ Reagents</div>
-<div class="lab-item" draggable="true" data-item="mno2"><div class="icon" style="color:#555">●</div><div><strong>Pyrolusite</strong><span>MnO₂</span></div></div>
-<div class="lab-item" draggable="true" data-item="koh"><div class="icon">◆</div><div><strong>Potassium Hydroxide</strong><span>KOH</span></div></div>
-<div class="lab-item" draggable="true" data-item="cl2"><div class="icon" style="color:#dfff45">Cl₂</div><div><strong>Chlorine</strong><span>Cl₂(aq)</span></div></div>
-</aside>
-
-<main id="workspace">
-<div id="hint">🖱️ Mouse: rotate/zoom • 👆 Touch: rotate/zoom • Drag items onto bench</div>
-<div id="dropMessage">DROP HERE</div>
-<button id="leftToggle" class="float-btn" onclick="openLeft()">☰</button>
-<button id="rightToggle" class="float-btn" onclick="openRight()">⚗️</button>
-<div id="scene"></div>
-</main>
-
-<aside id="panel">
-<div class="sidebar-head"><strong>📋 Experiment</strong><button class="close-btn" onclick="closeDrawers()">✕</button></div>
-<div class="card">
-<h3>🧪 Select Experiment</h3>
-<select id="expSelect" class="select" onchange="setExperiment(this.value)">
-<option value="dichromate">Preparation of K₂Cr₂O₇</option>
-<option value="permanganate">Preparation of KMnO₄</option>
-</select>
+<div id="mobileHelp">👆 Drag • Double tap = action</div>
 </div>
-<div class="card"><h3>📋 Procedure</h3><div id="steps"></div></div>
-<div class="card"><h3>⚖️ Balanced Reaction</h3><div id="reaction"><span class="note">Perform the current step.</span></div></div>
-<div class="card"><h3>🔬 Observation</h3><div id="observation" class="note">Select an experiment and arrange the required apparatus on the virtual bench.</div></div>
-<button class="action" onclick="performStep()">▶ Perform Current Step</button>
-<button class="action reset" onclick="resetLab()">↻ Reset Lab</button>
-</aside>
+
+<div id="lab"></div>
+
+<div id="stepBox">
+<b id="experimentName">K₂Cr₂O₇ Preparation</b>
+<div id="stepText">Take the required apparatus from the wall rack and place it on the table.</div>
 </div>
-<div id="drawerOverlay" onclick="closeDrawers()"></div>
+
+<div id="reactionScreen">
+<div id="screenTitle">● REACTION MONITOR / LAB SCREEN</div>
+<div id="reaction">
+Select an experiment and perform the steps.
+</div>
+<div id="screenStatus">STATUS: READY</div>
+</div>
+
+<div id="instruction">
+Drag equipment/reagents from the wall rack → table. Double-click/tap equipment to use it.
+</div>
+
+<div id="controls">
+<button class="btn" onclick="switchExperiment()">🔄 Switch Experiment</button>
+<button class="btn" onclick="resetLab()">↻ Reset</button>
+</div>
+
+<div id="toast"></div>
+
+</div>
 
 <script type="importmap">
-{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/"}}
+{
+ "imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/"
+ }
+}
 </script>
 
 <script type="module">
+
 import * as THREE from "three";
 import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x081522);
+const container=document.getElementById("lab");
 
-const sceneElement=document.getElementById("scene");
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x08151f);
 
 const camera=new THREE.PerspectiveCamera(
 45,
-sceneElement.clientWidth/sceneElement.clientHeight,
-.1,
-1000
+container.clientWidth/container.clientHeight,
+0.1,
+100
 );
 
-camera.position.set(8,7,10);
+camera.position.set(8,7,11);
 
 const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-renderer.setSize(sceneElement.clientWidth,sceneElement.clientHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(container.clientWidth,container.clientHeight);
 renderer.shadowMap.enabled=true;
-sceneElement.appendChild(renderer.domElement);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+container.appendChild(renderer.domElement);
 
 const controls=new OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true;
 controls.target.set(0,1,0);
-controls.minDistance=4;
+controls.minDistance=5;
 controls.maxDistance=18;
-controls.enablePan=true;
 
-scene.add(new THREE.AmbientLight(0x9fc8e0,1.8));
+scene.add(new THREE.AmbientLight(0x9ac7df,1.8));
 
-const mainLight=new THREE.DirectionalLight(0xffffff,3);
-mainLight.position.set(5,10,7);
-mainLight.castShadow=true;
-scene.add(mainLight);
+const light=new THREE.DirectionalLight(0xffffff,3);
+light.position.set(5,10,7);
+light.castShadow=true;
+scene.add(light);
 
-const blueLight=new THREE.PointLight(0x00aaff,12,20);
-blueLight.position.set(-5,4,3);
-scene.add(blueLight);
+const greenLight=new THREE.PointLight(0x00ff9d,8,15);
+greenLight.position.set(2,5,2);
+scene.add(greenLight);
 
-const glass=new THREE.MeshPhysicalMaterial({
-color:0x9edfff,
+
+/* ---------------- MATERIALS ---------------- */
+
+const glassMat=new THREE.MeshPhysicalMaterial({
+color:0x9bdcff,
 transparent:true,
 opacity:.28,
 roughness:.08,
-metalness:.05,
-transmission:.15
+transmission:.15,
+side:THREE.DoubleSide
 });
 
-const metal=new THREE.MeshStandardMaterial({
-color:0x7d8994,
+const metalMat=new THREE.MeshStandardMaterial({
+color:0x858e96,
 metalness:.8,
 roughness:.25
 });
 
-const darkMetal=new THREE.MeshStandardMaterial({
-color:0x252d35,
+const darkMat=new THREE.MeshStandardMaterial({
+color:0x22282d,
 metalness:.7,
 roughness:.3
 });
 
-const wood=new THREE.MeshStandardMaterial({
-color:0x593820,
-roughness:.8
+const woodMat=new THREE.MeshStandardMaterial({
+color:0x57391f,
+roughness:.75
 });
+
+const whiteMat=new THREE.MeshStandardMaterial({
+color:0xe7e9e8,
+roughness:.45
+});
+
+
+/* ---------------- ROOM ---------------- */
 
 const floor=new THREE.Mesh(
 new THREE.BoxGeometry(22,.4,16),
-new THREE.MeshStandardMaterial({color:0x17232d,roughness:.8})
+new THREE.MeshStandardMaterial({color:0x18242d})
 );
 floor.position.y=-.25;
 floor.receiveShadow=true;
 scene.add(floor);
 
-const bench=new THREE.Mesh(
-new THREE.BoxGeometry(16,.6,8),
-wood
+const table=new THREE.Mesh(
+new THREE.BoxGeometry(15,.65,7),
+woodMat
 );
-bench.position.y=0;
-bench.receiveShadow=true;
-scene.add(bench);
+table.position.y=.05;
+table.receiveShadow=true;
+scene.add(table);
 
 const wall=new THREE.Mesh(
-new THREE.BoxGeometry(20,10,.3),
-new THREE.MeshStandardMaterial({color:0x0e1b25})
+new THREE.BoxGeometry(21,9,.35),
+new THREE.MeshStandardMaterial({color:0x10202a})
 );
 wall.position.set(0,4,-4);
 scene.add(wall);
 
-const grid=new THREE.GridHelper(16,32,0x28506a,0x1c374a);
-grid.position.y=.32;
-scene.add(grid);
 
-const objects=[];
+/* ---------------- WALL RACK ---------------- */
 
-function addBeaker(x,z){
+const rack=new THREE.Mesh(
+new THREE.BoxGeometry(15,4,.25),
+new THREE.MeshStandardMaterial({color:0x1b3445})
+);
+rack.position.set(0,5.5,-3.75);
+scene.add(rack);
+
+const rackLabel=document.createElement("div");
+rackLabel.style.position="absolute";
+rackLabel.style.pointerEvents="none";
+
+
+/* ---------------- 3D TEXT ---------------- */
+
+function makeLabel(text,color="#bfefff"){
+
+const canvas=document.createElement("canvas");
+canvas.width=512;
+canvas.height=128;
+
+const ctx=canvas.getContext("2d");
+ctx.fillStyle=color;
+ctx.font="bold 38px Arial";
+ctx.textAlign="center";
+ctx.fillText(text,256,70);
+
+const texture=new THREE.CanvasTexture(canvas);
+
+const material=new THREE.SpriteMaterial({
+map:texture,
+transparent:true
+});
+
+const sprite=new THREE.Sprite(material);
+sprite.scale.set(2.2,.55,1);
+
+return sprite;
+}
+
+
+/* ---------------- ITEMS ---------------- */
+
+const allObjects=[];
+const tableObjects=[];
+const rackObjects=[];
+
+function register(obj,type,name){
+obj.userData.type=type;
+obj.userData.name=name;
+obj.userData.onTable=false;
+allObjects.push(obj);
+return obj;
+}
+
+
+function beaker(x,z,onTable=true){
+
 const g=new THREE.Group();
 
 const body=new THREE.Mesh(
-new THREE.CylinderGeometry(.8,.72,1.6,32,1,true),
-glass
+new THREE.CylinderGeometry(.75,.67,1.5,32,1,true),
+glassMat
 );
-body.position.y=1.15;
+body.position.y=1.1;
 g.add(body);
 
 const rim=new THREE.Mesh(
-new THREE.TorusGeometry(.8,.055,12,32),
-glass
+new THREE.TorusGeometry(.75,.05,12,32),
+glassMat
 );
 rim.rotation.x=Math.PI/2;
-rim.position.y=1.95;
+rim.position.y=1.85;
 g.add(rim);
 
 const liquid=new THREE.Mesh(
-new THREE.CylinderGeometry(.68,.65,.55,32),
+new THREE.CylinderGeometry(.64,.61,.35,32),
 new THREE.MeshPhysicalMaterial({
-color:0x55aaff,
+color:0x4ba8ff,
 transparent:true,
 opacity:.55
 })
 );
 liquid.position.y=.65;
+liquid.visible=false;
+liquid.name="liquid";
 g.add(liquid);
 
-g.position.set(x,.3,z);
-g.userData.type="beaker";
+register(g,"beaker","Beaker");
+g.position.set(x,onTable?.4:5,z);
+
 scene.add(g);
-objects.push(g);
+
+if(onTable)tableObjects.push(g);
+
+return g;
 }
 
-function addFlask(x,z){
+
+function flask(x,z,onTable=true){
+
 const g=new THREE.Group();
 
 const body=new THREE.Mesh(
-new THREE.SphereGeometry(1,32,20),
-glass
+new THREE.SphereGeometry(.9,32,24),
+glassMat
 );
-body.scale.set(.95,.9,.95);
 body.position.y=1;
 g.add(body);
 
 const neck=new THREE.Mesh(
-new THREE.CylinderGeometry(.28,.32,1.3,24),
-glass
+new THREE.CylinderGeometry(.27,.31,1.5,24),
+glassMat
 );
 neck.position.y=2.05;
 g.add(neck);
 
 const liquid=new THREE.Mesh(
-new THREE.SphereGeometry(.7,32,16),
+new THREE.SphereGeometry(.68,32,18),
 new THREE.MeshPhysicalMaterial({
-color:0x70bfff,
+color:0x5baaff,
 transparent:true,
-opacity:.45
+opacity:.5
 })
 );
-liquid.scale.y=.45;
-liquid.position.y=.65;
+liquid.scale.y=.4;
+liquid.position.y=.7;
+liquid.visible=false;
+liquid.name="liquid";
 g.add(liquid);
 
-g.position.set(x,.3,z);
-g.userData.type="flask";
+register(g,"flask","Conical Flask");
+g.position.set(x,onTable?.4:5,z);
+
 scene.add(g);
-objects.push(g);
+
+if(onTable)tableObjects.push(g);
+
+return g;
 }
 
-function addTestTube(x,z){
+
+function testTube(x,z,onTable=true){
+
 const g=new THREE.Group();
 
 const tube=new THREE.Mesh(
 new THREE.CylinderGeometry(.3,.3,1.9,24,1,true),
-glass
+glassMat
 );
-tube.position.y=1.2;
+tube.position.y=1.25;
 g.add(tube);
 
 const bottom=new THREE.Mesh(
 new THREE.SphereGeometry(.3,24,12),
-glass
+glassMat
 );
 bottom.scale.y=.45;
-bottom.position.y=.27;
+bottom.position.y=.3;
 g.add(bottom);
 
-g.position.set(x,.3,z);
-g.userData.type="testtube";
+register(g,"testtube","Test Tube");
+g.position.set(x,onTable?.4:5,z);
+
 scene.add(g);
-objects.push(g);
+
+if(onTable)tableObjects.push(g);
+
+return g;
 }
 
-function addBurner(x,z){
+
+function burner(x,z,onTable=true){
+
 const g=new THREE.Group();
 
 const base=new THREE.Mesh(
 new THREE.CylinderGeometry(.65,.75,.25,32),
-darkMetal
+darkMat
 );
 base.position.y=.45;
 g.add(base);
 
-const stem=new THREE.Mesh(
-new THREE.CylinderGeometry(.23,.23,1,24),
-darkMetal
+const tube=new THREE.Mesh(
+new THREE.CylinderGeometry(.2,.2,1,20),
+darkMat
 );
-stem.position.y=1;
-g.add(stem);
+tube.position.y=1;
+g.add(tube);
 
 const flame=new THREE.Mesh(
 new THREE.ConeGeometry(.25,.9,24),
-new THREE.MeshBasicMaterial({
-color:0x42b9ff,
-transparent:true,
-opacity:.9
-})
+new THREE.MeshBasicMaterial({color:0x33aaff})
 );
 flame.position.y=1.9;
+flame.visible=false;
+flame.name="flame";
 g.add(flame);
 
-g.position.set(x,.3,z);
-g.userData.type="burner";
+register(g,"burner","Bunsen Burner");
+g.position.set(x,onTable?.4:5,z);
+
 scene.add(g);
-objects.push(g);
+
+if(onTable)tableObjects.push(g);
+
+return g;
 }
 
-function addTripod(x,z){
+
+function tripod(x,z,onTable=true){
+
 const g=new THREE.Group();
 
 const top=new THREE.Mesh(
-new THREE.CylinderGeometry(1.15,1.15,.12,32),
-metal
+new THREE.CylinderGeometry(1.1,1.1,.12,32),
+metalMat
 );
 top.position.y=1.25;
 g.add(top);
 
 for(let i=0;i<3;i++){
+
 const leg=new THREE.Mesh(
-new THREE.CylinderGeometry(.08,.1,1.5,12),
-metal
+new THREE.CylinderGeometry(.07,.1,1.5,12),
+metalMat
 );
+
 leg.position.y=.65;
-leg.rotation.z=.3;
+leg.rotation.z=.28;
 leg.rotation.y=i*Math.PI*2/3;
+
 g.add(leg);
 }
 
-g.position.set(x,.3,z);
-g.userData.type="tripod";
+register(g,"tripod","Tripod Stand");
+g.position.set(x,onTable?.4:5,z);
+
 scene.add(g);
-objects.push(g);
+
+if(onTable)tableObjects.push(g);
+
+return g;
 }
 
-function addFunnel(x,z){
+
+function funnel(x,z,onTable=true){
+
 const g=new THREE.Group();
 
 const cone=new THREE.Mesh(
-new THREE.ConeGeometry(.65,.8,32,1,true),
-glass
+new THREE.ConeGeometry(.6,.8,32,1,true),
+glassMat
 );
-cone.position.y=1.1;
+cone.position.y=1.15;
 g.add(cone);
 
 const tube=new THREE.Mesh(
-new THREE.CylinderGeometry(.12,.12,1.3,16),
-glass
+new THREE.CylinderGeometry(.11,.11,1.4,16),
+glassMat
 );
-tube.position.y=.2;
+tube.position.y=.25;
 g.add(tube);
 
-g.position.set(x,.3,z);
-g.userData.type="funnel";
+register(g,"funnel","Funnel");
+g.position.set(x,onTable?.4:5,z);
+
 scene.add(g);
-objects.push(g);
+
+if(onTable)tableObjects.push(g);
+
+return g;
 }
 
-function addFilter(x,z){
-const filter=new THREE.Mesh(
-new THREE.CircleGeometry(.75,32),
-new THREE.MeshStandardMaterial({
-color:0xffffff,
-side:THREE.DoubleSide
-})
-);
-filter.rotation.x=-Math.PI/2;
-filter.position.set(x,.35,z);
-filter.userData.type="filter";
-scene.add(filter);
-objects.push(filter);
-}
 
-function addChemical(x,z,color,label){
+/* ---------------- CHEMICAL BOTTLES ---------------- */
+
+function bottle(x,z,name,color){
+
 const g=new THREE.Group();
 
-const bottle=new THREE.Mesh(
-new THREE.CylinderGeometry(.45,.55,1.1,24),
-new THREE.MeshStandardMaterial({
-color:0xeeeeee,
-roughness:.35
-})
+const body=new THREE.Mesh(
+new THREE.CylinderGeometry(.42,.5,1.05,24),
+whiteMat
 );
-bottle.position.y=.9;
-g.add(bottle);
-
-const cap=new THREE.Mesh(
-new THREE.CylinderGeometry(.3,.3,.22,20),
-darkMetal
-);
-cap.position.y=1.56;
-g.add(cap);
+body.position.y=.85;
+g.add(body);
 
 const liquid=new THREE.Mesh(
-new THREE.CylinderGeometry(.4,.4,.55,24),
-new THREE.MeshStandardMaterial({
-color,
-transparent:true,
-opacity:.8
-})
+new THREE.CylinderGeometry(.37,.37,.55,24),
+new THREE.MeshStandardMaterial({color})
 );
-liquid.position.y=.55;
+liquid.position.y=.58;
 g.add(liquid);
 
-g.position.set(x,.3,z);
-g.userData={type:"chemical",chemical:label};
+const cap=new THREE.Mesh(
+new THREE.CylinderGeometry(.28,.28,.2,20),
+darkMat
+);
+cap.position.y=1.5;
+g.add(cap);
+
+const label=makeLabel(name);
+label.position.set(0,.9,.51);
+label.scale.set(1.25,.32,1);
+g.add(label);
+
+register(g,"chemical",name);
+g.position.set(x,5,z);
+
 scene.add(g);
-objects.push(g);
+rackObjects.push(g);
+
+return g;
 }
 
-function addGlassRod(x,z){
-const rod=new THREE.Mesh(
-new THREE.CylinderGeometry(.035,.035,2.4,12),
-new THREE.MeshPhysicalMaterial({
-color:0xbfefff,
-transparent:true,
-opacity:.7
-})
-);
-rod.position.set(x,1.5,z);
-rod.rotation.z=.2;
-rod.userData.type="glassrod";
-scene.add(rod);
-objects.push(rod);
-}
 
-addBeaker(-3,-1);
-addFlask(0,-1);
-addTestTube(3,-1);
-addBurner(0,2);
-addTripod(0,2);
-addFunnel(4,2);
-addFilter(2,2);
-addGlassRod(-2,2);
+/* ---------------- WALL EQUIPMENT ---------------- */
 
-addChemical(-5,2,0x273a2e,"FeCr₂O₄");
-addChemical(-4,2,0xffffff,"Na₂CO₃");
-addChemical(-3,2,0xffc000,"H₂SO₄");
-addChemical(-2,2,0xffffff,"KCl");
+beaker(-5,-3.5,false);
+flask(-2.8,-3.5,false);
+testTube(-.5,-3.5,false);
+burner(2,-3.5,false);
+tripod(4.2,-3.5,false);
+funnel(6,-3.5,false);
 
-document.querySelectorAll(".lab-item").forEach(item=>{
-item.addEventListener("dragstart",e=>{
-e.dataTransfer.setData("text/plain",item.dataset.item);
-});
-});
+bottle(-5,-2.5,"FeCr₂O₄",0x263a2b);
+bottle(-2.8,-2.5,"Na₂CO₃",0xffffff);
+bottle(-.6,-2.5,"H₂SO₄",0xffc000);
+bottle(1.7,-2.5,"KCl",0xffffff);
+bottle(4,-2.5,"MnO₂",0x333333);
+bottle(6.2,-2.5,"KOH",0xffffff);
 
-const workspace=document.getElementById("workspace");
 
-workspace.addEventListener("dragover",e=>{
-e.preventDefault();
-workspace.classList.add("dragover");
-});
+/* ---------------- RACK TITLES ---------------- */
 
-workspace.addEventListener("dragleave",()=>{
-workspace.classList.remove("dragover");
-});
+const rackTitle=makeLabel("EQUIPMENT + REAGENTS  •  DRAG TO TABLE","#6fe5ff");
+rackTitle.position.set(-1,7.15,-3.5);
+rackTitle.scale.set(4,.6,1);
+scene.add(rackTitle);
 
-workspace.addEventListener("drop",e=>{
-e.preventDefault();
-workspace.classList.remove("dragover");
-const item=e.dataTransfer.getData("text/plain");
-dropItem(item,e.clientX,e.clientY);
-});
 
-let touchItem=null;
-let touchGhost=null;
+/* ---------------- EXPERIMENT STATE ---------------- */
 
-document.querySelectorAll(".lab-item").forEach(item=>{
+let experiment="dichromate";
+let step=0;
+let selected=null;
+let holding=null;
+let dragOffset=new THREE.Vector3();
 
-item.addEventListener("touchstart",e=>{
-const touch=e.touches[0];
-touchItem=item.dataset.item;
+const data={
 
-touchGhost=document.createElement("div");
-touchGhost.textContent=item.innerText.split("\n")[0];
-touchGhost.style.position="fixed";
-touchGhost.style.zIndex="9999";
-touchGhost.style.pointerEvents="none";
-touchGhost.style.padding="10px 14px";
-touchGhost.style.borderRadius="10px";
-touchGhost.style.background="#0d3550ee";
-touchGhost.style.border="1px solid #00cfff";
-touchGhost.style.color="white";
-document.body.appendChild(touchGhost);
-moveGhost(touch);
-},{passive:true});
-
-item.addEventListener("touchmove",e=>{
-if(!touchGhost)return;
-moveGhost(e.touches[0]);
-},{passive:true});
-
-item.addEventListener("touchend",e=>{
-if(!touchItem)return;
-const touch=e.changedTouches[0];
-
-if(touchGhost){
-touchGhost.remove();
-touchGhost=null;
-}
-
-dropItem(touchItem,touch.clientX,touch.clientY);
-touchItem=null;
-},{passive:true});
-
-});
-
-function moveGhost(touch){
-if(!touchGhost)return;
-touchGhost.style.left=(touch.clientX-40)+"px";
-touchGhost.style.top=(touch.clientY-20)+"px";
-}
-
-function dropItem(item,screenX,screenY){
-
-const rect=renderer.domElement.getBoundingClientRect();
-
-if(
-screenX<rect.left||
-screenX>rect.right||
-screenY<rect.top||
-screenY>rect.bottom
-)return;
-
-const mouse=new THREE.Vector2(
-((screenX-rect.left)/rect.width)*2-1,
--((screenY-rect.top)/rect.height)*2+1
-);
-
-const ray=new THREE.Raycaster();
-ray.setFromCamera(mouse,camera);
-
-const hit=ray.intersectObject(bench)[0];
-if(!hit)return;
-
-const p=hit.point;
-spawnItem(item,p.x,p.z);
-}
-
-function spawnItem(item,x,z){
-
-if(item==="beaker")addBeaker(x,z);
-else if(item==="flask")addFlask(x,z);
-else if(item==="testtube")addTestTube(x,z);
-else if(item==="burner")addBurner(x,z);
-else if(item==="tripod")addTripod(x,z);
-else if(item==="funnel")addFunnel(x,z);
-else if(item==="filter")addFilter(x,z);
-else if(item==="glassrod")addGlassRod(x,z);
-else if(item==="chromite")addChemical(x,z,0x273a2e,"FeCr₂O₄");
-else if(item==="na2co3")addChemical(x,z,0xffffff,"Na₂CO₃");
-else if(item==="h2so4")addChemical(x,z,0xffc000,"H₂SO₄");
-else if(item==="kcl")addChemical(x,z,0xffffff,"KCl");
-else if(item==="mno2")addChemical(x,z,0x303030,"MnO₂");
-else if(item==="koh")addChemical(x,z,0xffffff,"KOH");
-else if(item==="cl2")addChemical(x,z,0xd7ff3f,"Cl₂");
-}
-
-const experiments={
 dichromate:{
+name:"K₂Cr₂O₇ Preparation",
 steps:[
 {
-name:"Fuse chromite ore with Na₂CO₃",
+text:"Take Chromite Ore (FeCr₂O₄) and Na₂CO₃. Place them in a suitable vessel.",
+reaction:"FeCr₂O₄ + Na₂CO₃ + O₂ → Na₂CrO₄ + Fe₂O₃ + CO₂",
+action:"mix"
+},
+{
+text:"Heat the mixture using the Bunsen burner.",
 reaction:"4FeCr₂O₄ + 8Na₂CO₃ + 7O₂ → 8Na₂CrO₄ + 2Fe₂O₃ + 8CO₂",
-obs:"Chromite ore is oxidised in alkaline conditions and yellow sodium chromate is formed."
+action:"heat"
 },
 {
-name:"Acidify sodium chromate",
+text:"Add H₂SO₄ to sodium chromate solution.",
 reaction:"2Na₂CrO₄ + H₂SO₄ → Na₂Cr₂O₇ + Na₂SO₄ + H₂O",
-obs:"Yellow chromate changes to orange sodium dichromate solution."
+action:"acid"
 },
 {
-name:"Add KCl",
+text:"Add KCl. Potassium dichromate crystallises out.",
 reaction:"Na₂Cr₂O₇ + 2KCl → K₂Cr₂O₇↓ + 2NaCl",
-obs:"Orange potassium dichromate crystals separate from the solution."
+action:"kcl"
 },
 {
-name:"Filter and crystallise",
+text:"Filter and collect orange K₂Cr₂O₇ crystals.",
 reaction:"K₂Cr₂O₇(aq) → K₂Cr₂O₇(s)",
-obs:"Orange K₂Cr₂O₇ crystals are collected."
+action:"filter"
 }
 ]
 },
+
 permanganate:{
+name:"KMnO₄ Preparation",
 steps:[
 {
-name:"Fuse MnO₂ with KOH in air",
+text:"Take MnO₂ and KOH and place them in the heating vessel.",
 reaction:"2MnO₂ + 4KOH + O₂ → 2K₂MnO₄ + 2H₂O",
-obs:"MnO₂ is oxidised in alkaline medium and green potassium manganate is formed."
+action:"mix"
 },
 {
-name:"Convert manganate to permanganate",
+text:"Heat the mixture strongly in air.",
+reaction:"2MnO₂ + 4KOH + O₂ → 2K₂MnO₄ + 2H₂O",
+action:"heat"
+},
+{
+text:"Convert potassium manganate into permanganate.",
 reaction:"3K₂MnO₄ + 2H₂O → 2KMnO₄ + MnO₂ + 4KOH",
-obs:"Green manganate undergoes disproportionation and purple permanganate forms."
+action:"convert"
 },
 {
-name:"Filter MnO₂",
+text:"Filter off MnO₂ residue.",
 reaction:"MnO₂(s) → filtered residue",
-obs:"Brown/black MnO₂ residue is separated by filtration."
+action:"filter"
 },
 {
-name:"Crystallise KMnO₄",
+text:"Crystallise the KMnO₄ solution.",
 reaction:"KMnO₄(aq) → KMnO₄(s)",
-obs:"Deep purple KMnO₄ crystals are obtained."
+action:"crystal"
 }
 ]
 }
 };
 
-let currentExperiment="dichromate";
-let currentStep=0;
 
-window.setExperiment=function(exp){
-currentExperiment=exp;
-currentStep=0;
-document.getElementById("expSelect").value=exp;
-renderSteps();
-clearReaction();
-document.getElementById("observation").textContent="Experiment selected. Arrange the apparatus/reagents and perform the steps in order.";
-};
+/* ---------------- UI ---------------- */
 
-function renderSteps(){
-const data=experiments[currentExperiment];
+function toast(text){
 
-document.getElementById("steps").innerHTML=data.steps.map((step,i)=>`
-<div class="step ${i<currentStep?"done":""} ${i===currentStep?"current":""}">
-<div class="dot">${i<currentStep?"✓":i+1}</div>
-<span>${step.name}</span>
-</div>
-`).join("");
+const t=document.getElementById("toast");
+
+t.textContent=text;
+t.classList.add("show");
+
+setTimeout(()=>{
+t.classList.remove("show");
+},1800);
 }
 
-function clearReaction(){
-document.getElementById("reaction").innerHTML='<span class="note">Perform the current step to reveal the balanced reaction.</span>';
-}
 
-window.performStep=function(){
+function updateScreen(){
 
-const data=experiments[currentExperiment];
+const d=data[experiment];
 
-if(currentStep>=data.steps.length){
-document.getElementById("observation").textContent="✅ Experiment completed.";
+document.getElementById("experimentName").textContent=d.name;
+
+if(step>=d.steps.length){
+
+document.getElementById("stepText").textContent="🎉 Experiment completed.";
+
+document.getElementById("reaction").innerHTML=
+"<b>FINAL PRODUCT</b><br><br>"+
+(experiment==="dichromate"?
+"🟠 K₂Cr₂O₇ crystals":
+"🟣 KMnO₄ crystals");
+
+document.getElementById("screenStatus").textContent="STATUS: COMPLETED";
+
 return;
 }
 
-const step=data.steps[currentStep];
+document.getElementById("stepText").textContent=
+"Step "+(step+1)+": "+d.steps[step].text;
 
-document.getElementById("reaction").innerHTML=`<div class="eq">${step.reaction}</div>`;
-document.getElementById("observation").textContent="🔎 "+step.obs;
+document.getElementById("reaction").innerHTML=
+"<span style='color:#739a8b'>Waiting for action...</span>";
 
-currentStep++;
-renderSteps();
-
-if(currentStep===data.steps.length){
-document.getElementById("observation").textContent="🎉 Experiment completed. Final product obtained.";
+document.getElementById("screenStatus").textContent=
+"STATUS: STEP "+(step+1)+" / "+d.steps.length;
 }
+
+
+function showReaction(){
+
+const current=data[experiment].steps[step];
+
+document.getElementById("reaction").innerHTML=
+current.reaction;
+
+document.getElementById("screenStatus").textContent=
+"✓ REACTION BALANCED";
+
+}
+
+
+function completeStep(){
+
+showReaction();
+
+step++;
+
+setTimeout(updateScreen,1300);
+
+}
+
+
+window.switchExperiment=function(){
+
+experiment=experiment==="dichromate"?"permanganate":"dichromate";
+
+step=0;
+
+resetObjects();
+
+updateScreen();
+
+toast("Experiment switched");
 };
+
 
 window.resetLab=function(){
-currentStep=0;
-renderSteps();
-clearReaction();
-document.getElementById("observation").textContent="Lab reset. Start again.";
+
+step=0;
+
+resetObjects();
+
+updateScreen();
+
+toast("Lab reset");
 };
 
-const raycaster=new THREE.Raycaster();
-const mouse=new THREE.Vector2();
 
-renderer.domElement.addEventListener("pointerdown",e=>{
+function resetObjects(){
+
+allObjects.forEach(o=>{
+
+if(o.userData.onTable){
+
+o.userData.onTable=false;
+
+if(o.parent)scene.remove(o);
+
+}
+
+});
+
+selected=null;
+holding=null;
+}
+
+
+/* ---------------- DRAG FROM WALL ---------------- */
+
+const raycaster=new THREE.Raycaster();
+const pointer=new THREE.Vector2();
+
+function pointerPosition(e){
 
 const rect=renderer.domElement.getBoundingClientRect();
 
-mouse.x=((e.clientX-rect.left)/rect.width)*2-1;
-mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
+pointer.x=((e.clientX-rect.left)/rect.width)*2-1;
+pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;
+}
 
-raycaster.setFromCamera(mouse,camera);
 
-const hits=raycaster.intersectObjects(objects,true);
+function findRoot(obj){
 
-if(!hits.length)return;
-
-let obj=hits[0].object;
-
-while(obj.parent&&!obj.userData.type){
+while(obj.parent && !obj.userData.type){
 obj=obj.parent;
 }
 
-if(obj.userData.type){
-document.getElementById("observation").innerHTML=`Selected: <b>${obj.userData.chemical||obj.userData.type}</b>`;
+return obj;
 }
+
+
+renderer.domElement.addEventListener("pointerdown",e=>{
+
+pointerPosition(e);
+
+raycaster.setFromCamera(pointer,camera);
+
+const hits=raycaster.intersectObjects(allObjects,true);
+
+if(!hits.length)return;
+
+const root=findRoot(hits[0].object);
+
+selected=root;
+
+if(selected.userData.type==="chemical" ||
+selected.position.y>3){
+
+holding=selected;
+
+toast("Picked: "+selected.userData.name);
+}
+
 });
+
+
+renderer.domElement.addEventListener("pointermove",e=>{
+
+if(!holding)return;
+
+pointerPosition(e);
+
+raycaster.setFromCamera(pointer,camera);
+
+const tableHit=raycaster.intersectObject(table)[0];
+
+if(tableHit){
+
+const p=tableHit.point;
+
+holding.position.x=p.x;
+holding.position.z=p.z;
+holding.position.y=.4;
+
+}
+
+});
+
+
+renderer.domElement.addEventListener("pointerup",e=>{
+
+if(!holding)return;
+
+if(holding.position.y<1){
+
+holding.userData.onTable=true;
+
+if(!tableObjects.includes(holding))
+tableObjects.push(holding);
+
+toast(holding.userData.name+" placed on table");
+
+}
+
+holding=null;
+
+});
+
+
+/* ---------------- DOUBLE CLICK ACTION ---------------- */
+
+renderer.domElement.addEventListener("dblclick",e=>{
+
+pointerPosition(e);
+
+raycaster.setFromCamera(pointer,camera);
+
+const hits=raycaster.intersectObjects(allObjects,true);
+
+if(!hits.length)return;
+
+const obj=findRoot(hits[0].object);
+
+useObject(obj);
+
+});
+
+
+function useObject(obj){
+
+const current=data[experiment].steps[step];
+
+if(!current)return;
+
+if(obj.userData.type==="burner"){
+
+const flame=obj.children.find(x=>x.name==="flame");
+
+if(flame){
+
+flame.visible=!flame.visible;
+
+if(flame.visible){
+
+toast("🔥 Burner ON");
+
+if(current.action==="heat"){
+setTimeout(()=>{
+toast("Heating complete");
+completeStep();
+},2200);
+}
+
+}else{
+toast("Burner OFF");
+}
+
+}
+
+return;
+}
+
+
+if(obj.userData.type==="chemical"){
+
+toast("Chemical: "+obj.userData.name);
+
+if(
+experiment==="dichromate" &&
+current.action==="acid" &&
+obj.userData.name==="H₂SO₄"
+){
+toast("H₂SO₄ added");
+completeStep();
+return;
+}
+
+if(
+experiment==="dichromate" &&
+current.action==="kcl" &&
+obj.userData.name==="KCl"
+){
+toast("KCl added");
+completeStep();
+return;
+}
+
+if(
+experiment==="permanganate" &&
+current.action==="convert"
+){
+toast("Conversion started");
+setTimeout(completeStep,1200);
+return;
+}
+
+return;
+}
+
+
+if(obj.userData.type==="beaker" ||
+obj.userData.type==="flask"){
+
+if(current.action==="mix"){
+
+const liquid=obj.children.find(x=>x.name==="liquid");
+
+if(liquid){
+
+liquid.visible=true;
+
+liquid.material.color.set(
+experiment==="dichromate"?0xffb000:0x15a864
+);
+
+}
+
+toast("Reagents mixed");
+completeStep();
+return;
+}
+
+if(current.action==="filter"){
+
+toast("Filtration setup started");
+completeStep();
+return;
+}
+
+}
+
+if(obj.userData.type==="funnel" &&
+current.action==="filter"){
+
+toast("Filtering...");
+setTimeout(completeStep,1300);
+return;
+}
+
+}
+
+
+/* ---------------- TOUCH SUPPORT ---------------- */
+
+let lastTap=0;
+
+renderer.domElement.addEventListener("pointerup",e=>{
+
+const now=Date.now();
+
+if(now-lastTap<350){
+
+renderer.domElement.dispatchEvent(
+new MouseEvent("dblclick",{
+clientX:e.clientX,
+clientY:e.clientY
+})
+);
+
+}
+
+lastTap=now;
+
+});
+
+
+/* ---------------- ANIMATION ---------------- */
 
 function animate(){
 
 requestAnimationFrame(animate);
 
-objects.forEach(obj=>{
+allObjects.forEach(obj=>{
 
 if(obj.userData.type==="burner"){
 
-const flame=obj.children.find(c=>
-c.geometry&&c.geometry.type==="ConeGeometry"
-);
+const flame=obj.children.find(x=>x.name==="flame");
 
-if(flame){
-flame.scale.y=.9+Math.sin(Date.now()*.015)*.12;
+if(flame && flame.visible){
+
+flame.scale.y=.9+
+Math.sin(Date.now()*.018)*.15;
+
 }
+
 }
 
 });
 
 controls.update();
+
 renderer.render(scene,camera);
+
 }
 
 animate();
 
-function resize(){
 
-const width=sceneElement.clientWidth;
-const height=sceneElement.clientHeight;
+/* ---------------- RESIZE ---------------- */
 
-if(!width||!height)return;
+window.addEventListener("resize",()=>{
 
-camera.aspect=width/height;
+camera.aspect=container.clientWidth/container.clientHeight;
+
 camera.updateProjectionMatrix();
 
-renderer.setSize(width,height,false);
-}
+renderer.setSize(
+container.clientWidth,
+container.clientHeight
+);
 
-window.addEventListener("resize",resize);
-
-window.openLeft=function(){
-document.body.classList.add("mobile-left-open");
-document.body.classList.remove("mobile-right-open");
-document.body.classList.add("drawer-open");
-};
-
-window.openRight=function(){
-document.body.classList.add("mobile-right-open");
-document.body.classList.remove("mobile-left-open");
-document.body.classList.add("drawer-open");
-};
-
-window.closeDrawers=function(){
-document.body.classList.remove("mobile-left-open","mobile-right-open","drawer-open");
-};
-
-window.toggleDesktopLeft=function(){
-document.body.classList.toggle("left-hidden");
-setTimeout(resize,300);
-};
-
-window.toggleDesktopRight=function(){
-document.body.classList.toggle("right-hidden");
-setTimeout(resize,300);
-};
-
-document.getElementById("expSelect").addEventListener("change",()=>{
-if(window.innerWidth<=800)closeDrawers();
 });
 
-renderSteps();
-resize();
+
+updateScreen();
+
 </script>
+
 </body>
 </html>
