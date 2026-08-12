@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Gopal — Website to App</title>
+<title>AppForge — Website to App</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -22,7 +23,6 @@
     --primary:#635bff;
     --primary2:#8b5cf6;
     --success:#16a34a;
-    --danger:#ef4444;
     --shadow:0 20px 60px rgba(0,0,0,.08);
 }
 
@@ -46,8 +46,8 @@ body{
     background:
         radial-gradient(
             circle at 50% -20%,
-            rgba(99,91,255,.16),
-            transparent 40%
+            rgba(99,91,255,.18),
+            transparent 42%
         ),
         var(--bg);
 
@@ -60,58 +60,67 @@ body{
 
 .header{
     height:72px;
+    padding:0 6%;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 6%;
-    background:rgba(255,255,255,.7);
-    border-bottom:1px solid var(--border);
-    backdrop-filter:blur(15px);
+
     position:sticky;
     top:0;
-    z-index:20;
+    z-index:50;
+
+    background:rgba(255,255,255,.75);
+    border-bottom:1px solid var(--border);
+
+    backdrop-filter:blur(18px);
 }
 
 body.dark .header{
-    background:rgba(9,9,11,.75);
+    background:rgba(9,9,11,.78);
 }
 
 .logo{
     display:flex;
     align-items:center;
     gap:10px;
+
     font-size:20px;
     font-weight:800;
 }
 
 .logo-icon{
-    width:38px;
-    height:38px;
+    width:39px;
+    height:39px;
+
     display:grid;
     place-items:center;
-    border-radius:11px;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary2)
-    );
-    color:white;
-    box-shadow:0 8px 20px rgba(99,91,255,.3);
-}
 
-.header-right{
-    display:flex;
-    align-items:center;
-    gap:10px;
+    border-radius:12px;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary2)
+        );
+
+    box-shadow:
+        0 8px 22px rgba(99,91,255,.3);
 }
 
 .theme-btn{
     width:42px;
     height:42px;
+
     border:1px solid var(--border);
+    border-radius:12px;
+
     background:var(--card);
     color:var(--text);
-    border-radius:12px;
+
     cursor:pointer;
     font-size:17px;
 }
@@ -119,8 +128,11 @@ body.dark .header{
 /* MAIN */
 
 .container{
+    width:100%;
     max-width:1000px;
+
     margin:auto;
+
     padding:65px 20px 100px;
 }
 
@@ -135,38 +147,55 @@ body.dark .header{
     display:inline-flex;
     align-items:center;
     gap:7px;
+
     padding:8px 14px;
+
     border-radius:30px;
+
     background:rgba(99,91,255,.1);
     color:var(--primary);
+
     font-size:13px;
     font-weight:700;
+
     margin-bottom:20px;
 }
 
 .hero h1{
-    max-width:800px;
+    max-width:820px;
     margin:auto;
-    font-size:clamp(38px,7vw,68px);
+
+    font-size:
+        clamp(
+            38px,
+            7vw,
+            68px
+        );
+
     line-height:1.02;
     letter-spacing:-3px;
 }
 
 .gradient{
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary2)
-    );
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary2)
+        );
+
     -webkit-background-clip:text;
     background-clip:text;
+
     color:transparent;
 }
 
 .hero p{
     max-width:650px;
     margin:20px auto 0;
+
     color:var(--muted);
+
     font-size:17px;
     line-height:1.6;
 }
@@ -175,9 +204,12 @@ body.dark .header{
 
 .builder{
     background:var(--card);
+
     border:1px solid var(--border);
     border-radius:26px;
+
     padding:30px;
+
     box-shadow:var(--shadow);
 }
 
@@ -187,6 +219,7 @@ body.dark .header{
     display:flex;
     align-items:center;
     gap:13px;
+
     margin:30px 0 18px;
 }
 
@@ -198,15 +231,21 @@ body.dark .header{
     width:35px;
     height:35px;
     min-width:35px;
+
     display:grid;
     place-items:center;
+
     border-radius:50%;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary2)
-    );
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary2)
+        );
+
     color:#fff;
+
     font-size:14px;
     font-weight:800;
 }
@@ -216,56 +255,78 @@ body.dark .header{
 }
 
 .step p{
-    color:var(--muted);
-    font-size:13px;
     margin-top:3px;
+
+    color:var(--muted);
+
+    font-size:13px;
 }
 
 /* FORM */
 
 label{
     display:block;
+
+    margin:16px 0 8px;
+
     font-size:13px;
     font-weight:700;
-    margin:16px 0 8px;
 }
 
 input,
 textarea,
 select{
+
     width:100%;
+
     border:1px solid var(--border);
+    border-radius:13px;
+
+    padding:14px;
+
     background:var(--bg);
     color:var(--text);
-    border-radius:13px;
-    padding:14px;
+
     font-size:14px;
+
     outline:none;
+
     transition:.2s;
 }
 
 input:focus,
 textarea:focus,
 select:focus{
+
     border-color:var(--primary);
-    box-shadow:0 0 0 3px rgba(99,91,255,.1);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(99,91,255,.1);
 }
 
 textarea{
     min-height:190px;
+
     resize:vertical;
+
     line-height:1.6;
 }
 
 /* URL */
 
 .url-box{
+
     display:flex;
     align-items:center;
     gap:10px;
+
     padding-left:14px;
+
     background:var(--bg);
+
     border:1px solid var(--border);
+
     border-radius:13px;
 }
 
@@ -282,25 +343,38 @@ textarea{
 /* GRID */
 
 .grid{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:15px;
 }
 
 /* UPLOAD */
 
 .upload{
+
     border:2px dashed var(--border);
+
     border-radius:17px;
+
     padding:24px;
+
     text-align:center;
+
     cursor:pointer;
+
     transition:.2s;
 }
 
 .upload:hover{
+
     border-color:var(--primary);
-    background:rgba(99,91,255,.04);
+
+    background:
+        rgba(99,91,255,.04);
 }
 
 .upload input{
@@ -308,17 +382,27 @@ textarea{
 }
 
 .icon-preview{
-    width:75px;
-    height:75px;
-    border-radius:18px;
+
+    width:80px;
+    height:80px;
+
     margin:0 auto 12px;
+
     display:none;
+
     object-fit:cover;
-    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+    border-radius:20px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.15);
 }
 
 .upload-icon{
+
     font-size:35px;
+
     margin-bottom:8px;
 }
 
@@ -327,27 +411,42 @@ textarea{
 }
 
 .upload small{
+
     display:block;
+
     color:var(--muted);
+
     margin-top:5px;
 }
 
 /* LOADER */
 
 .loader-grid{
+
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap:12px;
 }
 
 .loader-option{
+
     padding:18px 10px;
+
     border:1px solid var(--border);
+
     background:var(--bg);
+
     color:var(--text);
+
     border-radius:14px;
+
     cursor:pointer;
+
     text-align:center;
+
     transition:.2s;
 }
 
@@ -356,44 +455,73 @@ textarea{
 }
 
 .loader-option.selected{
+
     border-color:var(--primary);
-    background:rgba(99,91,255,.08);
-    box-shadow:0 0 0 2px rgba(99,91,255,.08);
+
+    background:
+        rgba(99,91,255,.08);
+
+    box-shadow:
+        0 0 0 2px
+        rgba(99,91,255,.08);
 }
 
 .loader-icon{
+
     height:35px;
+
     display:flex;
+
     justify-content:center;
     align-items:center;
+
     margin-bottom:8px;
 }
 
 /* SPINNER */
 
 .spinner{
+
     width:25px;
     height:25px;
+
     border:3px solid #ddd;
-    border-top-color:var(--primary);
+
+    border-top-color:
+        var(--primary);
+
     border-radius:50%;
-    animation:spin 1s linear infinite;
+
+    animation:
+        spin 1s linear infinite;
 }
 
 @keyframes spin{
-    to{transform:rotate(360deg)}
+
+    to{
+        transform:rotate(360deg);
+    }
+
 }
 
 /* DOTS */
 
 .dots span{
+
     width:7px;
     height:7px;
+
     margin:2px;
+
     display:inline-block;
-    background:var(--primary);
+
+    background:
+        var(--primary);
+
     border-radius:50%;
-    animation:dot 1.2s infinite;
+
+    animation:
+        dot 1.2s infinite;
 }
 
 .dots span:nth-child(2){
@@ -405,56 +533,80 @@ textarea{
 }
 
 @keyframes dot{
-    0%,80%,100%{
-        transform:scale:.6;
+
+    0%,
+    80%,
+    100%{
+        transform:scale(.6);
         opacity:.5;
     }
+
     40%{
         transform:scale(1);
         opacity:1;
     }
+
 }
 
 /* PULSE */
 
 .pulse{
+
     width:25px;
     height:25px;
+
     border-radius:50%;
-    background:var(--primary);
-    animation:pulse 1.2s infinite;
+
+    background:
+        var(--primary);
+
+    animation:
+        pulse 1.2s infinite;
 }
 
 @keyframes pulse{
+
     0%{
         transform:scale(.6);
         opacity:.5;
     }
+
     50%{
         transform:scale(1);
         opacity:1;
     }
+
     100%{
         transform:scale(.6);
         opacity:.5;
     }
+
 }
 
 /* POLICY */
 
 .policy{
+
     border:1px solid var(--border);
+
     border-radius:16px;
+
     overflow:hidden;
 }
 
 .policy-top{
+
     display:flex;
+
     justify-content:space-between;
     align-items:center;
+
     gap:15px;
+
     padding:16px;
-    border-bottom:1px solid var(--border);
+
+    border-bottom:
+        1px solid var(--border);
 }
 
 .policy-title strong{
@@ -462,47 +614,72 @@ textarea{
 }
 
 .policy-title p{
+
     color:var(--muted);
+
     font-size:12px;
+
     margin-top:4px;
 }
 
 .ai-btn{
+
     border:0;
+
     padding:10px 14px;
+
     border-radius:10px;
-    color:white;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary2)
-    );
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary2)
+        );
+
     cursor:pointer;
+
     font-weight:700;
 }
 
 .policy textarea{
+
     border:0;
+
     border-radius:0;
+
     background:var(--bg);
 }
 
-/* CHECKBOX */
+/* OPTIONS */
 
 .options{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:12px;
+
     margin-top:15px;
 }
 
 .check{
+
     border:1px solid var(--border);
+
     padding:14px;
+
     border-radius:13px;
+
     display:flex;
     align-items:center;
+
     gap:10px;
+
     cursor:pointer;
 }
 
@@ -517,84 +694,154 @@ textarea{
 /* BUILD */
 
 .build-btn{
+
     width:100%;
+
     margin-top:25px;
+
     padding:17px;
+
     border:0;
+
     border-radius:15px;
+
     color:#fff;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary2)
-    );
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary2)
+        );
+
     font-size:16px;
+
     font-weight:800;
+
     cursor:pointer;
-    box-shadow:0 12px 30px rgba(99,91,255,.3);
+
+    box-shadow:
+        0 12px 30px
+        rgba(99,91,255,.3);
+
     transition:.2s;
 }
 
 .build-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 17px 35px rgba(99,91,255,.4);
+
+    transform:
+        translateY(-2px);
+
 }
 
 .build-btn:disabled{
+
     opacity:.6;
+
     cursor:not-allowed;
+
     transform:none;
 }
 
 /* STATUS */
 
 .status{
+
     display:none;
+
     margin-top:20px;
+
     padding:18px;
+
     border-radius:14px;
+
     background:var(--bg);
+
     border:1px solid var(--border);
+
     text-align:center;
 }
 
 .progress{
+
     height:8px;
-    background:var(--border);
+
+    background:
+        var(--border);
+
     border-radius:20px;
+
     overflow:hidden;
+
     margin-top:13px;
 }
 
 .progress-bar{
+
     width:0%;
+
     height:100%;
-    background:linear-gradient(
-        90deg,
-        var(--primary),
-        var(--primary2)
-    );
-    transition:width .5s;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--primary2)
+        );
+
+    transition:
+        width .5s;
+}
+
+.download-btn{
+
+    display:inline-block;
+
+    margin-top:15px;
+
+    padding:12px 20px;
+
+    border-radius:11px;
+
+    background:
+        var(--success);
+
+    color:#fff;
+
+    text-decoration:none;
+
+    font-weight:700;
 }
 
 /* FEATURES */
 
 .features{
+
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap:15px;
+
     margin-top:25px;
 }
 
 .feature{
+
     background:var(--card);
+
     border:1px solid var(--border);
+
     border-radius:18px;
+
     padding:20px;
 }
 
 .feature-icon{
+
     font-size:25px;
+
     margin-bottom:12px;
 }
 
@@ -603,18 +850,26 @@ textarea{
 }
 
 .feature p{
+
     color:var(--muted);
+
     font-size:12px;
+
     line-height:1.5;
+
     margin-top:6px;
 }
 
 /* FOOTER */
 
 .footer{
+
     text-align:center;
+
     color:var(--muted);
+
     font-size:12px;
+
     margin-top:40px;
 }
 
@@ -656,38 +911,44 @@ textarea{
     }
 
     .policy-top{
+
         align-items:flex-start;
+
         flex-direction:column;
     }
 
     .ai-btn{
         width:100%;
     }
+
 }
+
 </style>
 </head>
-
 
 <body>
 
 <header class="header">
 
     <div class="logo">
-        <div class="logo-icon">⚡</div>
-        <span>AppForge</span>
-    </div>
 
-    <div class="header-right">
+        <div class="logo-icon">
+            ⚡
+        </div>
 
-        <button
-            class="theme-btn"
-            onclick="toggleTheme()"
-            id="themeButton"
-        >
-            🌙
-        </button>
+        <span>
+            AppForge
+        </span>
 
     </div>
+
+    <button
+        class="theme-btn"
+        onclick="toggleTheme()"
+        id="themeButton"
+    >
+        🌙
+    </button>
 
 </header>
 
@@ -703,16 +964,21 @@ textarea{
         </div>
 
         <h1>
+
             Turn your website into a
+
             <span class="gradient">
                 beautiful app.
             </span>
+
         </h1>
 
         <p>
-            Add your website, customize your app,
-            choose your icon and create your Android
-            app with a professional experience.
+
+            Enter your website, customize your
+            app and generate a professional
+            Android application.
+
         </p>
 
     </section>
@@ -726,11 +992,21 @@ textarea{
 
         <div class="step">
 
-            <div class="step-number">1</div>
+            <div class="step-number">
+                1
+            </div>
 
             <div>
-                <h3>Website</h3>
-                <p>Tell us which website you want to turn into an app.</p>
+
+                <h3>
+                    Website
+                </h3>
+
+                <p>
+                    Enter the website you want
+                    to turn into an app.
+                </p>
+
             </div>
 
         </div>
@@ -742,12 +1018,15 @@ textarea{
 
         <div class="url-box">
 
-            <span>🌐</span>
+            <span>
+                🌐
+            </span>
 
             <input
-                type="url"
                 id="website"
+                type="url"
                 placeholder="https://example.com"
+                autocomplete="url"
             >
 
         </div>
@@ -757,11 +1036,20 @@ textarea{
 
         <div class="step">
 
-            <div class="step-number">2</div>
+            <div class="step-number">
+                2
+            </div>
 
             <div>
-                <h3>App Details</h3>
-                <p>Customize how your app will look.</p>
+
+                <h3>
+                    App Details
+                </h3>
+
+                <p>
+                    Customize your Android app.
+                </p>
+
             </div>
 
         </div>
@@ -778,6 +1066,7 @@ textarea{
                 <input
                     id="appName"
                     placeholder="My Awesome App"
+                    maxlength="40"
                 >
 
             </div>
@@ -803,6 +1092,14 @@ textarea{
 
         <label>
             App Icon
+            <span
+                style="
+                color:var(--muted);
+                font-weight:400;
+                "
+            >
+                (Optional)
+            </span>
         </label>
 
         <label
@@ -813,6 +1110,7 @@ textarea{
             <img
                 id="iconPreview"
                 class="icon-preview"
+                alt="App icon preview"
             >
 
             <div
@@ -827,12 +1125,13 @@ textarea{
             </strong>
 
             <small>
-                PNG or JPG • 512×512 recommended
+                PNG/JPG • 512×512 recommended
+                • Optional
             </small>
 
             <input
-                type="file"
                 id="iconInput"
+                type="file"
                 accept="image/png,image/jpeg"
             >
 
@@ -848,12 +1147,15 @@ textarea{
         <div class="loader-grid">
 
             <button
+                type="button"
                 class="loader-option selected"
                 data-loader="spinner"
             >
 
                 <div class="loader-icon">
+
                     <div class="spinner"></div>
+
                 </div>
 
                 Classic
@@ -862,6 +1164,7 @@ textarea{
 
 
             <button
+                type="button"
                 class="loader-option"
                 data-loader="dots"
             >
@@ -880,12 +1183,15 @@ textarea{
 
 
             <button
+                type="button"
                 class="loader-option"
                 data-loader="pulse"
             >
 
                 <div class="loader-icon">
+
                     <div class="pulse"></div>
+
                 </div>
 
                 Pulse
@@ -899,11 +1205,20 @@ textarea{
 
         <div class="step">
 
-            <div class="step-number">3</div>
+            <div class="step-number">
+                3
+            </div>
 
             <div>
-                <h3>Legal & Privacy</h3>
-                <p>Make your app look more complete and professional.</p>
+
+                <h3>
+                    Privacy & Features
+                </h3>
+
+                <p>
+                    Customize your app experience.
+                </p>
+
             </div>
 
         </div>
@@ -922,12 +1237,15 @@ textarea{
                     </strong>
 
                     <p>
-                        Write it yourself or generate a draft with AI.
+                        Write your own policy or
+                        generate a draft with AI.
                     </p>
 
                 </div>
 
+
                 <button
+                    type="button"
                     class="ai-btn"
                     onclick="generatePolicy()"
                 >
@@ -939,13 +1257,13 @@ textarea{
 
             <textarea
                 id="privacyPolicy"
-                placeholder="Write your privacy policy here...&#10;&#10;Or click 'Generate with AI' to create a draft."
+                placeholder="Write your privacy policy here..."
             ></textarea>
 
         </div>
 
 
-        <!-- EXTRA OPTIONS -->
+        <!-- FEATURES -->
 
         <label>
             App Features
@@ -956,8 +1274,8 @@ textarea{
             <label class="check">
 
                 <input
-                    type="checkbox"
                     id="homeButton"
+                    type="checkbox"
                     checked
                 >
 
@@ -971,13 +1289,13 @@ textarea{
             <label class="check">
 
                 <input
-                    type="checkbox"
                     id="refreshButton"
+                    type="checkbox"
                     checked
                 >
 
                 <span>
-                    🔄 Refresh button
+                    🔄 Refresh
                 </span>
 
             </label>
@@ -986,13 +1304,13 @@ textarea{
             <label class="check">
 
                 <input
-                    type="checkbox"
                     id="shareButton"
+                    type="checkbox"
                     checked
                 >
 
                 <span>
-                    📤 Share button
+                    📤 Share
                 </span>
 
             </label>
@@ -1001,8 +1319,8 @@ textarea{
             <label class="check">
 
                 <input
-                    type="checkbox"
                     id="ratingButton"
+                    type="checkbox"
                     checked
                 >
 
@@ -1016,8 +1334,8 @@ textarea{
             <label class="check">
 
                 <input
-                    type="checkbox"
                     id="browserButton"
+                    type="checkbox"
                     checked
                 >
 
@@ -1031,8 +1349,8 @@ textarea{
             <label class="check">
 
                 <input
-                    type="checkbox"
                     id="darkMode"
+                    type="checkbox"
                     checked
                 >
 
@@ -1045,9 +1363,10 @@ textarea{
         </div>
 
 
-        <!-- BUILD BUTTON -->
+        <!-- BUILD -->
 
         <button
+            type="button"
             class="build-btn"
             id="buildButton"
             onclick="buildApp()"
@@ -1096,8 +1415,8 @@ textarea{
             </h3>
 
             <p>
-                Professional app experience with
-                modern controls and navigation.
+                A clean and modern app builder
+                experience on mobile and desktop.
             </p>
 
         </div>
@@ -1110,12 +1429,12 @@ textarea{
             </div>
 
             <h3>
-                AI Privacy Policy
+                AI Privacy Draft
             </h3>
 
             <p>
-                Generate a privacy policy draft
-                instead of writing everything manually.
+                Quickly create a privacy policy
+                draft and customize it yourself.
             </p>
 
         </div>
@@ -1128,12 +1447,12 @@ textarea{
             </div>
 
             <h3>
-                APK Ready
+                APK Builder
             </h3>
 
             <p>
-                Configure your app and prepare it
-                for Android APK generation.
+                Send your configuration to the
+                backend for Android APK generation.
             </p>
 
         </div>
@@ -1142,7 +1461,9 @@ textarea{
 
 
     <div class="footer">
-        © 2026 AppForge • Website to Android App Builder
+
+        © 2026 AppForge
+
     </div>
 
 </main>
@@ -1150,18 +1471,47 @@ textarea{
 
 <script>
 
-/* ------------------------------
+/* ==========================================
+   BACKEND URL
+   ========================================== */
+
+/*
+   IMPORTANT:
+
+   Jab tum server.js ko hosting par deploy
+   karoge, yahan uska URL daalna.
+
+   Example:
+
+   const BACKEND_URL =
+       "https://your-server.example.com";
+
+*/
+
+const BACKEND_URL =
+    "YOUR_BACKEND_URL";
+
+
+/* ==========================================
    THEME
------------------------------- */
+   ========================================== */
 
 function toggleTheme(){
 
-    document.body.classList.toggle("dark");
+    document.body.classList.toggle(
+        "dark"
+    );
 
     const button =
-        document.getElementById("themeButton");
+        document.getElementById(
+            "themeButton"
+        );
 
-    if(document.body.classList.contains("dark")){
+    if(
+        document.body.classList.contains(
+            "dark"
+        )
+    ){
 
         button.textContent = "☀️";
 
@@ -1174,45 +1524,79 @@ function toggleTheme(){
 }
 
 
-/* ------------------------------
-   APP ICON
------------------------------- */
+/* ==========================================
+   APP ICON PREVIEW
+   ========================================== */
 
 const iconInput =
-    document.getElementById("iconInput");
+    document.getElementById(
+        "iconInput"
+    );
 
 const iconPreview =
-    document.getElementById("iconPreview");
+    document.getElementById(
+        "iconPreview"
+    );
 
 const uploadIcon =
-    document.getElementById("uploadIcon");
+    document.getElementById(
+        "uploadIcon"
+    );
 
 
 iconInput.addEventListener(
     "change",
     function(){
 
-        const file = this.files[0];
+        const file =
+            this.files[0];
 
         if(!file){
+
+            iconPreview.style.display =
+                "none";
+
+            uploadIcon.style.display =
+                "block";
+
             return;
         }
+
+
+        if(
+            !file.type.startsWith(
+                "image/"
+            )
+        ){
+
+            alert(
+                "Please select an image."
+            );
+
+            this.value = "";
+
+            return;
+        }
+
 
         const reader =
             new FileReader();
 
-        reader.onload = function(e){
 
-            iconPreview.src =
-                e.target.result;
+        reader.onload =
+            function(event){
 
-            iconPreview.style.display =
-                "block";
+                iconPreview.src =
+                    event.target.result;
 
-            uploadIcon.style.display =
-                "none";
+                iconPreview.style.display =
+                    "block";
 
-        };
+                uploadIcon.style.display =
+                    "none";
+
+            };
+
 
         reader.readAsDataURL(file);
 
@@ -1220,62 +1604,136 @@ iconInput.addEventListener(
 );
 
 
-/* ------------------------------
+/* ==========================================
    LOADER
------------------------------- */
+   ========================================== */
 
-let selectedLoader = "spinner";
+let selectedLoader =
+    "spinner";
 
 
 document
-    .querySelectorAll(".loader-option")
-    .forEach(button => {
+    .querySelectorAll(
+        ".loader-option"
+    )
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            function(){
+            button.addEventListener(
+                "click",
+                function(){
 
-                document
-                    .querySelectorAll(".loader-option")
-                    .forEach(item => {
+                    document
+                        .querySelectorAll(
+                            ".loader-option"
+                        )
+                        .forEach(
+                            item => {
 
-                        item.classList.remove(
-                            "selected"
+                                item.classList.remove(
+                                    "selected"
+                                );
+
+                            }
                         );
 
-                    });
 
-                this.classList.add(
-                    "selected"
+                    this.classList.add(
+                        "selected"
+                    );
+
+
+                    selectedLoader =
+                        this.dataset.loader;
+
+                }
+            );
+
+        }
+    );
+
+
+/* ==========================================
+   PACKAGE NAME
+   ========================================== */
+
+document
+    .getElementById("appName")
+    .addEventListener(
+        "input",
+        function(){
+
+            const packageInput =
+                document.getElementById(
+                    "packageName"
                 );
 
-                selectedLoader =
-                    this.dataset.loader;
+
+            if(
+                packageInput.dataset.manual !==
+                "true"
+            ){
+
+                let name =
+                    this.value
+                        .toLowerCase()
+                        .replace(
+                            /[^a-z0-9]+/g,
+                            ""
+                        );
+
+
+                if(!name){
+                    name = "myapp";
+                }
+
+
+                packageInput.value =
+                    "com.appforge." + name;
 
             }
-        );
 
-    });
+        }
+    );
 
 
-/* ------------------------------
-   AI PRIVACY POLICY DEMO
------------------------------- */
+document
+    .getElementById("packageName")
+    .addEventListener(
+        "input",
+        function(){
 
-function generatePolicy(){
+            this.dataset.manual =
+                "true";
+
+        }
+    );
+
+
+/* ==========================================
+   AI PRIVACY POLICY
+   ========================================== */
+
+async function generatePolicy(){
 
     const website =
         document
-            .getElementById("website")
+            .getElementById(
+                "website"
+            )
             .value
             .trim();
 
+
     const appName =
         document
-            .getElementById("appName")
+            .getElementById(
+                "appName"
+            )
             .value
             .trim() ||
         "Your App";
+
 
     const textarea =
         document.getElementById(
@@ -1290,20 +1748,94 @@ function generatePolicy(){
         );
 
         return;
+    }
+
+
+    /*
+       Agar backend available hai to
+       AI endpoint use karo.
+    */
+
+    if(
+        BACKEND_URL &&
+        BACKEND_URL !==
+        "YOUR_BACKEND_URL"
+    ){
+
+        try{
+
+            textarea.value =
+                "✨ AI privacy policy generate ho rahi hai...";
+
+
+            const response =
+                await fetch(
+                    BACKEND_URL +
+                    "/api/generate-policy",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:JSON.stringify({
+                            website:website,
+                            appName:appName
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if(
+                !response.ok
+            ){
+
+                throw new Error(
+                    data.error ||
+                    "AI generation failed"
+                );
+
+            }
+
+
+            textarea.value =
+                data.policy || "";
+
+
+            return;
+
+        }catch(error){
+
+            console.error(
+                error
+            );
+
+        }
 
     }
 
 
+    /*
+       Offline fallback draft.
+    */
+
     textarea.value =
 `Privacy Policy for ${appName}
 
-Last Updated: ${new Date().toLocaleDateString()}
+Last Updated:
+${new Date().toLocaleDateString()}
 
 This Privacy Policy explains how ${appName} handles information when users access the application.
 
 1. Information We Collect
 
-The application may collect information that is necessary to provide and improve the service.
+The application may collect information necessary to provide and improve its services.
 
 2. Website Content
 
@@ -1311,23 +1843,23 @@ This application displays content from:
 
 ${website}
 
-The website may have its own privacy policy and terms that also apply to its services.
+The website may maintain its own privacy policy and terms.
 
-3. Information Usage
+3. Use of Information
 
-Information may be used to provide functionality, maintain the application and improve the user experience.
+Information may be used to provide functionality, maintain the application and improve user experience.
 
 4. Third-Party Services
 
-The application may interact with third-party services provided by the website.
+The application may interact with third-party services used by the website.
 
 5. Data Security
 
-Reasonable measures may be used to protect information from unauthorized access.
+Reasonable security measures may be used to protect information.
 
 6. Children's Privacy
 
-This application is not intended to knowingly collect personal information from children.
+The application is not intended to knowingly collect personal information from children.
 
 7. Changes
 
@@ -1335,10 +1867,10 @@ This Privacy Policy may be updated from time to time.
 
 8. Contact
 
-If you have questions about this Privacy Policy, please contact the owner of the application.
+For privacy questions, contact the owner of the application.
 
-Important:
-This is an AI-generated draft and should be reviewed and customized for your actual app, website, data collection practices and applicable laws.`;
+IMPORTANT:
+This is a general draft. Review and customize it according to the actual data your app and website collect and the laws applicable to your service.`;
 
 
     textarea.focus();
@@ -1346,30 +1878,80 @@ This is an AI-generated draft and should be reviewed and customized for your act
 }
 
 
-/* ------------------------------
-   BUILD APP
------------------------------- */
+/* ==========================================
+   CREATE APK
+   ========================================== */
 
-function buildApp(){
+async function buildApp(){
 
     const website =
         document
-            .getElementById("website")
+            .getElementById(
+                "website"
+            )
             .value
             .trim();
+
 
     const appName =
         document
-            .getElementById("appName")
+            .getElementById(
+                "appName"
+            )
             .value
             .trim();
+
 
     const packageName =
         document
-            .getElementById("packageName")
+            .getElementById(
+                "packageName"
+            )
             .value
             .trim();
 
+
+    const privacyPolicy =
+        document
+            .getElementById(
+                "privacyPolicy"
+            )
+            .value;
+
+
+    const icon =
+        document
+            .getElementById(
+                "iconInput"
+            )
+            .files[0];
+
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    const statusText =
+        document.getElementById(
+            "statusText"
+        );
+
+
+    const progressBar =
+        document.getElementById(
+            "progressBar"
+        );
+
+
+    const buildButton =
+        document.getElementById(
+            "buildButton"
+        );
+
+
+    /* VALIDATION */
 
     if(!website){
 
@@ -1378,7 +1960,20 @@ function buildApp(){
         );
 
         return;
+    }
 
+
+    if(
+        !/^https?:\/\//i.test(
+            website
+        )
+    ){
+
+        alert(
+            "Website URL https:// se start hona chahiye."
+        );
+
+        return;
     }
 
 
@@ -1389,7 +1984,6 @@ function buildApp(){
         );
 
         return;
-
     }
 
 
@@ -1400,171 +1994,346 @@ function buildApp(){
         );
 
         return;
+    }
+
+
+    if(
+        !/^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/
+            .test(packageName)
+    ){
+
+        alert(
+            "Package Name invalid hai. Example: com.appforge.myapp"
+        );
+
+        return;
+    }
+
+
+    /* BACKEND CHECK */
+
+    if(
+        !BACKEND_URL ||
+        BACKEND_URL ===
+        "YOUR_BACKEND_URL"
+    ){
+
+        status.style.display =
+            "block";
+
+
+        statusText.innerHTML =
+            `
+            ⚠️ Backend connected nahi hai.
+
+            <br><br>
+
+            <small>
+            Pehle server.js ko Node.js hosting
+            par deploy karo aur JavaScript mein
+            BACKEND_URL set karo.
+            </small>
+            `;
+
+
+        progressBar.style.width =
+            "0%";
+
+
+        return;
+    }
+
+
+    /* FORM DATA */
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "website",
+        website
+    );
+
+
+    formData.append(
+        "appName",
+        appName
+    );
+
+
+    formData.append(
+        "packageName",
+        packageName
+    );
+
+
+    formData.append(
+        "loader",
+        selectedLoader
+    );
+
+
+    formData.append(
+        "privacyPolicy",
+        privacyPolicy
+    );
+
+
+    /* FEATURES */
+
+    formData.append(
+        "homeButton",
+        document.getElementById(
+            "homeButton"
+        ).checked
+    );
+
+
+    formData.append(
+        "refreshButton",
+        document.getElementById(
+            "refreshButton"
+        ).checked
+    );
+
+
+    formData.append(
+        "shareButton",
+        document.getElementById(
+            "shareButton"
+        ).checked
+    );
+
+
+    formData.append(
+        "ratingButton",
+        document.getElementById(
+            "ratingButton"
+        ).checked
+    );
+
+
+    formData.append(
+        "browserButton",
+        document.getElementById(
+            "browserButton"
+        ).checked
+    );
+
+
+    formData.append(
+        "darkMode",
+        document.getElementById(
+            "darkMode"
+        ).checked
+    );
+
+
+    /* ICON OPTIONAL */
+
+    if(icon){
+
+        formData.append(
+            "icon",
+            icon
+        );
 
     }
 
 
-    const buildButton =
-        document.getElementById(
-            "buildButton"
-        );
-
-    const status =
-        document.getElementById(
-            "status"
-        );
-
-    const statusText =
-        document.getElementById(
-            "statusText"
-        );
-
-    const progressBar =
-        document.getElementById(
-            "progressBar"
-        );
-
-
-    buildButton.disabled =
-        true;
+    /* UI */
 
     status.style.display =
         "block";
 
 
-    const steps = [
+    buildButton.disabled =
+        true;
 
-        {
-            text:"🔍 Checking website...",
-            progress:15
-        },
 
-        {
-            text:"🎨 Preparing app design...",
-            progress:30
-        },
+    progressBar.style.width =
+        "15%";
 
-        {
-            text:"🖼️ Processing app icon...",
-            progress:45
-        },
 
-        {
-            text:"⏳ Creating splash screen...",
-            progress:60
-        },
+    statusText.textContent =
+        "🔍 Checking website...";
 
-        {
-            text:"📱 Preparing Android project...",
-            progress:75
-        },
 
-        {
-            text:"⚙️ Preparing APK build...",
-            progress:90
-        },
+    try{
 
-        {
-            text:"✅ App configuration complete!",
-            progress:100
+        progressBar.style.width =
+            "30%";
+
+
+        statusText.textContent =
+            "🎨 Preparing Android app...";
+
+
+        const response =
+            await fetch(
+                BACKEND_URL +
+                "/api/build",
+                {
+                    method:"POST",
+                    body:formData
+                }
+            );
+
+
+        progressBar.style.width =
+            "70%";
+
+
+        statusText.textContent =
+            "⚙️ Building APK...";
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !response.ok
+        ){
+
+            throw new Error(
+                data.error ||
+                "APK build failed"
+            );
+
         }
 
-    ];
+
+        progressBar.style.width =
+            "100%";
 
 
-    let index = 0;
+        if(
+            data.download
+        ){
+
+            let downloadURL =
+                data.download;
 
 
-    function nextStep(){
+            if(
+                downloadURL.startsWith("/")
+            ){
 
-        if(index >= steps.length){
+                downloadURL =
+                    BACKEND_URL +
+                    downloadURL;
+
+            }
+
 
             statusText.innerHTML =
                 `
-                <strong>
-                    🎉 Your app is ready for APK building!
+                🎉 <strong>
+                APK Ready!
                 </strong>
+
+                <br>
+
+                <small>
+                Your Android app has been built.
+                </small>
+
+                <br>
+
+                <a
+                    class="download-btn"
+                    href="${downloadURL}"
+                    target="_blank"
+                    download
+                >
+                    📥 Download APK
+                </a>
+                `;
+
+        }else{
+
+            statusText.innerHTML =
+                `
+                ✅ Build started successfully.
 
                 <br><br>
 
                 <small>
-                    Real APK generation ke liye
-                    backend/Android build service connect
-                    karni hogi.
+                APK status:
+                ${data.jobId || "Processing"}
                 </small>
                 `;
-
-            buildButton.disabled =
-                false;
-
-            return;
 
         }
 
 
-        const step =
-            steps[index];
+    }catch(error){
 
-        statusText.textContent =
-            step.text;
-
-        progressBar.style.width =
-            step.progress + "%";
-
-        index++;
-
-        setTimeout(
-            nextStep,
-            700
+        console.error(
+            error
         );
 
+
+        progressBar.style.width =
+            "0%";
+
+
+        statusText.innerHTML =
+            `
+            ❌ <strong>
+            APK build failed
+            </strong>
+
+            <br><br>
+
+            <small>
+            ${escapeHTML(
+                error.message
+            )}
+            </small>
+            `;
+
+    }finally{
+
+        buildButton.disabled =
+            false;
+
     }
-
-
-    nextStep();
 
 }
 
 
-/* ------------------------------
-   PACKAGE NAME CLEANER
------------------------------- */
+/* ==========================================
+   SECURITY HELPER
+   ========================================== */
 
-document
-    .getElementById("appName")
-    .addEventListener(
-        "input",
-        function(){
+function escapeHTML(text){
 
-            const packageInput =
-                document.getElementById(
-                    "packageName"
-                );
+    return String(text)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
-            if(
-                packageInput.value.trim() === ""
-            ){
-
-                let name =
-                    this.value
-                        .toLowerCase()
-                        .replace(
-                            /[^a-z0-9]+/g,
-                            ""
-                        );
-
-                if(!name){
-                    name = "myapp";
-                }
-
-                packageInput.value =
-                    "com.appforge." + name;
-
-            }
-
-        }
-    );
-
+}
 
 </script>
 
