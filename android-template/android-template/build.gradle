@@ -1,3 +1,29 @@
 plugins {
-    id 'com.android.application' version '8.7.3' apply false
+    id 'com.android.application'
+}
+
+android {
+    namespace '__PACKAGE_NAME__'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId '__PACKAGE_NAME__'
+        minSdk 23
+        targetSdk 35
+
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.webkit:webkit:1.13.0'
 }
