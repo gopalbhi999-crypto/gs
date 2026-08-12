@@ -1,6 +1,7 @@
 const express = require("express");
-const multer = require("multer");
 const cors = require("cors");
+const multer = require("multer");
+const AdmZip = require("adm-zip");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
@@ -9,81 +10,65 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-const GITHUB_OWNER = process.env.GITHUB_OWNER;
-const GITHUB_REPO = process.env.GITHUB_REPO;
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const OWNER = process.env.GITHUB_OWNER;
+const REPO = process.env.GITHUB_REPO;
+const TOKEN = process.env.GITHUB_TOKEN;
 
-const PUBLIC_SERVER_URL =
-    process.env.PUBLIC_SERVER_URL || "";
+const WORKFLOW = "build-apk.yml";
 
-const WORKFLOW_FILE =
-    "build-apk.yml";
+const DATA_DIR = path.join(__dirname, "build-data");
 
-const ROOT =
-    __dirname;
-
-const BUILD_DIR =
-    path.join(ROOT, "build-data");
-
-if (!fs.existsSync(BUILD_DIR)) {
-    fs.mkdirSync(BUILD_DIR, {
-        recursive: true
-    });
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
 app.use(cors());
 
-app.use(
-    express.json({
-        limit: "2mb"
-    })
-);
+app.use(express.json({
+    limit: "2mb"
+}));
 
-const upload =
-    multer({
-        dest: BUILD_DIR,
-        limits: {
-            fileSize: 5 * 1024 * 1024
-        }
-    });
-
-
-function requiredConfig() {
-
-    if (
-        !GITHUB_OWNER ||
-        !GITHUB_REPO ||
-        !GITHUB_TOKEN
-    ) {
-
-        return false;
-
+const upload = multer({
+    dest: DATA_DIR,
+    limits: {
+        fileSize: 5 * 1024 * 1024
     }
+});
 
-    return true;
+
+function githubHeaders() {
+
+    return {
+        "Accept":
+            "application/vnd.github+json",
+
+        "Authorization":
+            `Bearer ${TOKEN}`,
+
+        "X-GitHub-Api-Version":
+            "2026-03-10"
+    };
 }
 
 
-function cleanPackageName(value) {
+function safe(value, max = 20000) {
 
     return String(value || "")
         .trim()
-        .replace(/[^a-zA-Z0-9_.]/g, "");
-
-}
-
-
-function safeText(value, max = 20000) {
-
-    return String(value || "")
         .slice(0, max);
 
 }
 
 
-/*
-    Health check
-*/
+function validPackage(value) {
+
+    return /^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/
+        .test(value);
+
+}
+
+
+/* HOME */
 
 app.get("/", (req, res) => {
 
@@ -95,27 +80,18 @@ app.get("/", (req, res) => {
 });
 
 
-/*
-    AI privacy policy fallback/API.
-    
-    Real AI provider baad mein add kar sakte ho.
-*/
+/* PRIVACY POLICY */
 
 app.post(
     "/api/generate-policy",
     (req, res) => {
 
         const appName =
-            safeText(
-                req.body.appName,
-                100
-            ) || "Your App";
+            safe(req.body.appName, 100) ||
+            "Your App";
 
         const website =
-            safeText(
-                req.body.website,
-                500
-            );
+            safe(req.body.website, 500);
 
         const policy = `
 Privacy Policy for ${appName}
@@ -161,7 +137,7 @@ This Privacy Policy may be updated from time to time.
 For privacy questions, contact the application owner.
 
 IMPORTANT:
-This is a general draft and should be reviewed and customized according to the actual data collected by your application and applicable laws.
+This is a general draft. Review and customize it according to the actual data collected by your app and applicable laws.
 `;
 
         res.json({
@@ -172,9 +148,7 @@ This is a general draft and should be reviewed and customized according to the a
 );
 
 
-/*
-    Create APK build
-*/
+/* CREATE BUILD */
 
 app.post(
     "/api/build",
@@ -183,45 +157,37 @@ app.post(
 
         try {
 
-            if (!requiredConfig()) {
+            if (
+                !OWNER ||
+                !REPO ||
+                !TOKEN
+            ) {
 
                 return res.status(500).json({
                     error:
-                        "Server configuration missing. Set GITHUB_OWNER, GITHUB_REPO and GITHUB_TOKEN."
+                        "GitHub server configuration missing."
                 });
 
             }
 
 
             const website =
-                safeText(
-                    req.body.website,
-                    1000
-                ).trim();
-
+                safe(req.body.website, 1000);
 
             const appName =
-                safeText(
-                    req.body.appName,
-                    80
-                ).trim();
-
+                safe(req.body.appName, 80);
 
             const packageName =
-                cleanPackageName(
-                    req.body.packageName
-                );
+                safe(req.body.packageName, 120);
 
 
             if (
-                !/^https?:\/\//i.test(
-                    website
-                )
+                !/^https?:\/\//i.test(website)
             ) {
 
                 return res.status(400).json({
                     error:
-                        "Website must start with http:// or https://"
+                        "Website URL must start with http:// or https://"
                 });
 
             }
@@ -237,10 +203,7 @@ app.post(
             }
 
 
-            if (
-                !/^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/
-                    .test(packageName)
-            ) {
+            if (!validPackage(packageName)) {
 
                 return res.status(400).json({
                     error:
@@ -256,65 +219,58 @@ app.post(
                     .toString("hex");
 
 
-            const buildFolder =
+            const folder =
                 path.join(
-                    BUILD_DIR,
+                    DATA_DIR,
                     buildId
                 );
 
 
             fs.mkdirSync(
-                buildFolder,
+                folder,
                 {
                     recursive: true
                 }
             );
 
 
-            let iconFile = null;
+            let iconName = null;
 
 
             if (req.file) {
 
-                const extension =
+                const ext =
                     path.extname(
                         req.file.originalname
-                    )
-                    .toLowerCase();
-
-
-                const allowed =
-                    [
-                        ".png",
-                        ".jpg",
-                        ".jpeg"
-                    ];
+                    ).toLowerCase();
 
 
                 if (
-                    !allowed.includes(
-                        extension
-                    )
+                    ![
+                        ".png",
+                        ".jpg",
+                        ".jpeg"
+                    ].includes(ext)
                 ) {
 
                     return res.status(400).json({
                         error:
-                            "Only PNG/JPG icons are supported."
+                            "Icon must be PNG or JPG."
                     });
 
                 }
 
 
-                iconFile =
-                    path.join(
-                        buildFolder,
-                        "icon" + extension
-                    );
+                iconName =
+                    `icon${ext}`;
 
 
                 fs.renameSync(
                     req.file.path,
-                    iconFile
+                    path.join(
+                        folder,
+                        iconName
+                    )
                 );
 
             }
@@ -331,13 +287,10 @@ app.post(
                 packageName,
 
                 loader:
-                    safeText(
-                        req.body.loader,
-                        30
-                    ),
+                    safe(req.body.loader, 30),
 
                 privacyPolicy:
-                    safeText(
+                    safe(
                         req.body.privacyPolicy,
                         20000
                     ),
@@ -367,18 +320,14 @@ app.post(
                     "true",
 
                 icon:
-                    iconFile
-                        ? path.basename(
-                            iconFile
-                        )
-                        : null
+                    iconName
 
             };
 
 
             fs.writeFileSync(
                 path.join(
-                    buildFolder,
+                    folder,
                     "config.json"
                 ),
                 JSON.stringify(
@@ -389,81 +338,46 @@ app.post(
             );
 
 
-            if (!PUBLIC_SERVER_URL) {
+            /* TRIGGER GITHUB ACTION */
 
-                return res.status(500).json({
-                    error:
-                        "PUBLIC_SERVER_URL is not configured."
-                });
-
-            }
-
-
-            /*
-                GitHub Actions workflow dispatch.
-            */
-
-            const githubURL =
+            const url =
                 `https://api.github.com/repos/` +
-                `${encodeURIComponent(GITHUB_OWNER)}/` +
-                `${encodeURIComponent(GITHUB_REPO)}/` +
-                `actions/workflows/` +
-                `${WORKFLOW_FILE}/dispatches`;
+                `${OWNER}/${REPO}/actions/workflows/` +
+                `${WORKFLOW}/dispatches`;
 
 
             const response =
                 await fetch(
-                    githubURL,
+                    url,
                     {
                         method: "POST",
 
-                        headers: {
-
-                            "Accept":
-                                "application/vnd.github+json",
-
-                            "Authorization":
-                                `Bearer ${GITHUB_TOKEN}`,
-
-                            "X-GitHub-Api-Version":
-                                "2026-03-10",
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
+                        headers:
+                            githubHeaders(),
 
                         body:
                             JSON.stringify({
-
                                 ref: "main",
 
                                 inputs: {
-
                                     build_id:
                                         buildId
-
                                 }
-
                             })
-
                     }
                 );
 
 
             if (!response.ok) {
 
-                const errorText =
+                const text =
                     await response.text();
 
-                console.error(
-                    errorText
-                );
-
+                console.error(text);
 
                 return res.status(500).json({
                     error:
-                        "Could not start GitHub Actions build."
+                        "GitHub Actions could not be started."
                 });
 
             }
@@ -473,8 +387,7 @@ app.post(
 
                 success: true,
 
-                jobId:
-                    buildId,
+                buildId,
 
                 message:
                     "APK build started."
@@ -484,10 +397,7 @@ app.post(
 
         } catch (error) {
 
-            console.error(
-                error
-            );
-
+            console.error(error);
 
             res.status(500).json({
                 error:
@@ -500,12 +410,7 @@ app.post(
 );
 
 
-/*
-    Build configuration endpoint.
-
-    GitHub Actions runner uses this to
-    download the requested build config.
-*/
+/* GET BUILD CONFIG */
 
 app.get(
     "/api/build-config/:id",
@@ -519,53 +424,33 @@ app.get(
             !/^[a-f0-9]{32}$/i.test(id)
         ) {
 
-            return res.status(400).json({
-                error:
-                    "Invalid build ID."
-            });
+            return res.status(400).end();
 
         }
 
 
-        const folder =
+        const file =
             path.join(
-                BUILD_DIR,
-                id
-            );
-
-
-        const configFile =
-            path.join(
-                folder,
+                DATA_DIR,
+                id,
                 "config.json"
             );
 
 
-        if (
-            !fs.existsSync(
-                configFile
-            )
-        ) {
+        if (!fs.existsSync(file)) {
 
-            return res.status(404).json({
-                error:
-                    "Build not found."
-            });
+            return res.status(404).end();
 
         }
 
 
-        res.sendFile(
-            configFile
-        );
+        res.sendFile(file);
 
     }
 );
 
 
-/*
-    Download uploaded icon.
-*/
+/* GET ICON */
 
 app.get(
     "/api/build-icon/:id",
@@ -586,26 +471,27 @@ app.get(
 
         const folder =
             path.join(
-                BUILD_DIR,
+                DATA_DIR,
                 id
             );
 
 
+        if (!fs.existsSync(folder)) {
+
+            return res.status(404).end();
+
+        }
+
+
         const files =
-            fs.readdirSync(
-                folder,
-                {
-                    withFileTypes: true
-                }
-            );
+            fs.readdirSync(folder);
 
 
         const icon =
             files.find(
-                file =>
-                    file.name.startsWith(
-                        "icon."
-                    )
+                x =>
+                    /^icon\.(png|jpg|jpeg)$/i
+                        .test(x)
             );
 
 
@@ -619,7 +505,7 @@ app.get(
         res.sendFile(
             path.join(
                 folder,
-                icon.name
+                icon
             )
         );
 
@@ -627,49 +513,351 @@ app.get(
 );
 
 
-/*
-    Build status endpoint.
-    
-    GitHub Actions status integration
-    next step mein add kar sakte hain.
-*/
+/* BUILD STATUS */
 
 app.get(
     "/api/build/:id",
-    (req, res) => {
+    async (req, res) => {
 
-        const id =
-            req.params.id;
+        try {
 
-
-        const config =
-            path.join(
-                BUILD_DIR,
-                id,
-                "config.json"
-            );
+            const id =
+                req.params.id;
 
 
-        if (
-            !fs.existsSync(config)
-        ) {
+            if (
+                !/^[a-f0-9]{32}$/i.test(id)
+            ) {
 
-            return res.status(404).json({
+                return res.status(400).json({
+                    error:
+                        "Invalid build ID."
+                });
+
+            }
+
+
+            const url =
+                `https://api.github.com/repos/` +
+                `${OWNER}/${REPO}/actions/runs` +
+                `?event=workflow_dispatch&per_page=20`;
+
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        headers:
+                            githubHeaders()
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                return res.status(500).json({
+                    error:
+                        "Could not check GitHub Actions."
+                });
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            const run =
+                data.workflow_runs.find(
+                    r =>
+                        r.name &&
+                        r.event ===
+                        "workflow_dispatch"
+                );
+
+
+            /*
+             * GitHub does not expose our build ID
+             * directly in the run list here.
+             *
+             * So look for the artifact instead.
+             */
+
+            const artifactsURL =
+                `https://api.github.com/repos/` +
+                `${OWNER}/${REPO}/actions/artifacts` +
+                `?name=appforge-apk-${id}`;
+
+
+            const artifactResponse =
+                await fetch(
+                    artifactsURL,
+                    {
+                        headers:
+                            githubHeaders()
+                    }
+                );
+
+
+            if (artifactResponse.ok) {
+
+                const artifacts =
+                    await artifactResponse.json();
+
+
+                const artifact =
+                    artifacts.artifacts &&
+                    artifacts.artifacts[0];
+
+
+                if (
+                    artifact &&
+                    !artifact.expired
+                ) {
+
+                    return res.json({
+
+                        status:
+                            "completed",
+
+                        download:
+                            `/api/download/${id}`
+
+                    });
+
+                }
+
+            }
+
+
+            /*
+             * Check recent runs.
+             */
+
+            if (run) {
+
+                if (
+                    run.status ===
+                    "completed"
+                ) {
+
+                    if (
+                        run.conclusion ===
+                        "success"
+                    ) {
+
+                        return res.json({
+                            status:
+                                "completed",
+
+                            download:
+                                `/api/download/${id}`
+                        });
+
+                    }
+
+
+                    return res.json({
+                        status:
+                            "failed"
+                    });
+
+                }
+
+            }
+
+
+            res.json({
+                status:
+                    "processing"
+            });
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            res.status(500).json({
                 error:
-                    "Build not found."
+                    "Status check failed."
             });
 
         }
 
+    }
+);
 
-        res.json({
 
-            buildId: id,
+/* DOWNLOAD APK */
 
-            status:
-                "processing"
+app.get(
+    "/api/download/:id",
+    async (req, res) => {
 
-        });
+        try {
+
+            const id =
+                req.params.id;
+
+
+            if (
+                !/^[a-f0-9]{32}$/i.test(id)
+            ) {
+
+                return res.status(400).end();
+
+            }
+
+
+            const artifactURL =
+                `https://api.github.com/repos/` +
+                `${OWNER}/${REPO}/actions/artifacts` +
+                `?name=appforge-apk-${id}`;
+
+
+            const listResponse =
+                await fetch(
+                    artifactURL,
+                    {
+                        headers:
+                            githubHeaders()
+                    }
+                );
+
+
+            if (!listResponse.ok) {
+
+                return res.status(404).send(
+                    "APK not ready."
+                );
+
+            }
+
+
+            const data =
+                await listResponse.json();
+
+
+            const artifact =
+                data.artifacts &&
+                data.artifacts[0];
+
+
+            if (
+                !artifact ||
+                artifact.expired
+            ) {
+
+                return res.status(404).send(
+                    "APK not ready or expired."
+                );
+
+            }
+
+
+            const downloadURL =
+                `https://api.github.com/repos/` +
+                `${OWNER}/${REPO}/actions/artifacts/` +
+                `${artifact.id}/zip`;
+
+
+            const zipResponse =
+                await fetch(
+                    downloadURL,
+                    {
+                        headers:
+                            githubHeaders()
+                    }
+                );
+
+
+            if (!zipResponse.ok) {
+
+                return res.status(500).send(
+                    "Could not download artifact."
+                );
+
+            }
+
+
+            const arrayBuffer =
+                await zipResponse.arrayBuffer();
+
+
+            const zipPath =
+                path.join(
+                    DATA_DIR,
+                    `${id}.zip`
+                );
+
+
+            fs.writeFileSync(
+                zipPath,
+                Buffer.from(
+                    arrayBuffer
+                )
+            );
+
+
+            const zip =
+                new AdmZip(zipPath);
+
+
+            const entries =
+                zip.getEntries();
+
+
+            const apkEntry =
+                entries.find(
+                    entry =>
+                        entry.entryName
+                            .toLowerCase()
+                            .endsWith(".apk")
+                );
+
+
+            if (!apkEntry) {
+
+                fs.unlinkSync(zipPath);
+
+                return res.status(404).send(
+                    "APK file not found."
+                );
+
+            }
+
+
+            const apk =
+                apkEntry.getData();
+
+
+            fs.unlinkSync(zipPath);
+
+
+            res.setHeader(
+                "Content-Type",
+                "application/vnd.android.package-archive"
+            );
+
+
+            res.setHeader(
+                "Content-Disposition",
+                'attachment; filename="app-release.apk"'
+            );
+
+
+            res.send(apk);
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            res.status(500).send(
+                "APK download failed."
+            );
+
+        }
 
     }
 );
@@ -680,7 +868,7 @@ app.listen(
     () => {
 
         console.log(
-            `AppForge API running on port ${PORT}`
+            `AppForge server running on port ${PORT}`
         );
 
     }
