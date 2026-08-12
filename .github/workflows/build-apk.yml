@@ -1,179 +1,39 @@
-name: Build GOPAL APK
+name: Build GOPL APK
 
 on:
-
   workflow_dispatch:
 
-    inputs:
-
-      build_id:
-        description: "AppForge Build ID"
-        required: true
-        type: string
-
-
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
 
     steps:
 
       - name: Checkout
         uses: actions/checkout@v4
 
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: '17'
 
-
-      - name: Setup Android
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-
-      - name: Install Android SDK
-        run: |
-          sdkmanager "platforms;android-35"
-          sdkmanager "build-tools;35.0.0"
-
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: "8.10"
-
-
-      - name: Download AppForge configuration
-        env:
-
-          BUILD_SERVER:
-            ${{ secrets.BUILD_SERVER_URL }}
-
-          BUILD_ID:
-            ${{ inputs.build_id }}
-
-        run: |
-
-          curl -fL \
-            "$BUILD_SERVER/api/build-config/$BUILD_ID" \
-            -o build-config.json
-
-          cat build-config.json
-
-
-      - name: Configure Android project
-        env:
-          BUILD_SERVER:
-            ${{ secrets.BUILD_SERVER_URL }}
-
-          BUILD_ID:
-            ${{ inputs.build_id }}
-
-        run: |
-
-          node <<'NODE'
-
-          const fs =
-            require("fs");
-
-          const config =
-            JSON.parse(
-              fs.readFileSync(
-                "build-config.json",
-                "utf8"
-              )
-            );
-
-
-          /*
-           * build.gradle
-           */
-
-          let gradle =
-            fs.readFileSync(
-              "android-template/app/build.gradle",
-              "utf8"
-            );
-
-          gradle =
-            gradle.replaceAll(
-              "__PACKAGE_NAME__",
-              config.packageName
-            );
-
-          fs.writeFileSync(
-            "android-template/app/build.gradle",
-            gradle
-          );
-
-
-          /*
-           * MainActivity
-           */
-
-          let java =
-            fs.readFileSync(
-              "android-template/app/src/main/java/com/appforge/template/MainActivity.java",
-              "utf8"
-            );
-
-          java =
-            java.replaceAll(
-              "__WEBSITE_URL__",
-              config.website
-            );
-
-          fs.writeFileSync(
-            "android-template/app/src/main/java/com/appforge/template/MainActivity.java",
-            java
-          );
-
-
-          /*
-           * Manifest
-           */
-
-          let manifest =
-            fs.readFileSync(
-              "android-template/app/src/main/AndroidManifest.xml",
-              "utf8"
-            );
-
-          manifest =
-            manifest.replaceAll(
-              "__APP_NAME__",
-              config.appName
-            );
-
-          fs.writeFileSync(
-            "android-template/app/src/main/AndroidManifest.xml",
-            manifest
-          );
-
-          NODE
-
-
-      - name: Build Release APK
+      - name: Create Gradle Wrapper
         working-directory: android-template
         run: |
-          gradle assembleRelease
+          gradle wrapper --gradle-version 8.9
 
+      - name: Build Debug APK
+        working-directory: android-template
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-
-          name:
-            appforge-apk-${{ inputs.build_id }}
-
-          path:
-            android-template/app/build/outputs/apk/release/*.apk
-
-          retention-days: 7
+          name: AppForge-APK
+          path: android-template/app/build/outputs/apk/debug/app-debug.apk
