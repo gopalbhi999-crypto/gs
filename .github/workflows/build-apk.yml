@@ -1,18 +1,25 @@
-name: Build Gopal apk
+name: Build GOPAL APK
 
 on:
+
   workflow_dispatch:
+
     inputs:
+
       build_id:
-        description: "AppForge build ID"
+        description: "AppForge Build ID"
         required: true
         type: string
+
 
 jobs:
 
   build:
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
 
     steps:
 
@@ -43,27 +50,38 @@ jobs:
           gradle-version: "8.10"
 
 
-      - name: Download build configuration
+      - name: Download AppForge configuration
         env:
-          BUILD_SERVER_URL: ${{ secrets.BUILD_SERVER_URL }}
-          BUILD_ID: ${{ inputs.build_id }}
+
+          BUILD_SERVER:
+            ${{ secrets.BUILD_SERVER_URL }}
+
+          BUILD_ID:
+            ${{ inputs.build_id }}
+
         run: |
+
           curl -fL \
-            "$BUILD_SERVER_URL/api/build-config/$BUILD_ID" \
+            "$BUILD_SERVER/api/build-config/$BUILD_ID" \
             -o build-config.json
 
           cat build-config.json
 
 
-      - name: Prepare Android project
+      - name: Configure Android project
         env:
-          BUILD_SERVER_URL: ${{ secrets.BUILD_SERVER_URL }}
-          BUILD_ID: ${{ inputs.build_id }}
+          BUILD_SERVER:
+            ${{ secrets.BUILD_SERVER_URL }}
+
+          BUILD_ID:
+            ${{ inputs.build_id }}
+
         run: |
 
           node <<'NODE'
 
-          const fs = require("fs");
+          const fs =
+            require("fs");
 
           const config =
             JSON.parse(
@@ -73,80 +91,89 @@ jobs:
               )
             );
 
-          const file =
-            "android-template/app/build.gradle";
+
+          /*
+           * build.gradle
+           */
 
           let gradle =
             fs.readFileSync(
-              file,
+              "android-template/app/build.gradle",
               "utf8"
             );
 
           gradle =
-            gradle.replace(
+            gradle.replaceAll(
               "__PACKAGE_NAME__",
               config.packageName
             );
 
           fs.writeFileSync(
-            file,
+            "android-template/app/build.gradle",
             gradle
           );
 
 
-          const activity =
-            "android-template/app/src/main/java/com/appforge/template/MainActivity.java";
+          /*
+           * MainActivity
+           */
 
           let java =
             fs.readFileSync(
-              activity,
+              "android-template/app/src/main/java/com/appforge/template/MainActivity.java",
               "utf8"
             );
 
           java =
-            java.replace(
+            java.replaceAll(
               "__WEBSITE_URL__",
               config.website
             );
 
           fs.writeFileSync(
-            activity,
+            "android-template/app/src/main/java/com/appforge/template/MainActivity.java",
             java
           );
 
 
-          const manifest =
-            "android-template/app/src/main/AndroidManifest.xml";
+          /*
+           * Manifest
+           */
 
-          let xml =
+          let manifest =
             fs.readFileSync(
-              manifest,
+              "android-template/app/src/main/AndroidManifest.xml",
               "utf8"
             );
 
-          xml =
-            xml.replace(
+          manifest =
+            manifest.replaceAll(
               "__APP_NAME__",
               config.appName
             );
 
           fs.writeFileSync(
-            manifest,
-            xml
+            "android-template/app/src/main/AndroidManifest.xml",
+            manifest
           );
 
           NODE
 
 
-      - name: Build APK
+      - name: Build Release APK
         working-directory: android-template
         run: |
           gradle assembleRelease
 
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: appforge-apk-${{ inputs.build_id }}
-          path: android-template/app/build/outputs/apk/release/*.apk
+
+          name:
+            appforge-apk-${{ inputs.build_id }}
+
+          path:
+            android-template/app/build/outputs/apk/release/*.apk
+
           retention-days: 7
