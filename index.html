@@ -1,163 +1,708 @@
-<!DOCTYPE html>
-<html lang="hi">
+<<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desi App Maker - Apni App Khud Banao</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>AppForge - Website to App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Container -->
-    <div class="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
+<body>
 
-        <!-- Left Side: Wizard Steps -->
-        <div class="p-8 flex flex-col justify-between">
-            <div>
-                <!-- Header -->
-                <div class="flex items-center space-x-2 mb-6">
-                    <i class="fa-solid fa-mobile-screen-button text-indigo-500 text-2xl"></i>
-                    <h1 class="text-xl font-bold">App Creator Studio</h1>
-                </div>
+<div class="app">
 
-                <!-- STEP 1: App Info & Icon -->
-                <div id="step1" class="space-y-4">
-                    <h2 class="text-lg font-semibold text-indigo-400">Step 1: App ki Details aur Photo</h2>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">App Ka Naam</label>
-                        <input type="text" id="appNameInput" placeholder="Jaise: Mera Khata, MyNotes" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Home Screen App Icon (Photo URL)</label>
-                        <input type="text" id="appIconInput" placeholder="Image ka direct link paste karein (Imgur etc.)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <button onclick="nextStep(2)" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer mt-4">Aage Badhein <i class="fa-solid fa-arrow-right ml-1"></i></button>
-                </div>
-
-                <!-- STEP 2: App Loader Screen -->
-                <div id="step2" class="space-y-4 hidden">
-                    <h2 class="text-lg font-semibold text-indigo-400">Step 2: App Loader / Splash Screen</h2>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Loader ka Text / Tagline</label>
-                        <input type="text" id="loaderTextInput" placeholder="Jaise: Loading your app, Please wait..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div class="flex space-x-2 mt-4">
-                        <button onclick="prevStep(1)" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer">Piche</button>
-                        <button onclick="nextStep(3)" class="w-1/2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer">Aage Badhein</button>
-                    </div>
-                </div>
-
-                <!-- STEP 3: Main App Feature/Function -->
-                <div id="step3" class="space-y-4 hidden">
-                    <h2 class="text-lg font-semibold text-indigo-400">Step 3: App ke Andar Kya Chale?</h2>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">App ka Idea / Function batayein</label>
-                        <textarea id="appIdeaInput" rows="4" placeholder="Jaise: Ek calculator app banao ya ek note pad jisme text save ho sake..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 resize-none"></textarea>
-                    </div>
-                    <div class="flex space-x-2 mt-4">
-                        <button onclick="prevStep(2)" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer">Piche</button>
-                        <button onclick="buildApp()" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer shadow-lg shadow-emerald-600/20"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> App Banayein</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-xs text-slate-500 mt-6 text-center">
-                GitHub Pages par free host karein!
-            </div>
-        </div>
-
-        <!-- Right Side: Phone Mockup Preview -->
-        <div class="bg-slate-950 p-6 flex flex-col items-center justify-center border-l border-slate-800">
-            <span class="text-xs text-slate-400 mb-3 font-medium"><i class="fa-solid fa-eye text-indigo-400 mr-1"></i> Live Phone Preview</span>
-            
-            <!-- Phone Outer Frame -->
-            <div class="w-[260px] h-[500px] bg-black border-4 border-slate-700 rounded-[40px] p-3 shadow-2xl relative flex flex-col overflow-hidden">
-                <!-- Phone Speaker Notch -->
-                <div class="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-4 bg-slate-800 rounded-full z-20"></div>
-
-                <!-- Phone Screen Inside -->
-                <div id="phoneScreen" class="w-full h-full bg-slate-900 rounded-[30px] overflow-hidden relative flex flex-col justify-center items-center text-center p-4">
-                    
-                    <!-- Default View: Home Screen Icon Simulator -->
-                    <div id="phoneHomeScreenView" class="flex flex-col items-center space-y-2">
-                        <div id="previewIconBox" class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg text-white text-2xl font-bold overflow-hidden">
-                            <i class="fa-solid fa-mobile"></i>
-                        </div>
-                        <span id="previewAppName" class="text-xs font-semibold text-slate-200">Aapka App</span>
-                        <span class="text-[10px] text-slate-500 mt-4">(App banane ke baad yahan click karke kholein)</span>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
+  <header class="topbar">
+    <div class="logo">
+      <span>⚡</span>
+      AppForge
     </div>
 
-    <!-- JavaScript Logic -->
-    <script>
-        function nextStep(step) {
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('step3').classList.add('hidden');
+    <button class="theme-btn" onclick="toggleTheme()">
+      ☀️
+    </button>
+  </header>
 
-            document.getElementById('step' + step).classList.remove('hidden');
+  <main>
 
-            // Update live phone preview icon/name dynamically
-            const appName = document.getElementById('appNameInput').value || 'Aapka App';
-            const iconUrl = document.getElementById('appIconInput').value;
-            
-            document.getElementById('previewAppName').innerText = appName;
-            if(iconUrl) {
-                document.getElementById('previewIconBox').innerHTML = `<img src="${iconUrl}" class="w-full h-full object-cover">`;
-            }
-        }
+    <section class="hero">
+      <div class="badge">⚡ Website → Android App</div>
 
-        function prevStep(step) {
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('step3').classList.add('hidden');
+      <h1>
+        Turn your website into an
+        <span>Android App</span>
+      </h1>
 
-            document.getElementById('step' + step).classList.remove('hidden');
-        }
+      <p>
+        Enter your website, customize your app and get your APK.
+      </p>
+    </section>
 
-        function buildApp() {
-            const loaderText = document.getElementById('loaderTextInput').value || 'Loading App...';
-            const appIdea = document.getElementById('appIdeaInput').value || 'Simple App';
-            const appName = document.getElementById('appNameInput').value || 'Mera App';
-            const phoneScreen = document.getElementById('phoneScreen');
+    <section class="builder-card">
 
-            // Step A: Show Loader inside phone
-            phoneScreen.innerHTML = `
-                <div class="flex flex-col items-center justify-center space-y-4">
-                    <i class="fa-solid fa-circle-notch animate-spin text-3xl text-indigo-500"></i>
-                    <p class="text-xs text-slate-300 font-medium">${loaderText}</p>
-                </div>
-            `;
+      <div class="step active">
+        <div class="step-number">1</div>
 
-            // Step B: After 1.5 seconds, open the generated app inside the phone screen!
-            setTimeout(() => {
-                phoneScreen.innerHTML = `
-                    <div class="w-full h-full flex flex-col bg-slate-900 text-left p-3 overflow-y-auto">
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
-                            <span class="text-xs font-bold text-indigo-400">${appName}</span>
-                            <button onclick="location.reload()" class="text-[10px] text-red-400 bg-red-500/10 px-2 py-0.5 rounded">Band Karein</button>
-                        </div>
-                        <div class="text-xs text-slate-400 mb-2">Feature: <span class="text-slate-200">${appIdea}</span></div>
-                        
-                        <!-- Interactive Functional Simulated App Box -->
-                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex-grow flex flex-col justify-between">
-                            <div>
-                                <h3 class="text-xs font-bold text-white mb-2">Swagat hai!</h3>
-                                <input type="text" id="userTypedText" placeholder="Kuch yahan type karein..." class="w-full bg-slate-900 border border-slate-800 p-2 rounded text-xs text-white mb-2">
-                            </div>
-                            <button onclick="alert('Aapka data save ho gaya!')" class="w-full bg-indigo-600 text-white text-xs py-2 rounded font-medium">Action Button</button>
-                        </div>
-                    </div>
-                `;
-            }, 1500);
-        }
-    </script>
+        <div>
+          <h3>Website</h3>
+          <p>Enter your website URL</p>
+        </div>
+      </div>
+
+      <label>Website URL</label>
+
+      <div class="url-input">
+        <span>🌐</span>
+        <input
+          id="website"
+          type="url"
+          placeholder="https://example.com"
+        >
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+
+        <div>
+          <h3>App Details</h3>
+          <p>Customize your Android app</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+
+        <div>
+          <label>App Name</label>
+          <input
+            id="appName"
+            placeholder="My Awesome App"
+          >
+        </div>
+
+        <div>
+          <label>Package Name</label>
+          <input
+            id="packageName"
+            placeholder="com.example.myapp"
+          >
+        </div>
+
+      </div>
+
+      <label>App Icon</label>
+
+      <div class="upload">
+        <input
+          type="file"
+          id="icon"
+          accept="image/png,image/jpeg"
+        >
+
+        <div>
+          <strong>Upload App Icon</strong>
+          <small>PNG or JPG • 512×512 recommended</small>
+        </div>
+      </div>
+
+      <label>Loader Style</label>
+
+      <div class="loader-options">
+
+        <button class="loader selected" data-loader="spinner">
+          <span class="spinner"></span>
+          Classic
+        </button>
+
+        <button class="loader" data-loader="dots">
+          <span>•••</span>
+          Dots
+        </button>
+
+        <button class="loader" data-loader="pulse">
+          <span class="pulse"></span>
+          Pulse
+        </button>
+
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+
+        <div>
+          <h3>Legal Pages</h3>
+          <p>Optional but recommended</p>
+        </div>
+      </div>
+
+      <div class="policy-box">
+
+        <div class="policy-header">
+          <div>
+            <strong>Privacy Policy</strong>
+            <p>Generate a professional privacy policy with AI</p>
+          </div>
+
+          <button onclick="generatePolicy()">
+            🤖 Generate with AI
+          </button>
+        </div>
+
+        <textarea
+          id="privacyPolicy"
+          placeholder="You can write your privacy policy here..."
+        ></textarea>
+
+      </div>
+
+      <button class="build-btn" onclick="buildApp()">
+        🚀 Create My APK
+      </button>
+
+      <div id="status"></div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --primary: #635bff;
+  --border: #e5e7eb;
+}
+
+.dark {
+  --bg: #09090b;
+  --card: #18181b;
+  --text: #fafafa;
+  --muted: #a1a1aa;
+  --border: #27272a;
+}
+
+body {
+  font-family: Inter, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: .3s;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.topbar {
+  height: 72px;
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+}
+
+.logo {
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.logo span {
+  color: var(--primary);
+}
+
+.theme-btn {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 13px;
+  cursor: pointer;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 70px 20px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 14px;
+  background: #eeecff;
+  color: var(--primary);
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: clamp(36px, 6vw, 62px);
+  line-height: 1.05;
+  letter-spacing: -2px;
+}
+
+.hero h1 span {
+  color: var(--primary);
+}
+
+.hero p {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.builder-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.07);
+}
+
+.step {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin: 28px 0 18px;
+}
+
+.step-number {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+}
+
+.step h3 {
+  font-size: 16px;
+}
+
+.step p,
+.policy-header p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 15px 0 8px;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 14px;
+  outline: none;
+  font-size: 14px;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--primary);
+}
+
+.url-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding-left: 14px;
+  border-radius: 12px;
+}
+
+.url-input input {
+  border: none;
+  background: transparent;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.upload {
+  border: 2px dashed var(--border);
+  padding: 25px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.upload small {
+  display: block;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.loader-options {
+  display: flex;
+  gap: 10px;
+}
+
+.loader {
+  flex: 1;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.loader.selected {
+  border-color: var(--primary);
+  background: #eeecff;
+}
+
+.policy-box {
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.policy-header {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.policy-header button {
+  background: var(--primary);
+  color: white;
+  border: 0;
+  padding: 10px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+textarea {
+  border: none;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  min-height: 180px;
+  resize: vertical;
+}
+
+.build-btn {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#635bff,#8b5cf6);
+  color: white;
+  padding: 17px;
+  margin-top: 25px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(99,91,255,.3);
+}
+
+#status {
+  text-align: center;
+  margin-top: 15px;
+  color: var(--muted);
+}
+
+@media(max-width:650px) {
+  main {
+    padding: 35px 12px;
+  }
+
+  .builder-card {
+    padding: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .loader-options {
+    flex-direction: column;
+  }
+
+  .policy-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+let selectedLoader = "spinner";
+
+document.querySelectorAll(".loader").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    document
+      .querySelectorAll(".loader")
+      .forEach(x => x.classList.remove("selected"));
+
+    button.classList.add("selected");
+
+    selectedLoader = button.dataset.loader;
+  });
+
+});
+
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+}
+
+async function generatePolicy() {
+
+  const website = document.getElementById("website").value;
+
+  if (!website) {
+    alert("Pehle website URL enter karo.");
+    return;
+  }
+
+  const textarea = document.getElementById("privacyPolicy");
+
+  textarea.value = "AI privacy policy generate kar raha hai...";
+
+  try {
+
+    const response = await fetch("/api/generate-policy", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        website
+      })
+    });
+
+    const data = await response.json();
+
+    textarea.value = data.policy;
+
+  } catch (error) {
+
+    textarea.value =
+      "Privacy policy generate nahi ho saki. Please manually enter it.";
+
+  }
+}
+
+async function buildApp() {
+
+  const website =
+    document.getElementById("website").value.trim();
+
+  const appName =
+    document.getElementById("appName").value.trim();
+
+  const packageName =
+    document.getElementById("packageName").value.trim();
+
+  const privacyPolicy =
+    document.getElementById("privacyPolicy").value;
+
+  if (!website || !appName || !packageName) {
+    alert("Website, App Name aur Package Name required hain.");
+    return;
+  }
+
+  const status = document.getElementById("status");
+
+  status.innerHTML =
+    "⏳ App project prepare ho raha hai...";
+
+  const formData = new FormData();
+
+  formData.append("website", website);
+  formData.append("appName", appName);
+  formData.append("packageName", packageName);
+  formData.append("loader", selectedLoader);
+  formData.append("privacyPolicy", privacyPolicy);
+
+  const icon =
+    document.getElementById("icon").files[0];
+
+  if (icon) {
+    formData.append("icon", icon);
+  }
+
+  try {
+
+    const response = await fetch("/api/build", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error);
+    }
+
+    status.innerHTML = `
+      ✅ App successfully created.
+      <br><br>
+      <a href="${data.downloadUrl}">
+        Download APK
+      </a>
+    `;
+
+  } catch (error) {
+
+    status.innerHTML =
+      "❌ " + error.message;
+
+  }
+}
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const crypto = require("crypto");
+
+const app = express();
+
+const upload = multer({
+  dest: "uploads/"
+});
+
+app.use(express.json());
+app.use(express.static("frontend"));
+
+app.post("/api/generate-policy", async (req, res) => {
+
+  const { website } = req.body;
+
+  if (!website) {
+    return res.status(400).json({
+      error: "Website URL required"
+    });
+  }
+
+  /*
+    Yahan OpenAI API call add kar sakte ho.
+    API key ko frontend mein kabhi expose mat karna.
+  */
+
+  const policy = `
+Privacy Policy
+
+This Privacy Policy explains how ${website}
+handles information when you use our application.
+
+Information We Collect
+
+The application may collect information required
+to provide and improve the service.
+
+Third Party Services
+
+The application may display content from the
+website and third-party services.
+
+Data Security
+
+We take reasonable measures to protect information.
+
+Changes to This Policy
+
+This Privacy Policy may be updated from time to time.
+
+Contact
+
+For privacy-related questions, please contact
+the website owner.
+`;
+
+  res.json({ policy });
+});
+
+app.post(
+  "/api/build",
+  upload.single("icon"),
+  async (req, res) => {
+
+    try {
+
+      const {
+        website,
+        appName,
+        packageName,
+        loader,
+        privacyPolicy
+      } = req.body;
+
+      if (!website || !appName || !packageName) {
+        return res.status(400).json({
+          error: "Missing required fields"
+        });
+      }
+
+      const id = crypto
+        .randomBytes(8)
+        .toString("hex");
+
+      /*
+        Production version mein:
+        1. Android template copy karo
+        2. Website URL inject karo
+        3. App name inject karo
+        4. Package name inject karo
+        5. Icon replace karo
+        6. Splash screen generate karo
+        7. Gradle build run karo
+        8. APK storage mein rakho
+      */
+
+      res.json({
+        success: true,
+        jobId: id,
+        downloadUrl: `/downloads/${id}.apk`
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        error: "APK build failed"
+      });
+
+    }
+  }
+);
+
+app.listen(3000, () => {
+  console.log(
+    "AppForge running on http://localhost:3000"
+  );
+});
