@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#635bff">
 
-<title>AppForge — Website to App</title>
+<title>AppForge — Website to APK</title>
 
 <style>
-
 *{
     box-sizing:border-box;
     margin:0;
@@ -23,6 +23,7 @@
     --primary:#635bff;
     --primary2:#8b5cf6;
     --success:#16a34a;
+    --danger:#dc2626;
     --shadow:0 20px 60px rgba(0,0,0,.08);
 }
 
@@ -33,6 +34,10 @@ body.dark{
     --muted:#a1a1aa;
     --border:#27272a;
     --shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
@@ -53,7 +58,17 @@ body{
 
     color:var(--text);
     min-height:100vh;
-    transition:.3s;
+    transition:.25s;
+}
+
+button,
+input,
+textarea{
+    font:inherit;
+}
+
+button{
+    -webkit-tap-highlight-color:transparent;
 }
 
 /* HEADER */
@@ -68,16 +83,17 @@ body{
 
     position:sticky;
     top:0;
-    z-index:50;
+    z-index:100;
 
-    background:rgba(255,255,255,.75);
+    background:rgba(255,255,255,.78);
     border-bottom:1px solid var(--border);
 
     backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
 }
 
 body.dark .header{
-    background:rgba(9,9,11,.78);
+    background:rgba(9,9,11,.82);
 }
 
 .logo{
@@ -90,8 +106,8 @@ body.dark .header{
 }
 
 .logo-icon{
-    width:39px;
-    height:39px;
+    width:40px;
+    height:40px;
 
     display:grid;
     place-items:center;
@@ -122,25 +138,24 @@ body.dark .header{
     color:var(--text);
 
     cursor:pointer;
-    font-size:17px;
 }
 
 /* MAIN */
 
 .container{
     width:100%;
-    max-width:1000px;
+    max-width:1050px;
 
     margin:auto;
 
-    padding:65px 20px 100px;
+    padding:62px 20px 100px;
 }
 
 /* HERO */
 
 .hero{
     text-align:center;
-    margin-bottom:45px;
+    margin-bottom:42px;
 }
 
 .badge{
@@ -156,20 +171,20 @@ body.dark .header{
     color:var(--primary);
 
     font-size:13px;
-    font-weight:700;
+    font-weight:800;
 
     margin-bottom:20px;
 }
 
 .hero h1{
-    max-width:820px;
+    max-width:850px;
     margin:auto;
 
     font-size:
         clamp(
-            38px,
+            40px,
             7vw,
-            68px
+            70px
         );
 
     line-height:1.02;
@@ -192,6 +207,7 @@ body.dark .header{
 
 .hero p{
     max-width:650px;
+
     margin:20px auto 0;
 
     color:var(--muted);
@@ -213,7 +229,7 @@ body.dark .header{
     box-shadow:var(--shadow);
 }
 
-/* STEPS */
+/* STEP */
 
 .step{
     display:flex;
@@ -262,7 +278,7 @@ body.dark .header{
     font-size:13px;
 }
 
-/* FORM */
+/* LABELS */
 
 label{
     display:block;
@@ -273,10 +289,10 @@ label{
     font-weight:700;
 }
 
-input,
-textarea,
-select{
+/* INPUTS */
 
+input,
+textarea{
     width:100%;
 
     border:1px solid var(--border);
@@ -295,9 +311,7 @@ select{
 }
 
 input:focus,
-textarea:focus,
-select:focus{
-
+textarea:focus{
     border-color:var(--primary);
 
     box-shadow:
@@ -306,7 +320,7 @@ select:focus{
 }
 
 textarea{
-    min-height:190px;
+    min-height:180px;
 
     resize:vertical;
 
@@ -316,7 +330,6 @@ textarea{
 /* URL */
 
 .url-box{
-
     display:flex;
     align-items:center;
     gap:10px;
@@ -343,7 +356,6 @@ textarea{
 /* GRID */
 
 .grid{
-
     display:grid;
 
     grid-template-columns:
@@ -355,7 +367,6 @@ textarea{
 /* UPLOAD */
 
 .upload{
-
     border:2px dashed var(--border);
 
     border-radius:17px;
@@ -370,11 +381,8 @@ textarea{
 }
 
 .upload:hover{
-
     border-color:var(--primary);
-
-    background:
-        rgba(99,91,255,.04);
+    background:rgba(99,91,255,.04);
 }
 
 .upload input{
@@ -382,7 +390,6 @@ textarea{
 }
 
 .icon-preview{
-
     width:80px;
     height:80px;
 
@@ -395,14 +402,11 @@ textarea{
     border-radius:20px;
 
     box-shadow:
-        0 10px 30px
-        rgba(0,0,0,.15);
+        0 10px 30px rgba(0,0,0,.15);
 }
 
 .upload-icon{
-
     font-size:35px;
-
     margin-bottom:8px;
 }
 
@@ -411,7 +415,6 @@ textarea{
 }
 
 .upload small{
-
     display:block;
 
     color:var(--muted);
@@ -422,7 +425,6 @@ textarea{
 /* LOADER */
 
 .loader-grid{
-
     display:grid;
 
     grid-template-columns:
@@ -432,13 +434,11 @@ textarea{
 }
 
 .loader-option{
-
     padding:18px 10px;
 
     border:1px solid var(--border);
 
     background:var(--bg);
-
     color:var(--text);
 
     border-radius:14px;
@@ -455,7 +455,6 @@ textarea{
 }
 
 .loader-option.selected{
-
     border-color:var(--primary);
 
     background:
@@ -467,13 +466,11 @@ textarea{
 }
 
 .loader-icon{
-
     height:35px;
 
     display:flex;
-
-    justify-content:center;
     align-items:center;
+    justify-content:center;
 
     margin-bottom:8px;
 }
@@ -481,33 +478,26 @@ textarea{
 /* SPINNER */
 
 .spinner{
-
     width:25px;
     height:25px;
 
     border:3px solid #ddd;
-
-    border-top-color:
-        var(--primary);
+    border-top-color:var(--primary);
 
     border-radius:50%;
 
-    animation:
-        spin 1s linear infinite;
+    animation:spin 1s linear infinite;
 }
 
 @keyframes spin{
-
     to{
         transform:rotate(360deg);
     }
-
 }
 
 /* DOTS */
 
 .dots span{
-
     width:7px;
     height:7px;
 
@@ -515,13 +505,11 @@ textarea{
 
     display:inline-block;
 
-    background:
-        var(--primary);
+    background:var(--primary);
 
     border-radius:50%;
 
-    animation:
-        dot 1.2s infinite;
+    animation:dot 1.2s infinite;
 }
 
 .dots span:nth-child(2){
@@ -533,10 +521,7 @@ textarea{
 }
 
 @keyframes dot{
-
-    0%,
-    80%,
-    100%{
+    0%,80%,100%{
         transform:scale(.6);
         opacity:.5;
     }
@@ -545,27 +530,22 @@ textarea{
         transform:scale(1);
         opacity:1;
     }
-
 }
 
 /* PULSE */
 
 .pulse{
-
     width:25px;
     height:25px;
 
     border-radius:50%;
 
-    background:
-        var(--primary);
+    background:var(--primary);
 
-    animation:
-        pulse 1.2s infinite;
+    animation:pulse 1.2s infinite;
 }
 
 @keyframes pulse{
-
     0%{
         transform:scale(.6);
         opacity:.5;
@@ -580,13 +560,11 @@ textarea{
         transform:scale(.6);
         opacity:.5;
     }
-
 }
 
-/* POLICY */
+/* PRIVACY */
 
 .policy{
-
     border:1px solid var(--border);
 
     border-radius:16px;
@@ -595,7 +573,6 @@ textarea{
 }
 
 .policy-top{
-
     display:flex;
 
     justify-content:space-between;
@@ -605,8 +582,7 @@ textarea{
 
     padding:16px;
 
-    border-bottom:
-        1px solid var(--border);
+    border-bottom:1px solid var(--border);
 }
 
 .policy-title strong{
@@ -614,7 +590,6 @@ textarea{
 }
 
 .policy-title p{
-
     color:var(--muted);
 
     font-size:12px;
@@ -623,7 +598,6 @@ textarea{
 }
 
 .ai-btn{
-
     border:0;
 
     padding:10px 14px;
@@ -644,19 +618,20 @@ textarea{
     font-weight:700;
 }
 
+.ai-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
 .policy textarea{
-
     border:0;
-
     border-radius:0;
-
     background:var(--bg);
 }
 
 /* OPTIONS */
 
 .options{
-
     display:grid;
 
     grid-template-columns:
@@ -668,7 +643,6 @@ textarea{
 }
 
 .check{
-
     border:1px solid var(--border);
 
     padding:14px;
@@ -691,10 +665,9 @@ textarea{
     font-size:13px;
 }
 
-/* BUILD */
+/* BUILD BUTTON */
 
 .build-btn{
-
     width:100%;
 
     margin-top:25px;
@@ -728,25 +701,18 @@ textarea{
 }
 
 .build-btn:hover{
-
-    transform:
-        translateY(-2px);
-
+    transform:translateY(-2px);
 }
 
 .build-btn:disabled{
-
     opacity:.6;
-
     cursor:not-allowed;
-
     transform:none;
 }
 
 /* STATUS */
 
 .status{
-
     display:none;
 
     margin-top:20px;
@@ -763,11 +729,9 @@ textarea{
 }
 
 .progress{
-
     height:8px;
 
-    background:
-        var(--border);
+    background:var(--border);
 
     border-radius:20px;
 
@@ -777,9 +741,7 @@ textarea{
 }
 
 .progress-bar{
-
     width:0%;
-
     height:100%;
 
     background:
@@ -789,12 +751,10 @@ textarea{
             var(--primary2)
         );
 
-    transition:
-        width .5s;
+    transition:width .5s;
 }
 
 .download-btn{
-
     display:inline-block;
 
     margin-top:15px;
@@ -803,20 +763,22 @@ textarea{
 
     border-radius:11px;
 
-    background:
-        var(--success);
+    background:var(--success);
 
     color:#fff;
 
     text-decoration:none;
 
-    font-weight:700;
+    font-weight:800;
+}
+
+.error-text{
+    color:var(--danger);
 }
 
 /* FEATURES */
 
 .features{
-
     display:grid;
 
     grid-template-columns:
@@ -828,7 +790,6 @@ textarea{
 }
 
 .feature{
-
     background:var(--card);
 
     border:1px solid var(--border);
@@ -839,9 +800,7 @@ textarea{
 }
 
 .feature-icon{
-
     font-size:25px;
-
     margin-bottom:12px;
 }
 
@@ -850,7 +809,6 @@ textarea{
 }
 
 .feature p{
-
     color:var(--muted);
 
     font-size:12px;
@@ -863,7 +821,6 @@ textarea{
 /* FOOTER */
 
 .footer{
-
     text-align:center;
 
     color:var(--muted);
@@ -911,18 +868,14 @@ textarea{
     }
 
     .policy-top{
-
         align-items:flex-start;
-
         flex-direction:column;
     }
 
     .ai-btn{
         width:100%;
     }
-
 }
-
 </style>
 </head>
 
@@ -931,21 +884,15 @@ textarea{
 <header class="header">
 
     <div class="logo">
-
-        <div class="logo-icon">
-            ⚡
-        </div>
-
-        <span>
-            AppForge
-        </span>
-
+        <div class="logo-icon">⚡</div>
+        <span>AppForge</span>
     </div>
 
     <button
+        type="button"
         class="theme-btn"
-        onclick="toggleTheme()"
         id="themeButton"
+        aria-label="Toggle dark mode"
     >
         🌙
     </button>
@@ -955,36 +902,26 @@ textarea{
 
 <main class="container">
 
-    <!-- HERO -->
-
     <section class="hero">
 
         <div class="badge">
-            ⚡ Website → Android App
+            ⚡ Website → Android APK
         </div>
 
         <h1>
-
             Turn your website into a
-
             <span class="gradient">
                 beautiful app.
             </span>
-
         </h1>
 
         <p>
-
-            Enter your website, customize your
-            app and generate a professional
-            Android application.
-
+            Enter your website, customize your app,
+            add an icon and generate an Android APK.
         </p>
 
     </section>
 
-
-    <!-- BUILDER -->
 
     <section class="builder">
 
@@ -992,35 +929,27 @@ textarea{
 
         <div class="step">
 
-            <div class="step-number">
-                1
-            </div>
+            <div class="step-number">1</div>
 
             <div>
-
-                <h3>
-                    Website
-                </h3>
+                <h3>Website</h3>
 
                 <p>
                     Enter the website you want
                     to turn into an app.
                 </p>
-
             </div>
 
         </div>
 
 
-        <label>
+        <label for="website">
             Website URL
         </label>
 
         <div class="url-box">
 
-            <span>
-                🌐
-            </span>
+            <span>🌐</span>
 
             <input
                 id="website"
@@ -1036,20 +965,14 @@ textarea{
 
         <div class="step">
 
-            <div class="step-number">
-                2
-            </div>
+            <div class="step-number">2</div>
 
             <div>
-
-                <h3>
-                    App Details
-                </h3>
+                <h3>App Details</h3>
 
                 <p>
-                    Customize your Android app.
+                    Customize your Android application.
                 </p>
-
             </div>
 
         </div>
@@ -1059,7 +982,7 @@ textarea{
 
             <div>
 
-                <label>
+                <label for="appName">
                     App Name
                 </label>
 
@@ -1074,13 +997,14 @@ textarea{
 
             <div>
 
-                <label>
+                <label for="packageName">
                     Package Name
                 </label>
 
                 <input
                     id="packageName"
-                    placeholder="com.example.myapp"
+                    placeholder="com.appforge.myapp"
+                    maxlength="100"
                 >
 
             </div>
@@ -1094,8 +1018,8 @@ textarea{
             App Icon
             <span
                 style="
-                color:var(--muted);
-                font-weight:400;
+                    color:var(--muted);
+                    font-weight:400;
                 "
             >
                 (Optional)
@@ -1153,9 +1077,7 @@ textarea{
             >
 
                 <div class="loader-icon">
-
                     <div class="spinner"></div>
-
                 </div>
 
                 Classic
@@ -1170,11 +1092,9 @@ textarea{
             >
 
                 <div class="loader-icon dots">
-
                     <span></span>
                     <span></span>
                     <span></span>
-
                 </div>
 
                 Dots
@@ -1189,9 +1109,7 @@ textarea{
             >
 
                 <div class="loader-icon">
-
                     <div class="pulse"></div>
-
                 </div>
 
                 Pulse
@@ -1205,9 +1123,7 @@ textarea{
 
         <div class="step">
 
-            <div class="step-number">
-                3
-            </div>
+            <div class="step-number">3</div>
 
             <div>
 
@@ -1224,7 +1140,7 @@ textarea{
         </div>
 
 
-        <!-- PRIVACY -->
+        <!-- PRIVACY POLICY -->
 
         <div class="policy">
 
@@ -1238,7 +1154,7 @@ textarea{
 
                     <p>
                         Write your own policy or
-                        generate a draft with AI.
+                        generate a general draft.
                     </p>
 
                 </div>
@@ -1247,7 +1163,7 @@ textarea{
                 <button
                     type="button"
                     class="ai-btn"
-                    onclick="generatePolicy()"
+                    id="aiPolicyButton"
                 >
                     ✨ Generate with AI
                 </button>
@@ -1369,7 +1285,6 @@ textarea{
             type="button"
             class="build-btn"
             id="buildButton"
-            onclick="buildApp()"
         >
             🚀 Create My APK
         </button>
@@ -1380,6 +1295,7 @@ textarea{
         <div
             class="status"
             id="status"
+            aria-live="polite"
         >
 
             <div id="statusText">
@@ -1406,17 +1322,15 @@ textarea{
 
         <div class="feature">
 
-            <div class="feature-icon">
-                🎨
-            </div>
+            <div class="feature-icon">🎨</div>
 
             <h3>
                 Beautiful UI
             </h3>
 
             <p>
-                A clean and modern app builder
-                experience on mobile and desktop.
+                Modern responsive builder
+                designed for mobile and desktop.
             </p>
 
         </div>
@@ -1424,17 +1338,15 @@ textarea{
 
         <div class="feature">
 
-            <div class="feature-icon">
-                🤖
-            </div>
+            <div class="feature-icon">🤖</div>
 
             <h3>
-                AI Privacy Draft
+                Privacy Draft
             </h3>
 
             <p>
-                Quickly create a privacy policy
-                draft and customize it yourself.
+                Generate a general privacy-policy
+                draft and edit it before publishing.
             </p>
 
         </div>
@@ -1442,9 +1354,7 @@ textarea{
 
         <div class="feature">
 
-            <div class="feature-icon">
-                📦
-            </div>
+            <div class="feature-icon">📦</div>
 
             <h3>
                 APK Builder
@@ -1452,7 +1362,7 @@ textarea{
 
             <p>
                 Send your configuration to the
-                backend for Android APK generation.
+                AppForge backend and build an APK.
             </p>
 
         </div>
@@ -1461,9 +1371,7 @@ textarea{
 
 
     <div class="footer">
-
         © 2026 AppForge
-
     </div>
 
 </main>
@@ -1471,78 +1379,114 @@ textarea{
 
 <script>
 
-/* ==========================================
-   BACKEND URL
-   ========================================== */
-
 /*
-   IMPORTANT:
+==================================================
+AP PFORGE CONFIGURATION
+==================================================
 
-   Jab tum server.js ko hosting par deploy
-   karoge, yahan uska URL daalna.
+IMPORTANT:
 
-   Example:
+After deploying server.js, put ONLY your public
+server URL here.
 
-   const BACKEND_URL =
-       "https://your-server.example.com";
+Example:
 
+const BACKEND_URL =
+    "https://appforge-api.example.com";
+
+Do NOT put a GitHub token here.
+Do NOT put any secret here.
+==================================================
 */
 
 const BACKEND_URL =
     "YOUR_BACKEND_URL";
 
 
-/* ==========================================
+/* ================================================
+   ELEMENTS
+================================================ */
+
+const websiteInput =
+    document.getElementById("website");
+
+const appNameInput =
+    document.getElementById("appName");
+
+const packageInput =
+    document.getElementById("packageName");
+
+const iconInput =
+    document.getElementById("iconInput");
+
+const iconPreview =
+    document.getElementById("iconPreview");
+
+const uploadIcon =
+    document.getElementById("uploadIcon");
+
+const statusBox =
+    document.getElementById("status");
+
+const statusText =
+    document.getElementById("statusText");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const buildButton =
+    document.getElementById("buildButton");
+
+const aiPolicyButton =
+    document.getElementById("aiPolicyButton");
+
+
+/* ================================================
    THEME
-   ========================================== */
+================================================ */
 
-function toggleTheme(){
+const savedTheme =
+    localStorage.getItem("appforge-theme");
 
-    document.body.classList.toggle(
-        "dark"
-    );
+if(savedTheme === "dark"){
 
-    const button =
-        document.getElementById(
-            "themeButton"
-        );
+    document.body.classList.add("dark");
 
-    if(
-        document.body.classList.contains(
-            "dark"
-        )
-    ){
-
-        button.textContent = "☀️";
-
-    }else{
-
-        button.textContent = "🌙";
-
-    }
-
+    document.getElementById(
+        "themeButton"
+    ).textContent = "☀️";
 }
 
 
-/* ==========================================
-   APP ICON PREVIEW
-   ========================================== */
+document.getElementById(
+    "themeButton"
+).addEventListener(
+    "click",
+    function(){
 
-const iconInput =
-    document.getElementById(
-        "iconInput"
-    );
+        document.body.classList.toggle(
+            "dark"
+        );
 
-const iconPreview =
-    document.getElementById(
-        "iconPreview"
-    );
+        const dark =
+            document.body.classList.contains(
+                "dark"
+            );
 
-const uploadIcon =
-    document.getElementById(
-        "uploadIcon"
-    );
+        localStorage.setItem(
+            "appforge-theme",
+            dark ? "dark" : "light"
+        );
 
+        this.textContent =
+            dark ? "☀️" : "🌙";
+    }
+);
+
+
+/* ================================================
+   ICON PREVIEW
+================================================ */
 
 iconInput.addEventListener(
     "change",
@@ -1562,15 +1506,15 @@ iconInput.addEventListener(
             return;
         }
 
-
         if(
-            !file.type.startsWith(
-                "image/"
-            )
+            ![
+                "image/png",
+                "image/jpeg"
+            ].includes(file.type)
         ){
 
             alert(
-                "Please select an image."
+                "Please select a PNG or JPG image."
             );
 
             this.value = "";
@@ -1578,10 +1522,8 @@ iconInput.addEventListener(
             return;
         }
 
-
         const reader =
             new FileReader();
-
 
         reader.onload =
             function(event){
@@ -1594,9 +1536,7 @@ iconInput.addEventListener(
 
                 uploadIcon.style.display =
                     "none";
-
             };
-
 
         reader.readAsDataURL(file);
 
@@ -1604,18 +1544,16 @@ iconInput.addEventListener(
 );
 
 
-/* ==========================================
+/* ================================================
    LOADER
-   ========================================== */
+================================================ */
 
 let selectedLoader =
     "spinner";
 
 
 document
-    .querySelectorAll(
-        ".loader-option"
-    )
+    .querySelectorAll(".loader-option")
     .forEach(
         button => {
 
@@ -1628,20 +1566,15 @@ document
                             ".loader-option"
                         )
                         .forEach(
-                            item => {
-
+                            item =>
                                 item.classList.remove(
                                     "selected"
-                                );
-
-                            }
+                                )
                         );
-
 
                     this.classList.add(
                         "selected"
                     );
-
 
                     selectedLoader =
                         this.dataset.loader;
@@ -1653,87 +1586,70 @@ document
     );
 
 
-/* ==========================================
-   PACKAGE NAME
-   ========================================== */
+/* ================================================
+   AUTO PACKAGE NAME
+================================================ */
 
-document
-    .getElementById("appName")
-    .addEventListener(
-        "input",
-        function(){
+let packageManuallyEdited =
+    false;
 
-            const packageInput =
-                document.getElementById(
-                    "packageName"
+
+packageInput.addEventListener(
+    "input",
+    function(){
+
+        packageManuallyEdited =
+            true;
+
+    }
+);
+
+
+appNameInput.addEventListener(
+    "input",
+    function(){
+
+        if(packageManuallyEdited){
+            return;
+        }
+
+        let name =
+            this.value
+                .toLowerCase()
+                .replace(
+                    /[^a-z0-9]+/g,
+                    ""
                 );
 
-
-            if(
-                packageInput.dataset.manual !==
-                "true"
-            ){
-
-                let name =
-                    this.value
-                        .toLowerCase()
-                        .replace(
-                            /[^a-z0-9]+/g,
-                            ""
-                        );
-
-
-                if(!name){
-                    name = "myapp";
-                }
-
-
-                packageInput.value =
-                    "com.appforge." + name;
-
-            }
-
+        if(!name){
+            name = "myapp";
         }
-    );
+
+        packageInput.value =
+            "com.appforge." + name;
+
+    }
+);
 
 
-document
-    .getElementById("packageName")
-    .addEventListener(
-        "input",
-        function(){
+/* ================================================
+   PRIVACY POLICY
+================================================ */
 
-            this.dataset.manual =
-                "true";
+aiPolicyButton.addEventListener(
+    "click",
+    generatePolicy
+);
 
-        }
-    );
-
-
-/* ==========================================
-   AI PRIVACY POLICY
-   ========================================== */
 
 async function generatePolicy(){
 
     const website =
-        document
-            .getElementById(
-                "website"
-            )
-            .value
-            .trim();
-
+        websiteInput.value.trim();
 
     const appName =
-        document
-            .getElementById(
-                "appName"
-            )
-            .value
-            .trim() ||
+        appNameInput.value.trim() ||
         "Your App";
-
 
     const textarea =
         document.getElementById(
@@ -1747,14 +1663,22 @@ async function generatePolicy(){
             "Pehle website URL enter karo."
         );
 
+        websiteInput.focus();
+
         return;
     }
 
 
+    aiPolicyButton.disabled =
+        true;
+
+    aiPolicyButton.textContent =
+        "⏳ Generating...";
+
+
     /*
-       Agar backend available hai to
-       AI endpoint use karo.
-    */
+     * Try backend endpoint first.
+     */
 
     if(
         BACKEND_URL &&
@@ -1763,10 +1687,6 @@ async function generatePolicy(){
     ){
 
         try{
-
-            textarea.value =
-                "✨ AI privacy policy generate ho rahi hai...";
-
 
             const response =
                 await fetch(
@@ -1781,8 +1701,8 @@ async function generatePolicy(){
                         },
 
                         body:JSON.stringify({
-                            website:website,
-                            appName:appName
+                            website,
+                            appName
                         })
                     }
                 );
@@ -1792,38 +1712,34 @@ async function generatePolicy(){
                 await response.json();
 
 
-            if(
-                !response.ok
-            ){
+            if(!response.ok){
 
                 throw new Error(
                     data.error ||
-                    "AI generation failed"
+                    "Policy generation failed."
                 );
-
             }
 
 
             textarea.value =
                 data.policy || "";
 
-
             return;
 
         }catch(error){
 
             console.error(
+                "Policy API:",
                 error
             );
-
         }
 
     }
 
 
     /*
-       Offline fallback draft.
-    */
+     * Local fallback.
+     */
 
     textarea.value =
 `Privacy Policy for ${appName}
@@ -1843,7 +1759,7 @@ This application displays content from:
 
 ${website}
 
-The website may maintain its own privacy policy and terms.
+The website may have its own privacy policy and terms.
 
 3. Use of Information
 
@@ -1867,88 +1783,53 @@ This Privacy Policy may be updated from time to time.
 
 8. Contact
 
-For privacy questions, contact the owner of the application.
+For privacy questions, contact the application owner.
 
 IMPORTANT:
-This is a general draft. Review and customize it according to the actual data your app and website collect and the laws applicable to your service.`;
+This is a general draft only. Review and customize it according to the actual data collected by your application, your services, and the laws applicable to your users.`;
 
 
-    textarea.focus();
+    aiPolicyButton.disabled =
+        false;
+
+    aiPolicyButton.textContent =
+        "✨ Generate with AI";
 
 }
 
 
-/* ==========================================
+/* ================================================
+   BUILD BUTTON
+================================================ */
+
+buildButton.addEventListener(
+    "click",
+    buildApp
+);
+
+
+/* ================================================
    CREATE APK
-   ========================================== */
+================================================ */
 
 async function buildApp(){
 
     const website =
-        document
-            .getElementById(
-                "website"
-            )
-            .value
-            .trim();
-
+        websiteInput.value.trim();
 
     const appName =
-        document
-            .getElementById(
-                "appName"
-            )
-            .value
-            .trim();
-
+        appNameInput.value.trim();
 
     const packageName =
-        document
-            .getElementById(
-                "packageName"
-            )
-            .value
-            .trim();
-
+        packageInput.value.trim();
 
     const privacyPolicy =
-        document
-            .getElementById(
-                "privacyPolicy"
-            )
-            .value;
-
+        document.getElementById(
+            "privacyPolicy"
+        ).value;
 
     const icon =
-        document
-            .getElementById(
-                "iconInput"
-            )
-            .files[0];
-
-
-    const status =
-        document.getElementById(
-            "status"
-        );
-
-
-    const statusText =
-        document.getElementById(
-            "statusText"
-        );
-
-
-    const progressBar =
-        document.getElementById(
-            "progressBar"
-        );
-
-
-    const buildButton =
-        document.getElementById(
-            "buildButton"
-        );
+        iconInput.files[0];
 
 
     /* VALIDATION */
@@ -1958,6 +1839,8 @@ async function buildApp(){
         alert(
             "Website URL enter karo."
         );
+
+        websiteInput.focus();
 
         return;
     }
@@ -1970,8 +1853,10 @@ async function buildApp(){
     ){
 
         alert(
-            "Website URL https:// se start hona chahiye."
+            "Website URL https:// ya http:// se start hona chahiye."
         );
+
+        websiteInput.focus();
 
         return;
     }
@@ -1983,6 +1868,8 @@ async function buildApp(){
             "App Name enter karo."
         );
 
+        appNameInput.focus();
+
         return;
     }
 
@@ -1993,24 +1880,35 @@ async function buildApp(){
             "Package Name enter karo."
         );
 
+        packageInput.focus();
+
         return;
     }
+
+
+    const packageRegex =
+        /^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/;
 
 
     if(
-        !/^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/
-            .test(packageName)
+        !packageRegex.test(
+            packageName
+        )
     ){
 
         alert(
-            "Package Name invalid hai. Example: com.appforge.myapp"
+            "Invalid Package Name.\nExample: com.appforge.myapp"
         );
+
+        packageInput.focus();
 
         return;
     }
 
 
-    /* BACKEND CHECK */
+    /*
+     * Backend not configured yet.
+     */
 
     if(
         !BACKEND_URL ||
@@ -2018,27 +1916,20 @@ async function buildApp(){
         "YOUR_BACKEND_URL"
     ){
 
-        status.style.display =
+        statusBox.style.display =
             "block";
-
-
-        statusText.innerHTML =
-            `
-            ⚠️ Backend connected nahi hai.
-
-            <br><br>
-
-            <small>
-            Pehle server.js ko Node.js hosting
-            par deploy karo aur JavaScript mein
-            BACKEND_URL set karo.
-            </small>
-            `;
-
 
         progressBar.style.width =
             "0%";
 
+        statusText.innerHTML = `
+            ⚠️ <strong>Backend is not connected.</strong>
+            <br><br>
+            <small>
+                Deploy your server.js first, then put
+                its public URL in BACKEND_URL.
+            </small>
+        `;
 
         return;
     }
@@ -2055,24 +1946,20 @@ async function buildApp(){
         website
     );
 
-
     formData.append(
         "appName",
         appName
     );
-
 
     formData.append(
         "packageName",
         packageName
     );
 
-
     formData.append(
         "loader",
         selectedLoader
     );
-
 
     formData.append(
         "privacyPolicy",
@@ -2080,57 +1967,31 @@ async function buildApp(){
     );
 
 
-    /* FEATURES */
+    const featureIds = [
 
-    formData.append(
         "homeButton",
-        document.getElementById(
-            "homeButton"
-        ).checked
-    );
-
-
-    formData.append(
         "refreshButton",
-        document.getElementById(
-            "refreshButton"
-        ).checked
-    );
-
-
-    formData.append(
         "shareButton",
-        document.getElementById(
-            "shareButton"
-        ).checked
-    );
-
-
-    formData.append(
         "ratingButton",
-        document.getElementById(
-            "ratingButton"
-        ).checked
-    );
-
-
-    formData.append(
         "browserButton",
-        document.getElementById(
-            "browserButton"
-        ).checked
+        "darkMode"
+
+    ];
+
+
+    featureIds.forEach(
+        id => {
+
+            formData.append(
+                id,
+                document.getElementById(
+                    id
+                ).checked
+            );
+
+        }
     );
 
-
-    formData.append(
-        "darkMode",
-        document.getElementById(
-            "darkMode"
-        ).checked
-    );
-
-
-    /* ICON OPTIONAL */
 
     if(icon){
 
@@ -2144,31 +2005,20 @@ async function buildApp(){
 
     /* UI */
 
-    status.style.display =
+    statusBox.style.display =
         "block";
-
 
     buildButton.disabled =
         true;
 
-
     progressBar.style.width =
-        "15%";
+        "10%";
 
-
-    statusText.textContent =
-        "🔍 Checking website...";
+    statusText.innerHTML =
+        "🚀 Starting APK build...";
 
 
     try{
-
-        progressBar.style.width =
-            "30%";
-
-
-        statusText.textContent =
-            "🎨 Preparing Android app...";
-
 
         const response =
             await fetch(
@@ -2181,97 +2031,205 @@ async function buildApp(){
             );
 
 
-        progressBar.style.width =
-            "70%";
+        let data = {};
+
+        try{
+
+            data =
+                await response.json();
+
+        }catch{
+
+            throw new Error(
+                "Server returned an invalid response."
+            );
+
+        }
 
 
-        statusText.textContent =
-            "⚙️ Building APK...";
-
-
-        const data =
-            await response.json();
-
-
-        if(
-            !response.ok
-        ){
+        if(!response.ok){
 
             throw new Error(
                 data.error ||
-                "APK build failed"
+                "Could not start APK build."
+            );
+
+        }
+
+
+        const buildId =
+            data.buildId;
+
+
+        if(!buildId){
+
+            throw new Error(
+                "Server did not return a build ID."
             );
 
         }
 
 
         progressBar.style.width =
-            "100%";
+            "25%";
+
+        statusText.innerHTML =
+            "⚙️ Build started. Preparing Android project...";
 
 
-        if(
-            data.download
+        /*
+         * Poll GitHub build status.
+         */
+
+        let attempts = 0;
+
+        const maxAttempts =
+            120;
+
+
+        while(
+            attempts <
+            maxAttempts
         ){
 
-            let downloadURL =
-                data.download;
+            await sleep(5000);
+
+            attempts++;
 
 
-            if(
-                downloadURL.startsWith("/")
-            ){
+            let statusResponse;
 
-                downloadURL =
-                    BACKEND_URL +
-                    downloadURL;
+
+            try{
+
+                statusResponse =
+                    await fetch(
+                        BACKEND_URL +
+                        "/api/build/" +
+                        encodeURIComponent(
+                            buildId
+                        ),
+                        {
+                            cache:"no-store"
+                        }
+                    );
+
+            }catch{
+
+                continue;
 
             }
 
 
-            statusText.innerHTML =
-                `
-                🎉 <strong>
-                APK Ready!
-                </strong>
+            let statusData;
 
-                <br>
 
-                <small>
-                Your Android app has been built.
-                </small>
+            try{
 
-                <br>
+                statusData =
+                    await statusResponse.json();
 
-                <a
-                    class="download-btn"
-                    href="${downloadURL}"
-                    target="_blank"
-                    download
-                >
-                    📥 Download APK
-                </a>
+            }catch{
+
+                continue;
+
+            }
+
+
+            if(
+                statusData.status ===
+                "completed"
+            ){
+
+                progressBar.style.width =
+                    "100%";
+
+
+                const downloadPath =
+                    statusData.download;
+
+
+                const downloadURL =
+                    downloadPath.startsWith(
+                        "http"
+                    )
+                    ? downloadPath
+                    : BACKEND_URL +
+                      downloadPath;
+
+
+                statusText.innerHTML = `
+                    🎉 <strong>APK Ready!</strong>
+                    <br>
+                    <small>
+                        Your Android app has been built successfully.
+                    </small>
+                    <br>
+                    <a
+                        class="download-btn"
+                        href="${escapeAttribute(downloadURL)}"
+                    >
+                        📥 Download APK
+                    </a>
                 `;
 
-        }else{
+
+                buildButton.disabled =
+                    false;
+
+
+                return;
+
+            }
+
+
+            if(
+                statusData.status ===
+                "failed"
+            ){
+
+                throw new Error(
+                    "GitHub Actions APK build failed. Check the Actions log."
+                );
+
+            }
+
+
+            const progress =
+                Math.min(
+                    90,
+                    25 +
+                    Math.floor(
+                        attempts * 0.55
+                    )
+                );
+
+
+            progressBar.style.width =
+                progress + "%";
+
 
             statusText.innerHTML =
                 `
-                ✅ Build started successfully.
-
-                <br><br>
-
+                ⚙️ Building APK...
+                <br>
                 <small>
-                APK status:
-                ${data.jobId || "Processing"}
+                    Please wait. Build attempt ${attempts}/${maxAttempts}
                 </small>
                 `;
 
         }
 
 
+        throw new Error(
+            "Build is taking too long. Check GitHub Actions for the build status."
+        );
+
+
     }catch(error){
 
         console.error(
+            "AppForge build:",
             error
         );
 
@@ -2282,16 +2240,14 @@ async function buildApp(){
 
         statusText.innerHTML =
             `
-            ❌ <strong>
-            APK build failed
-            </strong>
-
+            <span class="error-text">
+                ❌ <strong>Build failed</strong>
+            </span>
             <br><br>
-
             <small>
-            ${escapeHTML(
-                error.message
-            )}
+                ${escapeHTML(
+                    error.message
+                )}
             </small>
             `;
 
@@ -2305,13 +2261,26 @@ async function buildApp(){
 }
 
 
-/* ==========================================
-   SECURITY HELPER
-   ========================================== */
+/* ================================================
+   HELPERS
+================================================ */
 
-function escapeHTML(text){
+function sleep(ms){
 
-    return String(text)
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+    );
+
+}
+
+
+function escapeHTML(value){
+
+    return String(value)
         .replace(
             /&/g,
             "&amp;"
@@ -2331,6 +2300,29 @@ function escapeHTML(text){
         .replace(
             /'/g,
             "&#039;"
+        );
+
+}
+
+
+function escapeAttribute(value){
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
         );
 
 }
