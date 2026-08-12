@@ -1,708 +1,1572 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>AppForge - Website to App</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<body>
+<title>AppForge — Website to App</title>
 
-<div class="app">
-
-  <header class="topbar">
-    <div class="logo">
-      <span>⚡</span>
-      AppForge
-    </div>
-
-    <button class="theme-btn" onclick="toggleTheme()">
-      ☀️
-    </button>
-  </header>
-
-  <main>
-
-    <section class="hero">
-      <div class="badge">⚡ Website → Android App</div>
-
-      <h1>
-        Turn your website into an
-        <span>Android App</span>
-      </h1>
-
-      <p>
-        Enter your website, customize your app and get your APK.
-      </p>
-    </section>
-
-    <section class="builder-card">
-
-      <div class="step active">
-        <div class="step-number">1</div>
-
-        <div>
-          <h3>Website</h3>
-          <p>Enter your website URL</p>
-        </div>
-      </div>
-
-      <label>Website URL</label>
-
-      <div class="url-input">
-        <span>🌐</span>
-        <input
-          id="website"
-          type="url"
-          placeholder="https://example.com"
-        >
-      </div>
-
-      <div class="step">
-        <div class="step-number">2</div>
-
-        <div>
-          <h3>App Details</h3>
-          <p>Customize your Android app</p>
-        </div>
-      </div>
-
-      <div class="form-grid">
-
-        <div>
-          <label>App Name</label>
-          <input
-            id="appName"
-            placeholder="My Awesome App"
-          >
-        </div>
-
-        <div>
-          <label>Package Name</label>
-          <input
-            id="packageName"
-            placeholder="com.example.myapp"
-          >
-        </div>
-
-      </div>
-
-      <label>App Icon</label>
-
-      <div class="upload">
-        <input
-          type="file"
-          id="icon"
-          accept="image/png,image/jpeg"
-        >
-
-        <div>
-          <strong>Upload App Icon</strong>
-          <small>PNG or JPG • 512×512 recommended</small>
-        </div>
-      </div>
-
-      <label>Loader Style</label>
-
-      <div class="loader-options">
-
-        <button class="loader selected" data-loader="spinner">
-          <span class="spinner"></span>
-          Classic
-        </button>
-
-        <button class="loader" data-loader="dots">
-          <span>•••</span>
-          Dots
-        </button>
-
-        <button class="loader" data-loader="pulse">
-          <span class="pulse"></span>
-          Pulse
-        </button>
-
-      </div>
-
-      <div class="step">
-        <div class="step-number">3</div>
-
-        <div>
-          <h3>Legal Pages</h3>
-          <p>Optional but recommended</p>
-        </div>
-      </div>
-
-      <div class="policy-box">
-
-        <div class="policy-header">
-          <div>
-            <strong>Privacy Policy</strong>
-            <p>Generate a professional privacy policy with AI</p>
-          </div>
-
-          <button onclick="generatePolicy()">
-            🤖 Generate with AI
-          </button>
-        </div>
-
-        <textarea
-          id="privacyPolicy"
-          placeholder="You can write your privacy policy here..."
-        ></textarea>
-
-      </div>
-
-      <button class="build-btn" onclick="buildApp()">
-        🚀 Create My APK
-      </button>
-
-      <div id="status"></div>
-
-    </section>
-
-  </main>
-
-</div>
-
-<script src="app.js"></script>
-</body>
-</html>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-:root {
-  --bg: #f6f7fb;
-  --card: #ffffff;
-  --text: #111827;
-  --muted: #6b7280;
-  --primary: #635bff;
-  --border: #e5e7eb;
+:root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#111827;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --primary:#635bff;
+    --primary2:#8b5cf6;
+    --success:#16a34a;
+    --danger:#ef4444;
+    --shadow:0 20px 60px rgba(0,0,0,.08);
 }
 
-.dark {
-  --bg: #09090b;
-  --card: #18181b;
-  --text: #fafafa;
-  --muted: #a1a1aa;
-  --border: #27272a;
+body.dark{
+    --bg:#09090b;
+    --card:#151518;
+    --text:#fafafa;
+    --muted:#a1a1aa;
+    --border:#27272a;
+    --shadow:0 20px 60px rgba(0,0,0,.35);
 }
 
-body {
-  font-family: Inter, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  transition: .3s;
+body{
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(99,91,255,.16),
+            transparent 40%
+        ),
+        var(--bg);
+
+    color:var(--text);
+    min-height:100vh;
+    transition:.3s;
 }
 
-.app {
-  min-height: 100vh;
+/* HEADER */
+
+.header{
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+    background:rgba(255,255,255,.7);
+    border-bottom:1px solid var(--border);
+    backdrop-filter:blur(15px);
+    position:sticky;
+    top:0;
+    z-index:20;
 }
 
-.topbar {
-  height: 72px;
-  padding: 0 7%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-  background: var(--card);
+body.dark .header{
+    background:rgba(9,9,11,.75);
 }
 
-.logo {
-  font-size: 21px;
-  font-weight: 800;
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:20px;
+    font-weight:800;
 }
 
-.logo span {
-  color: var(--primary);
+.logo-icon{
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    border-radius:11px;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
+    color:white;
+    box-shadow:0 8px 20px rgba(99,91,255,.3);
 }
 
-.theme-btn {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 10px;
-  padding: 10px 13px;
-  cursor: pointer;
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
-main {
-  max-width: 900px;
-  margin: auto;
-  padding: 70px 20px;
+.theme-btn{
+    width:42px;
+    height:42px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    border-radius:12px;
+    cursor:pointer;
+    font-size:17px;
 }
 
-.hero {
-  text-align: center;
-  margin-bottom: 45px;
+/* MAIN */
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:65px 20px 100px;
 }
 
-.badge {
-  display: inline-block;
-  padding: 8px 14px;
-  background: #eeecff;
-  color: var(--primary);
-  border-radius: 30px;
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 20px;
+/* HERO */
+
+.hero{
+    text-align:center;
+    margin-bottom:45px;
 }
 
-.hero h1 {
-  font-size: clamp(36px, 6vw, 62px);
-  line-height: 1.05;
-  letter-spacing: -2px;
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 14px;
+    border-radius:30px;
+    background:rgba(99,91,255,.1);
+    color:var(--primary);
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:20px;
 }
 
-.hero h1 span {
-  color: var(--primary);
+.hero h1{
+    max-width:800px;
+    margin:auto;
+    font-size:clamp(38px,7vw,68px);
+    line-height:1.02;
+    letter-spacing:-3px;
 }
 
-.hero p {
-  margin-top: 18px;
-  color: var(--muted);
-  font-size: 17px;
+.gradient{
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
 }
 
-.builder-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 30px;
-  box-shadow: 0 20px 60px rgba(0,0,0,.07);
+.hero p{
+    max-width:650px;
+    margin:20px auto 0;
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.6;
 }
 
-.step {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  margin: 28px 0 18px;
+/* BUILDER */
+
+.builder{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:26px;
+    padding:30px;
+    box-shadow:var(--shadow);
 }
 
-.step-number {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--primary);
-  color: white;
-  font-weight: 700;
+/* STEPS */
+
+.step{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    margin:30px 0 18px;
 }
 
-.step h3 {
-  font-size: 16px;
+.step:first-child{
+    margin-top:0;
 }
 
-.step p,
-.policy-header p {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 3px;
+.step-number{
+    width:35px;
+    height:35px;
+    min-width:35px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
+    color:#fff;
+    font-size:14px;
+    font-weight:800;
 }
 
-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  margin: 15px 0 8px;
+.step h3{
+    font-size:16px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:3px;
+}
+
+/* FORM */
+
+label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    margin:16px 0 8px;
 }
 
 input,
-textarea {
-  width: 100%;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  border-radius: 12px;
-  padding: 14px;
-  outline: none;
-  font-size: 14px;
+textarea,
+select{
+    width:100%;
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    border-radius:13px;
+    padding:14px;
+    font-size:14px;
+    outline:none;
+    transition:.2s;
 }
 
 input:focus,
-textarea:focus {
-  border-color: var(--primary);
+textarea:focus,
+select:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(99,91,255,.1);
 }
 
-.url-input {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  padding-left: 14px;
-  border-radius: 12px;
+textarea{
+    min-height:190px;
+    resize:vertical;
+    line-height:1.6;
 }
 
-.url-input input {
-  border: none;
-  background: transparent;
+/* URL */
+
+.url-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding-left:14px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:13px;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+.url-box span{
+    font-size:18px;
 }
 
-.upload {
-  border: 2px dashed var(--border);
-  padding: 25px;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
+.url-box input{
+    border:0;
+    background:transparent;
+    box-shadow:none;
 }
 
-.upload small {
-  display: block;
-  color: var(--muted);
-  margin-top: 5px;
+/* GRID */
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
 }
 
-.loader-options {
-  display: flex;
-  gap: 10px;
+/* UPLOAD */
+
+.upload{
+    border:2px dashed var(--border);
+    border-radius:17px;
+    padding:24px;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
 }
 
-.loader {
-  flex: 1;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  cursor: pointer;
+.upload:hover{
+    border-color:var(--primary);
+    background:rgba(99,91,255,.04);
 }
 
-.loader.selected {
-  border-color: var(--primary);
-  background: #eeecff;
+.upload input{
+    display:none;
 }
 
-.policy-box {
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  overflow: hidden;
+.icon-preview{
+    width:75px;
+    height:75px;
+    border-radius:18px;
+    margin:0 auto 12px;
+    display:none;
+    object-fit:cover;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
 }
 
-.policy-header {
-  padding: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.upload-icon{
+    font-size:35px;
+    margin-bottom:8px;
 }
 
-.policy-header button {
-  background: var(--primary);
-  color: white;
-  border: 0;
-  padding: 10px 14px;
-  border-radius: 9px;
-  cursor: pointer;
+.upload strong{
+    display:block;
 }
 
-textarea {
-  border: none;
-  border-top: 1px solid var(--border);
-  border-radius: 0;
-  min-height: 180px;
-  resize: vertical;
+.upload small{
+    display:block;
+    color:var(--muted);
+    margin-top:5px;
 }
 
-.build-btn {
-  width: 100%;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(135deg,#635bff,#8b5cf6);
-  color: white;
-  padding: 17px;
-  margin-top: 25px;
-  font-size: 16px;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(99,91,255,.3);
+/* LOADER */
+
+.loader-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
 }
 
-#status {
-  text-align: center;
-  margin-top: 15px;
-  color: var(--muted);
+.loader-option{
+    padding:18px 10px;
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    border-radius:14px;
+    cursor:pointer;
+    text-align:center;
+    transition:.2s;
 }
 
-@media(max-width:650px) {
-  main {
-    padding: 35px 12px;
-  }
-
-  .builder-card {
-    padding: 20px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .loader-options {
-    flex-direction: column;
-  }
-
-  .policy-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-}
-let selectedLoader = "spinner";
-
-document.querySelectorAll(".loader").forEach(button => {
-
-  button.addEventListener("click", () => {
-
-    document
-      .querySelectorAll(".loader")
-      .forEach(x => x.classList.remove("selected"));
-
-    button.classList.add("selected");
-
-    selectedLoader = button.dataset.loader;
-  });
-
-});
-
-function toggleTheme() {
-  document.body.classList.toggle("dark");
+.loader-option:hover{
+    transform:translateY(-2px);
 }
 
-async function generatePolicy() {
-
-  const website = document.getElementById("website").value;
-
-  if (!website) {
-    alert("Pehle website URL enter karo.");
-    return;
-  }
-
-  const textarea = document.getElementById("privacyPolicy");
-
-  textarea.value = "AI privacy policy generate kar raha hai...";
-
-  try {
-
-    const response = await fetch("/api/generate-policy", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        website
-      })
-    });
-
-    const data = await response.json();
-
-    textarea.value = data.policy;
-
-  } catch (error) {
-
-    textarea.value =
-      "Privacy policy generate nahi ho saki. Please manually enter it.";
-
-  }
+.loader-option.selected{
+    border-color:var(--primary);
+    background:rgba(99,91,255,.08);
+    box-shadow:0 0 0 2px rgba(99,91,255,.08);
 }
 
-async function buildApp() {
+.loader-icon{
+    height:35px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:8px;
+}
 
-  const website =
-    document.getElementById("website").value.trim();
+/* SPINNER */
 
-  const appName =
-    document.getElementById("appName").value.trim();
+.spinner{
+    width:25px;
+    height:25px;
+    border:3px solid #ddd;
+    border-top-color:var(--primary);
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+}
 
-  const packageName =
-    document.getElementById("packageName").value.trim();
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
 
-  const privacyPolicy =
-    document.getElementById("privacyPolicy").value;
+/* DOTS */
 
-  if (!website || !appName || !packageName) {
-    alert("Website, App Name aur Package Name required hain.");
-    return;
-  }
+.dots span{
+    width:7px;
+    height:7px;
+    margin:2px;
+    display:inline-block;
+    background:var(--primary);
+    border-radius:50%;
+    animation:dot 1.2s infinite;
+}
 
-  const status = document.getElementById("status");
+.dots span:nth-child(2){
+    animation-delay:.15s;
+}
 
-  status.innerHTML =
-    "⏳ App project prepare ho raha hai...";
+.dots span:nth-child(3){
+    animation-delay:.3s;
+}
 
-  const formData = new FormData();
+@keyframes dot{
+    0%,80%,100%{
+        transform:scale:.6;
+        opacity:.5;
+    }
+    40%{
+        transform:scale(1);
+        opacity:1;
+    }
+}
 
-  formData.append("website", website);
-  formData.append("appName", appName);
-  formData.append("packageName", packageName);
-  formData.append("loader", selectedLoader);
-  formData.append("privacyPolicy", privacyPolicy);
+/* PULSE */
 
-  const icon =
-    document.getElementById("icon").files[0];
+.pulse{
+    width:25px;
+    height:25px;
+    border-radius:50%;
+    background:var(--primary);
+    animation:pulse 1.2s infinite;
+}
 
-  if (icon) {
-    formData.append("icon", icon);
-  }
+@keyframes pulse{
+    0%{
+        transform:scale(.6);
+        opacity:.5;
+    }
+    50%{
+        transform:scale(1);
+        opacity:1;
+    }
+    100%{
+        transform:scale(.6);
+        opacity:.5;
+    }
+}
 
-  try {
+/* POLICY */
 
-    const response = await fetch("/api/build", {
-      method: "POST",
-      body: formData
-    });
+.policy{
+    border:1px solid var(--border);
+    border-radius:16px;
+    overflow:hidden;
+}
 
-    const data = await response.json();
+.policy-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    padding:16px;
+    border-bottom:1px solid var(--border);
+}
 
-    if (!response.ok) {
-      throw new Error(data.error);
+.policy-title strong{
+    font-size:14px;
+}
+
+.policy-title p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:4px;
+}
+
+.ai-btn{
+    border:0;
+    padding:10px 14px;
+    border-radius:10px;
+    color:white;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
+    cursor:pointer;
+    font-weight:700;
+}
+
+.policy textarea{
+    border:0;
+    border-radius:0;
+    background:var(--bg);
+}
+
+/* CHECKBOX */
+
+.options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:15px;
+}
+
+.check{
+    border:1px solid var(--border);
+    padding:14px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+}
+
+.check input{
+    width:auto;
+}
+
+.check span{
+    font-size:13px;
+}
+
+/* BUILD */
+
+.build-btn{
+    width:100%;
+    margin-top:25px;
+    padding:17px;
+    border:0;
+    border-radius:15px;
+    color:#fff;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 12px 30px rgba(99,91,255,.3);
+    transition:.2s;
+}
+
+.build-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 17px 35px rgba(99,91,255,.4);
+}
+
+.build-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
+}
+
+/* STATUS */
+
+.status{
+    display:none;
+    margin-top:20px;
+    padding:18px;
+    border-radius:14px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    text-align:center;
+}
+
+.progress{
+    height:8px;
+    background:var(--border);
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:13px;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(
+        90deg,
+        var(--primary),
+        var(--primary2)
+    );
+    transition:width .5s;
+}
+
+/* FEATURES */
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:25px;
+}
+
+.feature{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:20px;
+}
+
+.feature-icon{
+    font-size:25px;
+    margin-bottom:12px;
+}
+
+.feature h3{
+    font-size:15px;
+}
+
+.feature p{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.5;
+    margin-top:6px;
+}
+
+/* FOOTER */
+
+.footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:40px;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .header{
+        padding:0 18px;
     }
 
-    status.innerHTML = `
-      ✅ App successfully created.
-      <br><br>
-      <a href="${data.downloadUrl}">
-        Download APK
-      </a>
-    `;
+    .container{
+        padding:40px 12px 70px;
+    }
 
-  } catch (error) {
+    .builder{
+        padding:20px;
+        border-radius:20px;
+    }
 
-    status.innerHTML =
-      "❌ " + error.message;
+    .hero h1{
+        letter-spacing:-2px;
+    }
 
-  }
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .loader-grid{
+        grid-template-columns:1fr;
+    }
+
+    .options{
+        grid-template-columns:1fr;
+    }
+
+    .features{
+        grid-template-columns:1fr;
+    }
+
+    .policy-top{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .ai-btn{
+        width:100%;
+    }
 }
-const express = require("express");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const crypto = require("crypto");
+</style>
+</head>
 
-const app = express();
 
-const upload = multer({
-  dest: "uploads/"
-});
+<body>
 
-app.use(express.json());
-app.use(express.static("frontend"));
+<header class="header">
 
-app.post("/api/generate-policy", async (req, res) => {
+    <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <span>AppForge</span>
+    </div>
 
-  const { website } = req.body;
+    <div class="header-right">
 
-  if (!website) {
-    return res.status(400).json({
-      error: "Website URL required"
+        <button
+            class="theme-btn"
+            onclick="toggleTheme()"
+            id="themeButton"
+        >
+            🌙
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="badge">
+            ⚡ Website → Android App
+        </div>
+
+        <h1>
+            Turn your website into a
+            <span class="gradient">
+                beautiful app.
+            </span>
+        </h1>
+
+        <p>
+            Add your website, customize your app,
+            choose your icon and create your Android
+            app with a professional experience.
+        </p>
+
+    </section>
+
+
+    <!-- BUILDER -->
+
+    <section class="builder">
+
+        <!-- STEP 1 -->
+
+        <div class="step">
+
+            <div class="step-number">1</div>
+
+            <div>
+                <h3>Website</h3>
+                <p>Tell us which website you want to turn into an app.</p>
+            </div>
+
+        </div>
+
+
+        <label>
+            Website URL
+        </label>
+
+        <div class="url-box">
+
+            <span>🌐</span>
+
+            <input
+                type="url"
+                id="website"
+                placeholder="https://example.com"
+            >
+
+        </div>
+
+
+        <!-- STEP 2 -->
+
+        <div class="step">
+
+            <div class="step-number">2</div>
+
+            <div>
+                <h3>App Details</h3>
+                <p>Customize how your app will look.</p>
+            </div>
+
+        </div>
+
+
+        <div class="grid">
+
+            <div>
+
+                <label>
+                    App Name
+                </label>
+
+                <input
+                    id="appName"
+                    placeholder="My Awesome App"
+                >
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Package Name
+                </label>
+
+                <input
+                    id="packageName"
+                    placeholder="com.example.myapp"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- ICON -->
+
+        <label>
+            App Icon
+        </label>
+
+        <label
+            class="upload"
+            for="iconInput"
+        >
+
+            <img
+                id="iconPreview"
+                class="icon-preview"
+            >
+
+            <div
+                id="uploadIcon"
+                class="upload-icon"
+            >
+                🖼️
+            </div>
+
+            <strong>
+                Upload App Icon
+            </strong>
+
+            <small>
+                PNG or JPG • 512×512 recommended
+            </small>
+
+            <input
+                type="file"
+                id="iconInput"
+                accept="image/png,image/jpeg"
+            >
+
+        </label>
+
+
+        <!-- LOADER -->
+
+        <label>
+            App Loader
+        </label>
+
+        <div class="loader-grid">
+
+            <button
+                class="loader-option selected"
+                data-loader="spinner"
+            >
+
+                <div class="loader-icon">
+                    <div class="spinner"></div>
+                </div>
+
+                Classic
+
+            </button>
+
+
+            <button
+                class="loader-option"
+                data-loader="dots"
+            >
+
+                <div class="loader-icon dots">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+                Dots
+
+            </button>
+
+
+            <button
+                class="loader-option"
+                data-loader="pulse"
+            >
+
+                <div class="loader-icon">
+                    <div class="pulse"></div>
+                </div>
+
+                Pulse
+
+            </button>
+
+        </div>
+
+
+        <!-- STEP 3 -->
+
+        <div class="step">
+
+            <div class="step-number">3</div>
+
+            <div>
+                <h3>Legal & Privacy</h3>
+                <p>Make your app look more complete and professional.</p>
+            </div>
+
+        </div>
+
+
+        <!-- PRIVACY -->
+
+        <div class="policy">
+
+            <div class="policy-top">
+
+                <div class="policy-title">
+
+                    <strong>
+                        🔒 Privacy Policy
+                    </strong>
+
+                    <p>
+                        Write it yourself or generate a draft with AI.
+                    </p>
+
+                </div>
+
+                <button
+                    class="ai-btn"
+                    onclick="generatePolicy()"
+                >
+                    ✨ Generate with AI
+                </button>
+
+            </div>
+
+
+            <textarea
+                id="privacyPolicy"
+                placeholder="Write your privacy policy here...&#10;&#10;Or click 'Generate with AI' to create a draft."
+            ></textarea>
+
+        </div>
+
+
+        <!-- EXTRA OPTIONS -->
+
+        <label>
+            App Features
+        </label>
+
+        <div class="options">
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="homeButton"
+                    checked
+                >
+
+                <span>
+                    🏠 Home button
+                </span>
+
+            </label>
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="refreshButton"
+                    checked
+                >
+
+                <span>
+                    🔄 Refresh button
+                </span>
+
+            </label>
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="shareButton"
+                    checked
+                >
+
+                <span>
+                    📤 Share button
+                </span>
+
+            </label>
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="ratingButton"
+                    checked
+                >
+
+                <span>
+                    ⭐ Rate App
+                </span>
+
+            </label>
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="browserButton"
+                    checked
+                >
+
+                <span>
+                    🌐 Open in Browser
+                </span>
+
+            </label>
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="darkMode"
+                    checked
+                >
+
+                <span>
+                    🌙 Dark Mode
+                </span>
+
+            </label>
+
+        </div>
+
+
+        <!-- BUILD BUTTON -->
+
+        <button
+            class="build-btn"
+            id="buildButton"
+            onclick="buildApp()"
+        >
+            🚀 Create My APK
+        </button>
+
+
+        <!-- STATUS -->
+
+        <div
+            class="status"
+            id="status"
+        >
+
+            <div id="statusText">
+                Preparing...
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    id="progressBar"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="features">
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🎨
+            </div>
+
+            <h3>
+                Beautiful UI
+            </h3>
+
+            <p>
+                Professional app experience with
+                modern controls and navigation.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🤖
+            </div>
+
+            <h3>
+                AI Privacy Policy
+            </h3>
+
+            <p>
+                Generate a privacy policy draft
+                instead of writing everything manually.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                📦
+            </div>
+
+            <h3>
+                APK Ready
+            </h3>
+
+            <p>
+                Configure your app and prepare it
+                for Android APK generation.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <div class="footer">
+        © 2026 AppForge • Website to Android App Builder
+    </div>
+
+</main>
+
+
+<script>
+
+/* ------------------------------
+   THEME
+------------------------------ */
+
+function toggleTheme(){
+
+    document.body.classList.toggle("dark");
+
+    const button =
+        document.getElementById("themeButton");
+
+    if(document.body.classList.contains("dark")){
+
+        button.textContent = "☀️";
+
+    }else{
+
+        button.textContent = "🌙";
+
+    }
+
+}
+
+
+/* ------------------------------
+   APP ICON
+------------------------------ */
+
+const iconInput =
+    document.getElementById("iconInput");
+
+const iconPreview =
+    document.getElementById("iconPreview");
+
+const uploadIcon =
+    document.getElementById("uploadIcon");
+
+
+iconInput.addEventListener(
+    "change",
+    function(){
+
+        const file = this.files[0];
+
+        if(!file){
+            return;
+        }
+
+        const reader =
+            new FileReader();
+
+        reader.onload = function(e){
+
+            iconPreview.src =
+                e.target.result;
+
+            iconPreview.style.display =
+                "block";
+
+            uploadIcon.style.display =
+                "none";
+
+        };
+
+        reader.readAsDataURL(file);
+
+    }
+);
+
+
+/* ------------------------------
+   LOADER
+------------------------------ */
+
+let selectedLoader = "spinner";
+
+
+document
+    .querySelectorAll(".loader-option")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            function(){
+
+                document
+                    .querySelectorAll(".loader-option")
+                    .forEach(item => {
+
+                        item.classList.remove(
+                            "selected"
+                        );
+
+                    });
+
+                this.classList.add(
+                    "selected"
+                );
+
+                selectedLoader =
+                    this.dataset.loader;
+
+            }
+        );
+
     });
-  }
 
-  /*
-    Yahan OpenAI API call add kar sakte ho.
-    API key ko frontend mein kabhi expose mat karna.
-  */
 
-  const policy = `
-Privacy Policy
+/* ------------------------------
+   AI PRIVACY POLICY DEMO
+------------------------------ */
 
-This Privacy Policy explains how ${website}
-handles information when you use our application.
+function generatePolicy(){
 
-Information We Collect
+    const website =
+        document
+            .getElementById("website")
+            .value
+            .trim();
 
-The application may collect information required
-to provide and improve the service.
+    const appName =
+        document
+            .getElementById("appName")
+            .value
+            .trim() ||
+        "Your App";
 
-Third Party Services
+    const textarea =
+        document.getElementById(
+            "privacyPolicy"
+        );
 
-The application may display content from the
-website and third-party services.
 
-Data Security
+    if(!website){
 
-We take reasonable measures to protect information.
+        alert(
+            "Pehle website URL enter karo."
+        );
 
-Changes to This Policy
+        return;
+
+    }
+
+
+    textarea.value =
+`Privacy Policy for ${appName}
+
+Last Updated: ${new Date().toLocaleDateString()}
+
+This Privacy Policy explains how ${appName} handles information when users access the application.
+
+1. Information We Collect
+
+The application may collect information that is necessary to provide and improve the service.
+
+2. Website Content
+
+This application displays content from:
+
+${website}
+
+The website may have its own privacy policy and terms that also apply to its services.
+
+3. Information Usage
+
+Information may be used to provide functionality, maintain the application and improve the user experience.
+
+4. Third-Party Services
+
+The application may interact with third-party services provided by the website.
+
+5. Data Security
+
+Reasonable measures may be used to protect information from unauthorized access.
+
+6. Children's Privacy
+
+This application is not intended to knowingly collect personal information from children.
+
+7. Changes
 
 This Privacy Policy may be updated from time to time.
 
-Contact
+8. Contact
 
-For privacy-related questions, please contact
-the website owner.
-`;
+If you have questions about this Privacy Policy, please contact the owner of the application.
 
-  res.json({ policy });
-});
+Important:
+This is an AI-generated draft and should be reviewed and customized for your actual app, website, data collection practices and applicable laws.`;
 
-app.post(
-  "/api/build",
-  upload.single("icon"),
-  async (req, res) => {
 
-    try {
+    textarea.focus();
 
-      const {
-        website,
-        appName,
-        packageName,
-        loader,
-        privacyPolicy
-      } = req.body;
+}
 
-      if (!website || !appName || !packageName) {
-        return res.status(400).json({
-          error: "Missing required fields"
-        });
-      }
 
-      const id = crypto
-        .randomBytes(8)
-        .toString("hex");
+/* ------------------------------
+   BUILD APP
+------------------------------ */
 
-      /*
-        Production version mein:
-        1. Android template copy karo
-        2. Website URL inject karo
-        3. App name inject karo
-        4. Package name inject karo
-        5. Icon replace karo
-        6. Splash screen generate karo
-        7. Gradle build run karo
-        8. APK storage mein rakho
-      */
+function buildApp(){
 
-      res.json({
-        success: true,
-        jobId: id,
-        downloadUrl: `/downloads/${id}.apk`
-      });
+    const website =
+        document
+            .getElementById("website")
+            .value
+            .trim();
 
-    } catch (error) {
+    const appName =
+        document
+            .getElementById("appName")
+            .value
+            .trim();
 
-      console.error(error);
+    const packageName =
+        document
+            .getElementById("packageName")
+            .value
+            .trim();
 
-      res.status(500).json({
-        error: "APK build failed"
-      });
+
+    if(!website){
+
+        alert(
+            "Website URL enter karo."
+        );
+
+        return;
 
     }
-  }
-);
 
-app.listen(3000, () => {
-  console.log(
-    "AppForge running on http://localhost:3000"
-  );
-});
+
+    if(!appName){
+
+        alert(
+            "App Name enter karo."
+        );
+
+        return;
+
+    }
+
+
+    if(!packageName){
+
+        alert(
+            "Package Name enter karo."
+        );
+
+        return;
+
+    }
+
+
+    const buildButton =
+        document.getElementById(
+            "buildButton"
+        );
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+    const statusText =
+        document.getElementById(
+            "statusText"
+        );
+
+    const progressBar =
+        document.getElementById(
+            "progressBar"
+        );
+
+
+    buildButton.disabled =
+        true;
+
+    status.style.display =
+        "block";
+
+
+    const steps = [
+
+        {
+            text:"🔍 Checking website...",
+            progress:15
+        },
+
+        {
+            text:"🎨 Preparing app design...",
+            progress:30
+        },
+
+        {
+            text:"🖼️ Processing app icon...",
+            progress:45
+        },
+
+        {
+            text:"⏳ Creating splash screen...",
+            progress:60
+        },
+
+        {
+            text:"📱 Preparing Android project...",
+            progress:75
+        },
+
+        {
+            text:"⚙️ Preparing APK build...",
+            progress:90
+        },
+
+        {
+            text:"✅ App configuration complete!",
+            progress:100
+        }
+
+    ];
+
+
+    let index = 0;
+
+
+    function nextStep(){
+
+        if(index >= steps.length){
+
+            statusText.innerHTML =
+                `
+                <strong>
+                    🎉 Your app is ready for APK building!
+                </strong>
+
+                <br><br>
+
+                <small>
+                    Real APK generation ke liye
+                    backend/Android build service connect
+                    karni hogi.
+                </small>
+                `;
+
+            buildButton.disabled =
+                false;
+
+            return;
+
+        }
+
+
+        const step =
+            steps[index];
+
+        statusText.textContent =
+            step.text;
+
+        progressBar.style.width =
+            step.progress + "%";
+
+        index++;
+
+        setTimeout(
+            nextStep,
+            700
+        );
+
+    }
+
+
+    nextStep();
+
+}
+
+
+/* ------------------------------
+   PACKAGE NAME CLEANER
+------------------------------ */
+
+document
+    .getElementById("appName")
+    .addEventListener(
+        "input",
+        function(){
+
+            const packageInput =
+                document.getElementById(
+                    "packageName"
+                );
+
+            if(
+                packageInput.value.trim() === ""
+            ){
+
+                let name =
+                    this.value
+                        .toLowerCase()
+                        .replace(
+                            /[^a-z0-9]+/g,
+                            ""
+                        );
+
+                if(!name){
+                    name = "myapp";
+                }
+
+                packageInput.value =
+                    "com.appforge." + name;
+
+            }
+
+        }
+    );
+
+
+</script>
+
+</body>
+</html>
