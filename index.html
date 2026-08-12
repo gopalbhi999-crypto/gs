@@ -1,1064 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Class 12 Virtual Chemistry Lab</title>
-
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071018;color:#fff;font-family:Arial,sans-serif}
-#app{width:100%;height:100%;position:relative}
-#lab{position:absolute;inset:0}
-#top{
-position:absolute;top:0;left:0;right:0;height:55px;z-index:20;
-display:flex;align-items:center;padding:7px 12px;
-background:linear-gradient(90deg,#081a2a,#12354d,#081a2a);
-border-bottom:1px solid #31546b
-}
-.logo{font-size:25px;margin-right:10px}
-.title{font-size:15px;font-weight:bold}
-.title small{display:block;color:#7fa5bb;font-size:9px;margin-top:3px}
-#mobileHelp{
-margin-left:auto;padding:7px 10px;border-radius:8px;
-border:1px solid #31556d;background:#0b2234;color:#bcecff;font-size:10px
-}
-#reactionScreen{
-position:absolute;right:15px;top:75px;width:310px;height:245px;z-index:15;
-border:9px solid #26323a;border-radius:8px;
-background:#04100d;box-shadow:0 0 25px #000, inset 0 0 20px #001d12;
-padding:13px
-}
-#screenTitle{font-size:11px;color:#55ffbd;margin-bottom:8px}
-#reaction{font-family:"Times New Roman",serif;font-size:17px;line-height:1.5;color:#d6fff1}
-#screenStatus{margin-top:12px;padding:7px;border-radius:5px;background:#08231a;color:#67e8b4;font:10px Arial}
-#instruction{
-position:absolute;bottom:13px;left:50%;transform:translateX(-50%);
-z-index:15;padding:8px 13px;background:#061522dd;border:1px solid #31576d;
-border-radius:20px;color:#a9c7d9;font-size:10px;pointer-events:none
-}
-#stepBox{
-position:absolute;left:15px;top:75px;z-index:15;width:255px;
-padding:10px;border-radius:10px;background:#071723dd;border:1px solid #294b61
-}
-#stepBox b{font-size:11px;color:#6fe5ff}
-#stepText{font-size:10px;color:#a4bac9;margin-top:5px;line-height:1.5}
-#controls{
-position:absolute;left:15px;bottom:15px;z-index:20;display:flex;gap:7px
-}
-.btn{
-border:1px solid #356077;background:#0b2538;color:white;
-border-radius:8px;padding:9px 12px;font-size:10px
-}
-.btn:hover{background:#123a54}
-#toast{
-position:absolute;left:50%;top:65px;transform:translateX(-50%);
-z-index:50;background:#071b2a;border:1px solid #35c8f0;
-padding:10px 16px;border-radius:9px;font-size:11px;
-opacity:0;pointer-events:none;transition:.25s
-}
-#toast.show{opacity:1}
-@media(max-width:800px){
-#reactionScreen{right:8px;top:62px;width:235px;height:190px;padding:9px}
-#reaction{font-size:13px}
-#screenTitle{font-size:9px}
-#stepBox{left:8px;top:62px;width:190px}
-#stepText{font-size:9px}
-#instruction{font-size:8px;bottom:8px;max-width:90%;white-space:nowrap}
-#controls{left:8px;bottom:8px}
-.btn{padding:7px 9px;font-size:9px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI App Generator - Build Apps Instantly</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
-<body>
-
-<div id="app">
-
-<div id="top">
-<div class="logo">⚗️</div>
-<div class="title">
-Class 12 Virtual Chemistry Lab
-<small>Preparation of K₂Cr₂O₇ & KMnO₄</small>
-</div>
-<div id="mobileHelp">👆 Drag • Double tap = action</div>
-</div>
-
-<div id="lab"></div>
-
-<div id="stepBox">
-<b id="experimentName">K₂Cr₂O₇ Preparation</b>
-<div id="stepText">Take the required apparatus from the wall rack and place it on the table.</div>
-</div>
-
-<div id="reactionScreen">
-<div id="screenTitle">● REACTION MONITOR / LAB SCREEN</div>
-<div id="reaction">
-Select an experiment and perform the steps.
-</div>
-<div id="screenStatus">STATUS: READY</div>
-</div>
-
-<div id="instruction">
-Drag equipment/reagents from the wall rack → table. Double-click/tap equipment to use it.
-</div>
-
-<div id="controls">
-<button class="btn" onclick="switchExperiment()">🔄 Switch Experiment</button>
-<button class="btn" onclick="resetLab()">↻ Reset</button>
-</div>
-
-<div id="toast"></div>
-
-</div>
-
-<script type="importmap">
-{
- "imports":{
-  "three":"https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
-  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/"
- }
-}
-</script>
-
-<script type="module">
-
-import * as THREE from "three";
-import {OrbitControls} from "three/addons/controls/OrbitControls.js";
-
-const container=document.getElementById("lab");
-
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x08151f);
-
-const camera=new THREE.PerspectiveCamera(
-45,
-container.clientWidth/container.clientHeight,
-0.1,
-100
-);
-
-camera.position.set(8,7,11);
-
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(container.clientWidth,container.clientHeight);
-renderer.shadowMap.enabled=true;
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-
-container.appendChild(renderer.domElement);
-
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.enableDamping=true;
-controls.target.set(0,1,0);
-controls.minDistance=5;
-controls.maxDistance=18;
-
-scene.add(new THREE.AmbientLight(0x9ac7df,1.8));
-
-const light=new THREE.DirectionalLight(0xffffff,3);
-light.position.set(5,10,7);
-light.castShadow=true;
-scene.add(light);
-
-const greenLight=new THREE.PointLight(0x00ff9d,8,15);
-greenLight.position.set(2,5,2);
-scene.add(greenLight);
-
-
-/* ---------------- MATERIALS ---------------- */
-
-const glassMat=new THREE.MeshPhysicalMaterial({
-color:0x9bdcff,
-transparent:true,
-opacity:.28,
-roughness:.08,
-transmission:.15,
-side:THREE.DoubleSide
-});
-
-const metalMat=new THREE.MeshStandardMaterial({
-color:0x858e96,
-metalness:.8,
-roughness:.25
-});
-
-const darkMat=new THREE.MeshStandardMaterial({
-color:0x22282d,
-metalness:.7,
-roughness:.3
-});
-
-const woodMat=new THREE.MeshStandardMaterial({
-color:0x57391f,
-roughness:.75
-});
-
-const whiteMat=new THREE.MeshStandardMaterial({
-color:0xe7e9e8,
-roughness:.45
-});
-
-
-/* ---------------- ROOM ---------------- */
-
-const floor=new THREE.Mesh(
-new THREE.BoxGeometry(22,.4,16),
-new THREE.MeshStandardMaterial({color:0x18242d})
-);
-floor.position.y=-.25;
-floor.receiveShadow=true;
-scene.add(floor);
-
-const table=new THREE.Mesh(
-new THREE.BoxGeometry(15,.65,7),
-woodMat
-);
-table.position.y=.05;
-table.receiveShadow=true;
-scene.add(table);
-
-const wall=new THREE.Mesh(
-new THREE.BoxGeometry(21,9,.35),
-new THREE.MeshStandardMaterial({color:0x10202a})
-);
-wall.position.set(0,4,-4);
-scene.add(wall);
-
-
-/* ---------------- WALL RACK ---------------- */
-
-const rack=new THREE.Mesh(
-new THREE.BoxGeometry(15,4,.25),
-new THREE.MeshStandardMaterial({color:0x1b3445})
-);
-rack.position.set(0,5.5,-3.75);
-scene.add(rack);
-
-const rackLabel=document.createElement("div");
-rackLabel.style.position="absolute";
-rackLabel.style.pointerEvents="none";
-
-
-/* ---------------- 3D TEXT ---------------- */
-
-function makeLabel(text,color="#bfefff"){
-
-const canvas=document.createElement("canvas");
-canvas.width=512;
-canvas.height=128;
-
-const ctx=canvas.getContext("2d");
-ctx.fillStyle=color;
-ctx.font="bold 38px Arial";
-ctx.textAlign="center";
-ctx.fillText(text,256,70);
-
-const texture=new THREE.CanvasTexture(canvas);
-
-const material=new THREE.SpriteMaterial({
-map:texture,
-transparent:true
-});
-
-const sprite=new THREE.Sprite(material);
-sprite.scale.set(2.2,.55,1);
-
-return sprite;
-}
-
-
-/* ---------------- ITEMS ---------------- */
-
-const allObjects=[];
-const tableObjects=[];
-const rackObjects=[];
-
-function register(obj,type,name){
-obj.userData.type=type;
-obj.userData.name=name;
-obj.userData.onTable=false;
-allObjects.push(obj);
-return obj;
-}
-
-
-function beaker(x,z,onTable=true){
-
-const g=new THREE.Group();
-
-const body=new THREE.Mesh(
-new THREE.CylinderGeometry(.75,.67,1.5,32,1,true),
-glassMat
-);
-body.position.y=1.1;
-g.add(body);
-
-const rim=new THREE.Mesh(
-new THREE.TorusGeometry(.75,.05,12,32),
-glassMat
-);
-rim.rotation.x=Math.PI/2;
-rim.position.y=1.85;
-g.add(rim);
-
-const liquid=new THREE.Mesh(
-new THREE.CylinderGeometry(.64,.61,.35,32),
-new THREE.MeshPhysicalMaterial({
-color:0x4ba8ff,
-transparent:true,
-opacity:.55
-})
-);
-liquid.position.y=.65;
-liquid.visible=false;
-liquid.name="liquid";
-g.add(liquid);
-
-register(g,"beaker","Beaker");
-g.position.set(x,onTable?.4:5,z);
-
-scene.add(g);
-
-if(onTable)tableObjects.push(g);
-
-return g;
-}
-
-
-function flask(x,z,onTable=true){
-
-const g=new THREE.Group();
-
-const body=new THREE.Mesh(
-new THREE.SphereGeometry(.9,32,24),
-glassMat
-);
-body.position.y=1;
-g.add(body);
-
-const neck=new THREE.Mesh(
-new THREE.CylinderGeometry(.27,.31,1.5,24),
-glassMat
-);
-neck.position.y=2.05;
-g.add(neck);
-
-const liquid=new THREE.Mesh(
-new THREE.SphereGeometry(.68,32,18),
-new THREE.MeshPhysicalMaterial({
-color:0x5baaff,
-transparent:true,
-opacity:.5
-})
-);
-liquid.scale.y=.4;
-liquid.position.y=.7;
-liquid.visible=false;
-liquid.name="liquid";
-g.add(liquid);
-
-register(g,"flask","Conical Flask");
-g.position.set(x,onTable?.4:5,z);
-
-scene.add(g);
-
-if(onTable)tableObjects.push(g);
-
-return g;
-}
-
-
-function testTube(x,z,onTable=true){
-
-const g=new THREE.Group();
-
-const tube=new THREE.Mesh(
-new THREE.CylinderGeometry(.3,.3,1.9,24,1,true),
-glassMat
-);
-tube.position.y=1.25;
-g.add(tube);
-
-const bottom=new THREE.Mesh(
-new THREE.SphereGeometry(.3,24,12),
-glassMat
-);
-bottom.scale.y=.45;
-bottom.position.y=.3;
-g.add(bottom);
-
-register(g,"testtube","Test Tube");
-g.position.set(x,onTable?.4:5,z);
-
-scene.add(g);
-
-if(onTable)tableObjects.push(g);
-
-return g;
-}
-
-
-function burner(x,z,onTable=true){
-
-const g=new THREE.Group();
-
-const base=new THREE.Mesh(
-new THREE.CylinderGeometry(.65,.75,.25,32),
-darkMat
-);
-base.position.y=.45;
-g.add(base);
-
-const tube=new THREE.Mesh(
-new THREE.CylinderGeometry(.2,.2,1,20),
-darkMat
-);
-tube.position.y=1;
-g.add(tube);
-
-const flame=new THREE.Mesh(
-new THREE.ConeGeometry(.25,.9,24),
-new THREE.MeshBasicMaterial({color:0x33aaff})
-);
-flame.position.y=1.9;
-flame.visible=false;
-flame.name="flame";
-g.add(flame);
-
-register(g,"burner","Bunsen Burner");
-g.position.set(x,onTable?.4:5,z);
-
-scene.add(g);
-
-if(onTable)tableObjects.push(g);
-
-return g;
-}
-
-
-function tripod(x,z,onTable=true){
-
-const g=new THREE.Group();
-
-const top=new THREE.Mesh(
-new THREE.CylinderGeometry(1.1,1.1,.12,32),
-metalMat
-);
-top.position.y=1.25;
-g.add(top);
-
-for(let i=0;i<3;i++){
-
-const leg=new THREE.Mesh(
-new THREE.CylinderGeometry(.07,.1,1.5,12),
-metalMat
-);
-
-leg.position.y=.65;
-leg.rotation.z=.28;
-leg.rotation.y=i*Math.PI*2/3;
-
-g.add(leg);
-}
-
-register(g,"tripod","Tripod Stand");
-g.position.set(x,onTable?.4:5,z);
-
-scene.add(g);
-
-if(onTable)tableObjects.push(g);
-
-return g;
-}
-
-
-function funnel(x,z,onTable=true){
-
-const g=new THREE.Group();
-
-const cone=new THREE.Mesh(
-new THREE.ConeGeometry(.6,.8,32,1,true),
-glassMat
-);
-cone.position.y=1.15;
-g.add(cone);
-
-const tube=new THREE.Mesh(
-new THREE.CylinderGeometry(.11,.11,1.4,16),
-glassMat
-);
-tube.position.y=.25;
-g.add(tube);
-
-register(g,"funnel","Funnel");
-g.position.set(x,onTable?.4:5,z);
-
-scene.add(g);
-
-if(onTable)tableObjects.push(g);
-
-return g;
-}
-
-
-/* ---------------- CHEMICAL BOTTLES ---------------- */
-
-function bottle(x,z,name,color){
-
-const g=new THREE.Group();
-
-const body=new THREE.Mesh(
-new THREE.CylinderGeometry(.42,.5,1.05,24),
-whiteMat
-);
-body.position.y=.85;
-g.add(body);
-
-const liquid=new THREE.Mesh(
-new THREE.CylinderGeometry(.37,.37,.55,24),
-new THREE.MeshStandardMaterial({color})
-);
-liquid.position.y=.58;
-g.add(liquid);
-
-const cap=new THREE.Mesh(
-new THREE.CylinderGeometry(.28,.28,.2,20),
-darkMat
-);
-cap.position.y=1.5;
-g.add(cap);
-
-const label=makeLabel(name);
-label.position.set(0,.9,.51);
-label.scale.set(1.25,.32,1);
-g.add(label);
-
-register(g,"chemical",name);
-g.position.set(x,5,z);
-
-scene.add(g);
-rackObjects.push(g);
-
-return g;
-}
-
-
-/* ---------------- WALL EQUIPMENT ---------------- */
-
-beaker(-5,-3.5,false);
-flask(-2.8,-3.5,false);
-testTube(-.5,-3.5,false);
-burner(2,-3.5,false);
-tripod(4.2,-3.5,false);
-funnel(6,-3.5,false);
-
-bottle(-5,-2.5,"FeCr₂O₄",0x263a2b);
-bottle(-2.8,-2.5,"Na₂CO₃",0xffffff);
-bottle(-.6,-2.5,"H₂SO₄",0xffc000);
-bottle(1.7,-2.5,"KCl",0xffffff);
-bottle(4,-2.5,"MnO₂",0x333333);
-bottle(6.2,-2.5,"KOH",0xffffff);
-
-
-/* ---------------- RACK TITLES ---------------- */
-
-const rackTitle=makeLabel("EQUIPMENT + REAGENTS  •  DRAG TO TABLE","#6fe5ff");
-rackTitle.position.set(-1,7.15,-3.5);
-rackTitle.scale.set(4,.6,1);
-scene.add(rackTitle);
-
-
-/* ---------------- EXPERIMENT STATE ---------------- */
-
-let experiment="dichromate";
-let step=0;
-let selected=null;
-let holding=null;
-let dragOffset=new THREE.Vector3();
-
-const data={
-
-dichromate:{
-name:"K₂Cr₂O₇ Preparation",
-steps:[
-{
-text:"Take Chromite Ore (FeCr₂O₄) and Na₂CO₃. Place them in a suitable vessel.",
-reaction:"FeCr₂O₄ + Na₂CO₃ + O₂ → Na₂CrO₄ + Fe₂O₃ + CO₂",
-action:"mix"
-},
-{
-text:"Heat the mixture using the Bunsen burner.",
-reaction:"4FeCr₂O₄ + 8Na₂CO₃ + 7O₂ → 8Na₂CrO₄ + 2Fe₂O₃ + 8CO₂",
-action:"heat"
-},
-{
-text:"Add H₂SO₄ to sodium chromate solution.",
-reaction:"2Na₂CrO₄ + H₂SO₄ → Na₂Cr₂O₇ + Na₂SO₄ + H₂O",
-action:"acid"
-},
-{
-text:"Add KCl. Potassium dichromate crystallises out.",
-reaction:"Na₂Cr₂O₇ + 2KCl → K₂Cr₂O₇↓ + 2NaCl",
-action:"kcl"
-},
-{
-text:"Filter and collect orange K₂Cr₂O₇ crystals.",
-reaction:"K₂Cr₂O₇(aq) → K₂Cr₂O₇(s)",
-action:"filter"
-}
-]
-},
-
-permanganate:{
-name:"KMnO₄ Preparation",
-steps:[
-{
-text:"Take MnO₂ and KOH and place them in the heating vessel.",
-reaction:"2MnO₂ + 4KOH + O₂ → 2K₂MnO₄ + 2H₂O",
-action:"mix"
-},
-{
-text:"Heat the mixture strongly in air.",
-reaction:"2MnO₂ + 4KOH + O₂ → 2K₂MnO₄ + 2H₂O",
-action:"heat"
-},
-{
-text:"Convert potassium manganate into permanganate.",
-reaction:"3K₂MnO₄ + 2H₂O → 2KMnO₄ + MnO₂ + 4KOH",
-action:"convert"
-},
-{
-text:"Filter off MnO₂ residue.",
-reaction:"MnO₂(s) → filtered residue",
-action:"filter"
-},
-{
-text:"Crystallise the KMnO₄ solution.",
-reaction:"KMnO₄(aq) → KMnO₄(s)",
-action:"crystal"
-}
-]
-}
-};
-
-
-/* ---------------- UI ---------------- */
-
-function toast(text){
-
-const t=document.getElementById("toast");
-
-t.textContent=text;
-t.classList.add("show");
-
-setTimeout(()=>{
-t.classList.remove("show");
-},1800);
-}
-
-
-function updateScreen(){
-
-const d=data[experiment];
-
-document.getElementById("experimentName").textContent=d.name;
-
-if(step>=d.steps.length){
-
-document.getElementById("stepText").textContent="🎉 Experiment completed.";
-
-document.getElementById("reaction").innerHTML=
-"<b>FINAL PRODUCT</b><br><br>"+
-(experiment==="dichromate"?
-"🟠 K₂Cr₂O₇ crystals":
-"🟣 KMnO₄ crystals");
-
-document.getElementById("screenStatus").textContent="STATUS: COMPLETED";
-
-return;
-}
-
-document.getElementById("stepText").textContent=
-"Step "+(step+1)+": "+d.steps[step].text;
-
-document.getElementById("reaction").innerHTML=
-"<span style='color:#739a8b'>Waiting for action...</span>";
-
-document.getElementById("screenStatus").textContent=
-"STATUS: STEP "+(step+1)+" / "+d.steps.length;
-}
-
-
-function showReaction(){
-
-const current=data[experiment].steps[step];
-
-document.getElementById("reaction").innerHTML=
-current.reaction;
-
-document.getElementById("screenStatus").textContent=
-"✓ REACTION BALANCED";
-
-}
-
-
-function completeStep(){
-
-showReaction();
-
-step++;
-
-setTimeout(updateScreen,1300);
-
-}
-
-
-window.switchExperiment=function(){
-
-experiment=experiment==="dichromate"?"permanganate":"dichromate";
-
-step=0;
-
-resetObjects();
-
-updateScreen();
-
-toast("Experiment switched");
-};
-
-
-window.resetLab=function(){
-
-step=0;
-
-resetObjects();
-
-updateScreen();
-
-toast("Lab reset");
-};
-
-
-function resetObjects(){
-
-allObjects.forEach(o=>{
-
-if(o.userData.onTable){
-
-o.userData.onTable=false;
-
-if(o.parent)scene.remove(o);
-
-}
-
-});
-
-selected=null;
-holding=null;
-}
-
-
-/* ---------------- DRAG FROM WALL ---------------- */
-
-const raycaster=new THREE.Raycaster();
-const pointer=new THREE.Vector2();
-
-function pointerPosition(e){
-
-const rect=renderer.domElement.getBoundingClientRect();
-
-pointer.x=((e.clientX-rect.left)/rect.width)*2-1;
-pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;
-}
-
-
-function findRoot(obj){
-
-while(obj.parent && !obj.userData.type){
-obj=obj.parent;
-}
-
-return obj;
-}
-
-
-renderer.domElement.addEventListener("pointerdown",e=>{
-
-pointerPosition(e);
-
-raycaster.setFromCamera(pointer,camera);
-
-const hits=raycaster.intersectObjects(allObjects,true);
-
-if(!hits.length)return;
-
-const root=findRoot(hits[0].object);
-
-selected=root;
-
-if(selected.userData.type==="chemical" ||
-selected.position.y>3){
-
-holding=selected;
-
-toast("Picked: "+selected.userData.name);
-}
-
-});
-
-
-renderer.domElement.addEventListener("pointermove",e=>{
-
-if(!holding)return;
-
-pointerPosition(e);
-
-raycaster.setFromCamera(pointer,camera);
-
-const tableHit=raycaster.intersectObject(table)[0];
-
-if(tableHit){
-
-const p=tableHit.point;
-
-holding.position.x=p.x;
-holding.position.z=p.z;
-holding.position.y=.4;
-
-}
-
-});
-
-
-renderer.domElement.addEventListener("pointerup",e=>{
-
-if(!holding)return;
-
-if(holding.position.y<1){
-
-holding.userData.onTable=true;
-
-if(!tableObjects.includes(holding))
-tableObjects.push(holding);
-
-toast(holding.userData.name+" placed on table");
-
-}
-
-holding=null;
-
-});
-
-
-/* ---------------- DOUBLE CLICK ACTION ---------------- */
-
-renderer.domElement.addEventListener("dblclick",e=>{
-
-pointerPosition(e);
-
-raycaster.setFromCamera(pointer,camera);
-
-const hits=raycaster.intersectObjects(allObjects,true);
-
-if(!hits.length)return;
-
-const obj=findRoot(hits[0].object);
-
-useObject(obj);
-
-});
-
-
-function useObject(obj){
-
-const current=data[experiment].steps[step];
-
-if(!current)return;
-
-if(obj.userData.type==="burner"){
-
-const flame=obj.children.find(x=>x.name==="flame");
-
-if(flame){
-
-flame.visible=!flame.visible;
-
-if(flame.visible){
-
-toast("🔥 Burner ON");
-
-if(current.action==="heat"){
-setTimeout(()=>{
-toast("Heating complete");
-completeStep();
-},2200);
-}
-
-}else{
-toast("Burner OFF");
-}
-
-}
-
-return;
-}
-
-
-if(obj.userData.type==="chemical"){
-
-toast("Chemical: "+obj.userData.name);
-
-if(
-experiment==="dichromate" &&
-current.action==="acid" &&
-obj.userData.name==="H₂SO₄"
-){
-toast("H₂SO₄ added");
-completeStep();
-return;
-}
-
-if(
-experiment==="dichromate" &&
-current.action==="kcl" &&
-obj.userData.name==="KCl"
-){
-toast("KCl added");
-completeStep();
-return;
-}
-
-if(
-experiment==="permanganate" &&
-current.action==="convert"
-){
-toast("Conversion started");
-setTimeout(completeStep,1200);
-return;
-}
-
-return;
-}
-
-
-if(obj.userData.type==="beaker" ||
-obj.userData.type==="flask"){
-
-if(current.action==="mix"){
-
-const liquid=obj.children.find(x=>x.name==="liquid");
-
-if(liquid){
-
-liquid.visible=true;
-
-liquid.material.color.set(
-experiment==="dichromate"?0xffb000:0x15a864
-);
-
-}
-
-toast("Reagents mixed");
-completeStep();
-return;
-}
-
-if(current.action==="filter"){
-
-toast("Filtration setup started");
-completeStep();
-return;
-}
-
-}
-
-if(obj.userData.type==="funnel" &&
-current.action==="filter"){
-
-toast("Filtering...");
-setTimeout(completeStep,1300);
-return;
-}
-
-}
-
-
-/* ---------------- TOUCH SUPPORT ---------------- */
-
-let lastTap=0;
-
-renderer.domElement.addEventListener("pointerup",e=>{
-
-const now=Date.now();
-
-if(now-lastTap<350){
-
-renderer.domElement.dispatchEvent(
-new MouseEvent("dblclick",{
-clientX:e.clientX,
-clientY:e.clientY
-})
-);
-
-}
-
-lastTap=now;
-
-});
-
-
-/* ---------------- ANIMATION ---------------- */
-
-function animate(){
-
-requestAnimationFrame(animate);
-
-allObjects.forEach(obj=>{
-
-if(obj.userData.type==="burner"){
-
-const flame=obj.children.find(x=>x.name==="flame");
-
-if(flame && flame.visible){
-
-flame.scale.y=.9+
-Math.sin(Date.now()*.018)*.15;
-
-}
-
-}
-
-});
-
-controls.update();
-
-renderer.render(scene,camera);
-
-}
-
-animate();
-
-
-/* ---------------- RESIZE ---------------- */
-
-window.addEventListener("resize",()=>{
-
-camera.aspect=container.clientWidth/container.clientHeight;
-
-camera.updateProjectionMatrix();
-
-renderer.setSize(
-container.clientWidth,
-container.clientHeight
-);
-
-});
-
-
-updateScreen();
-
-</script>
-
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-indigo-500 text-2xl"></i>
+                <span class="text-xl font-bold tracking-tight">AI<span class="text-indigo-500">AppBuilder</span></span>
+            </div>
+            <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1 rounded-full font-medium">GitHub Pages Ready</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl mx-auto w-full p-4 md:p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Left Column: Prompt Section -->
+        <div class="flex flex-col space-y-4 bg-slate-900/40 border border-slate-800 p-6 rounded-2xl shadow-xl">
+            <div>
+                <h1 class="text-2xl font-bold mb-1">Aapko kaisa App chahiye?</h1>
+                <p class="text-slate-400 text-sm">Apne app ka idea detail mein yahan likhein, AI uske mutabiq code taiyar karega.</p>
+            </div>
+
+            <div class="flex flex-col space-y-2 flex-grow">
+                <label for="appPrompt" class="text-sm font-medium text-slate-300">App Description / Prompt:</label>
+                <textarea id="appPrompt" rows="6" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-100 focus:outline-none focus:border-indigo-500 transition resize-none placeholder:text-slate-600" placeholder="Jaise: Ek To-Do list app banao jisme dark mode ho aur tasks local storage mein save ho sakein..."></textarea>
+            </div>
+
+            <button onclick="generateApp()" id="generateBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition flex items-center justify-center space-x-2 shadow-lg shadow-indigo-600/20 cursor-pointer">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Generate App</span>
+            </button>
+        </div>
+
+        <!-- Right Column: Preview & Code Output Section -->
+        <div class="flex flex-col bg-slate-900/40 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+            <!-- Tabs -->
+            <div class="flex border-b border-slate-800 bg-slate-900/80">
+                <button onclick="switchTab('preview')" id="tabPreview" class="flex-1 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400 transition">Live Preview</button>
+                <button onclick="switchTab('code')" id="tabCode" class="flex-1 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Source Code</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="flex-grow relative bg-slate-950 flex items-center justify-center p-4 min-h-[350px]">
+                <!-- Preview Screen -->
+                <div id="previewContent" class="w-full h-full flex items-center justify-center">
+                    <div class="text-center text-slate-600 space-y-2">
+                        <i class="fa-solid fa-code text-4xl mb-2"></i>
+                        <p class="text-sm">App generate hone ke baad preview yahan dikhega.</p>
+                    </div>
+                </div>
+
+                <!-- Code Screen -->
+                <div id="codeContent" class="w-full h-full hidden overflow-auto">
+                    <pre class="text-xs text-indigo-300 p-4 font-mono"><code id="codeOutput">&lt;!-- Code will appear here --&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+        Powered by HTML, Tailwind & AI Logic. Host free on GitHub Pages.
+    </footer>
+
+    <!-- JavaScript for Functionality -->
+    <script>
+        function switchTab(tab) {
+            const previewContent = document.getElementById('previewContent');
+            const codeContent = document.getElementById('codeContent');
+            const tabPreview = document.getElementById('tabPreview');
+            const tabCode = document.getElementById('tabCode');
+
+            if (tab === 'preview') {
+                previewContent.classList.remove('hidden');
+                codeContent.classList.add('hidden');
+                tabPreview.classList.add('border-indigo-500', 'text-indigo-400');
+                tabPreview.classList.remove('border-transparent', 'text-slate-400');
+                tabCode.classList.remove('border-indigo-500', 'text-indigo-400');
+                tabCode.classList.add('border-transparent', 'text-slate-400');
+            } else {
+                codeContent.classList.remove('hidden');
+                previewContent.classList.add('hidden');
+                tabCode.classList.add('border-indigo-500', 'text-indigo-400');
+                tabCode.classList.remove('border-transparent', 'text-slate-400');
+                tabPreview.classList.remove('border-indigo-500', 'text-indigo-400');
+                tabPreview.classList.add('border-transparent', 'text-slate-400');
+            }
+        }
+
+        function generateApp() {
+            const promptText = document.getElementById('appPrompt').value.trim();
+            const previewContainer = document.getElementById('previewContent');
+            const codeOutput = document.getElementById('codeOutput');
+
+            if (!promptText) {
+                alert('Pehle apna app idea type karein!');
+                return;
+            }
+
+            // Loading state
+            document.getElementById('generateBtn').innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Generating...</span>`;
+
+            setTimeout(() => {
+                // Dummy generated app structure based on prompt (Aap isme OpenAI/Gemini API integrate kar sakte hain)
+                const generatedHTML = `
+<div class="p-6 bg-white text-slate-900 rounded-xl shadow-lg max-w-sm mx-auto my-auto w-full">
+    <h2 class="text-xl font-bold mb-2 text-indigo-600">Generated App</h2>
+    <p class="text-sm text-slate-600 mb-4">Idea: ${promptText}</p>
+    <input type="text" placeholder="Type something..." class="w-full border p-2 rounded mb-3 text-sm">
+    <button onclick="alert('Button clicked!')" class="w-full bg-indigo-600 text-white py-2 rounded font-medium text-sm">Click Me</button>
+</div>`;
+
+                previewContainer.innerHTML = generatedHTML;
+                codeOutput.textContent = generatedHTML;
+
+                // Reset button
+                document.getElementById('generateBtn').innerHTML = `<i class="fa-solid fa-bolt"></i><span>Generate App</span>`;
+            }, 1200);
+        }
+    </script>
 </body>
 </html>
