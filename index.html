@@ -1,133 +1,162 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI App Generator - Build Apps Instantly</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Desi App Maker - Apni App Khud Banao</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Header -->
-    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-wand-magic-sparkles text-indigo-500 text-2xl"></i>
-                <span class="text-xl font-bold tracking-tight">AI<span class="text-indigo-500">AppBuilder</span></span>
-            </div>
-            <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1 rounded-full font-medium">GitHub Pages Ready</span>
-        </div>
-    </header>
+    <!-- Container -->
+    <div class="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
 
-    <!-- Main Container -->
-    <main class="flex-grow max-w-7xl mx-auto w-full p-4 md:p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        <!-- Left Column: Prompt Section -->
-        <div class="flex flex-col space-y-4 bg-slate-900/40 border border-slate-800 p-6 rounded-2xl shadow-xl">
+        <!-- Left Side: Wizard Steps -->
+        <div class="p-8 flex flex-col justify-between">
             <div>
-                <h1 class="text-2xl font-bold mb-1">Aapko kaisa App chahiye?</h1>
-                <p class="text-slate-400 text-sm">Apne app ka idea detail mein yahan likhein, AI uske mutabiq code taiyar karega.</p>
-            </div>
+                <!-- Header -->
+                <div class="flex items-center space-x-2 mb-6">
+                    <i class="fa-solid fa-mobile-screen-button text-indigo-500 text-2xl"></i>
+                    <h1 class="text-xl font-bold">App Creator Studio</h1>
+                </div>
 
-            <div class="flex flex-col space-y-2 flex-grow">
-                <label for="appPrompt" class="text-sm font-medium text-slate-300">App Description / Prompt:</label>
-                <textarea id="appPrompt" rows="6" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-100 focus:outline-none focus:border-indigo-500 transition resize-none placeholder:text-slate-600" placeholder="Jaise: Ek To-Do list app banao jisme dark mode ho aur tasks local storage mein save ho sakein..."></textarea>
-            </div>
+                <!-- STEP 1: App Info & Icon -->
+                <div id="step1" class="space-y-4">
+                    <h2 class="text-lg font-semibold text-indigo-400">Step 1: App ki Details aur Photo</h2>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">App Ka Naam</label>
+                        <input type="text" id="appNameInput" placeholder="Jaise: Mera Khata, MyNotes" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Home Screen App Icon (Photo URL)</label>
+                        <input type="text" id="appIconInput" placeholder="Image ka direct link paste karein (Imgur etc.)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <button onclick="nextStep(2)" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer mt-4">Aage Badhein <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                </div>
 
-            <button onclick="generateApp()" id="generateBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition flex items-center justify-center space-x-2 shadow-lg shadow-indigo-600/20 cursor-pointer">
-                <i class="fa-solid fa-bolt"></i>
-                <span>Generate App</span>
-            </button>
-        </div>
-
-        <!-- Right Column: Preview & Code Output Section -->
-        <div class="flex flex-col bg-slate-900/40 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
-            <!-- Tabs -->
-            <div class="flex border-b border-slate-800 bg-slate-900/80">
-                <button onclick="switchTab('preview')" id="tabPreview" class="flex-1 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400 transition">Live Preview</button>
-                <button onclick="switchTab('code')" id="tabCode" class="flex-1 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Source Code</button>
-            </div>
-
-            <!-- Tab Contents -->
-            <div class="flex-grow relative bg-slate-950 flex items-center justify-center p-4 min-h-[350px]">
-                <!-- Preview Screen -->
-                <div id="previewContent" class="w-full h-full flex items-center justify-center">
-                    <div class="text-center text-slate-600 space-y-2">
-                        <i class="fa-solid fa-code text-4xl mb-2"></i>
-                        <p class="text-sm">App generate hone ke baad preview yahan dikhega.</p>
+                <!-- STEP 2: App Loader Screen -->
+                <div id="step2" class="space-y-4 hidden">
+                    <h2 class="text-lg font-semibold text-indigo-400">Step 2: App Loader / Splash Screen</h2>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Loader ka Text / Tagline</label>
+                        <input type="text" id="loaderTextInput" placeholder="Jaise: Loading your app, Please wait..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div class="flex space-x-2 mt-4">
+                        <button onclick="prevStep(1)" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer">Piche</button>
+                        <button onclick="nextStep(3)" class="w-1/2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer">Aage Badhein</button>
                     </div>
                 </div>
 
-                <!-- Code Screen -->
-                <div id="codeContent" class="w-full h-full hidden overflow-auto">
-                    <pre class="text-xs text-indigo-300 p-4 font-mono"><code id="codeOutput">&lt;!-- Code will appear here --&gt;</code></pre>
+                <!-- STEP 3: Main App Feature/Function -->
+                <div id="step3" class="space-y-4 hidden">
+                    <h2 class="text-lg font-semibold text-indigo-400">Step 3: App ke Andar Kya Chale?</h2>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">App ka Idea / Function batayein</label>
+                        <textarea id="appIdeaInput" rows="4" placeholder="Jaise: Ek calculator app banao ya ek note pad jisme text save ho sake..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 resize-none"></textarea>
+                    </div>
+                    <div class="flex space-x-2 mt-4">
+                        <button onclick="prevStep(2)" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer">Piche</button>
+                        <button onclick="buildApp()" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl transition text-sm cursor-pointer shadow-lg shadow-emerald-600/20"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> App Banayein</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-500 mt-6 text-center">
+                GitHub Pages par free host karein!
+            </div>
+        </div>
+
+        <!-- Right Side: Phone Mockup Preview -->
+        <div class="bg-slate-950 p-6 flex flex-col items-center justify-center border-l border-slate-800">
+            <span class="text-xs text-slate-400 mb-3 font-medium"><i class="fa-solid fa-eye text-indigo-400 mr-1"></i> Live Phone Preview</span>
+            
+            <!-- Phone Outer Frame -->
+            <div class="w-[260px] h-[500px] bg-black border-4 border-slate-700 rounded-[40px] p-3 shadow-2xl relative flex flex-col overflow-hidden">
+                <!-- Phone Speaker Notch -->
+                <div class="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-4 bg-slate-800 rounded-full z-20"></div>
+
+                <!-- Phone Screen Inside -->
+                <div id="phoneScreen" class="w-full h-full bg-slate-900 rounded-[30px] overflow-hidden relative flex flex-col justify-center items-center text-center p-4">
+                    
+                    <!-- Default View: Home Screen Icon Simulator -->
+                    <div id="phoneHomeScreenView" class="flex flex-col items-center space-y-2">
+                        <div id="previewIconBox" class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg text-white text-2xl font-bold overflow-hidden">
+                            <i class="fa-solid fa-mobile"></i>
+                        </div>
+                        <span id="previewAppName" class="text-xs font-semibold text-slate-200">Aapka App</span>
+                        <span class="text-[10px] text-slate-500 mt-4">(App banane ke baad yahan click karke kholein)</span>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-    </main>
+    </div>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-        Powered by HTML, Tailwind & AI Logic. Host free on GitHub Pages.
-    </footer>
-
-    <!-- JavaScript for Functionality -->
+    <!-- JavaScript Logic -->
     <script>
-        function switchTab(tab) {
-            const previewContent = document.getElementById('previewContent');
-            const codeContent = document.getElementById('codeContent');
-            const tabPreview = document.getElementById('tabPreview');
-            const tabCode = document.getElementById('tabCode');
+        function nextStep(step) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
 
-            if (tab === 'preview') {
-                previewContent.classList.remove('hidden');
-                codeContent.classList.add('hidden');
-                tabPreview.classList.add('border-indigo-500', 'text-indigo-400');
-                tabPreview.classList.remove('border-transparent', 'text-slate-400');
-                tabCode.classList.remove('border-indigo-500', 'text-indigo-400');
-                tabCode.classList.add('border-transparent', 'text-slate-400');
-            } else {
-                codeContent.classList.remove('hidden');
-                previewContent.classList.add('hidden');
-                tabCode.classList.add('border-indigo-500', 'text-indigo-400');
-                tabCode.classList.remove('border-transparent', 'text-slate-400');
-                tabPreview.classList.remove('border-indigo-500', 'text-indigo-400');
-                tabPreview.classList.add('border-transparent', 'text-slate-400');
+            document.getElementById('step' + step).classList.remove('hidden');
+
+            // Update live phone preview icon/name dynamically
+            const appName = document.getElementById('appNameInput').value || 'Aapka App';
+            const iconUrl = document.getElementById('appIconInput').value;
+            
+            document.getElementById('previewAppName').innerText = appName;
+            if(iconUrl) {
+                document.getElementById('previewIconBox').innerHTML = `<img src="${iconUrl}" class="w-full h-full object-cover">`;
             }
         }
 
-        function generateApp() {
-            const promptText = document.getElementById('appPrompt').value.trim();
-            const previewContainer = document.getElementById('previewContent');
-            const codeOutput = document.getElementById('codeOutput');
+        function prevStep(step) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
 
-            if (!promptText) {
-                alert('Pehle apna app idea type karein!');
-                return;
-            }
+            document.getElementById('step' + step).classList.remove('hidden');
+        }
 
-            // Loading state
-            document.getElementById('generateBtn').innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Generating...</span>`;
+        function buildApp() {
+            const loaderText = document.getElementById('loaderTextInput').value || 'Loading App...';
+            const appIdea = document.getElementById('appIdeaInput').value || 'Simple App';
+            const appName = document.getElementById('appNameInput').value || 'Mera App';
+            const phoneScreen = document.getElementById('phoneScreen');
 
+            // Step A: Show Loader inside phone
+            phoneScreen.innerHTML = `
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <i class="fa-solid fa-circle-notch animate-spin text-3xl text-indigo-500"></i>
+                    <p class="text-xs text-slate-300 font-medium">${loaderText}</p>
+                </div>
+            `;
+
+            // Step B: After 1.5 seconds, open the generated app inside the phone screen!
             setTimeout(() => {
-                // Dummy generated app structure based on prompt (Aap isme OpenAI/Gemini API integrate kar sakte hain)
-                const generatedHTML = `
-<div class="p-6 bg-white text-slate-900 rounded-xl shadow-lg max-w-sm mx-auto my-auto w-full">
-    <h2 class="text-xl font-bold mb-2 text-indigo-600">Generated App</h2>
-    <p class="text-sm text-slate-600 mb-4">Idea: ${promptText}</p>
-    <input type="text" placeholder="Type something..." class="w-full border p-2 rounded mb-3 text-sm">
-    <button onclick="alert('Button clicked!')" class="w-full bg-indigo-600 text-white py-2 rounded font-medium text-sm">Click Me</button>
-</div>`;
-
-                previewContainer.innerHTML = generatedHTML;
-                codeOutput.textContent = generatedHTML;
-
-                // Reset button
-                document.getElementById('generateBtn').innerHTML = `<i class="fa-solid fa-bolt"></i><span>Generate App</span>`;
-            }, 1200);
+                phoneScreen.innerHTML = `
+                    <div class="w-full h-full flex flex-col bg-slate-900 text-left p-3 overflow-y-auto">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+                            <span class="text-xs font-bold text-indigo-400">${appName}</span>
+                            <button onclick="location.reload()" class="text-[10px] text-red-400 bg-red-500/10 px-2 py-0.5 rounded">Band Karein</button>
+                        </div>
+                        <div class="text-xs text-slate-400 mb-2">Feature: <span class="text-slate-200">${appIdea}</span></div>
+                        
+                        <!-- Interactive Functional Simulated App Box -->
+                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex-grow flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold text-white mb-2">Swagat hai!</h3>
+                                <input type="text" id="userTypedText" placeholder="Kuch yahan type karein..." class="w-full bg-slate-900 border border-slate-800 p-2 rounded text-xs text-white mb-2">
+                            </div>
+                            <button onclick="alert('Aapka data save ho gaya!')" class="w-full bg-indigo-600 text-white text-xs py-2 rounded font-medium">Action Button</button>
+                        </div>
+                    </div>
+                `;
+            }, 1500);
         }
     </script>
 </body>
