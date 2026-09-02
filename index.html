@@ -3,46 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCall - GOPAL</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://jsdelivr.net"></script>
+    <title GOPAL Talk Video Call</title>
     <style>
-        body {
-            background: #0b0f19;
-            color: #f3f4f6;
+        /* Pura page cover karne ke liye styling */
+        html, body {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-col: flex;
-            flex-direction: column;
+            background-color: #000;
         }
-        .gradient-text {
-            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Bar with GOPAL Name -->
-    <header class="w-full bg-gray-900/80 border-b border-gray-800 px-6 py-4 flex justify-between items-center z-10">
-        <span class="text-xl font-bold tracking-tight text-white">Nex<span class="gradient-text">Call</span></span>
-        <div class="text-sm font-bold tracking-wider text-indigo-400 bg-gray-950/60 border border-gray-800 px-4 py-1.5 rounded-full">
-            <span class="h-2 w-2 inline-block rounded-full bg-indigo-500 animate-pulse mr-2"></span>GOPAL
-        </div>
-    </header>
-
-    <!-- Full Screen Brave Talk Display Area -->
-    <main class="flex-1 w-full relative bg-black">
-        <iframe 
-            src="https://talk.brave.com" 
-            allow="camera; microphone; display-capture; autoplay; clipboard-write" 
-            class="absolute top-0 left-0 w-full h-full border-none">
-        </iframe>
-    </main>
+    <!-- Brave Talk ko load karne ke liye iframe -->
+    <!-- allow attribute camera aur microphone permissions ke liye zaroori hai -->
+    <iframe 
+        src="https://talk.brave.com" 
+        allow="camera; microphone; display-capture; fullscreen">
+    </iframe>
 
 </body>
 </html>
