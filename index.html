@@ -1,26 +1,23 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCall - Premium Instant Video Calling</title>
-    <!-- Tailwind CSS CDN for Premium UI styling -->
+    <title>NexCall Pro - Premium Video Conferencing</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- FontAwesome for Premium Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts (Inter) -->
+    <!-- Google Font (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Jitsi External API Script -->
+    <!-- Jitsi API -->
     <script src="https://meet.jit.si/external_api.js"></script>
-
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent),
-                        radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.15), transparent),
-                        #0b0f19;
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent), radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.15), transparent), #0b0f19;
             min-height: 100vh;
             color: #f3f4f6;
         }
@@ -29,340 +26,215 @@
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .gradient-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .gradient-btn-indigo {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
         }
-        .gradient-btn:hover {
+        .gradient-btn-purple {
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+        }
+        .btn-hover:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        /* Custom scrollbar for chat/lists if any */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-between p-4 md:p-8">
+<body class="flex flex-col items-center justify-between p-4 md:p-8 min-h-screen">
 
-    <!-- Header / Brand -->
-    <header class="w-full max-w-6xl flex justify-between items-center mb-8">
+    <!-- Header -->
+    <header class="w-full max-w-6xl flex justify-between items-center mb-6">
         <div class="flex items-center gap-3">
             <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <i class="fa-solid fa-video text-white text-lg"></i>
+                <i class="fa-solid fa-shield-halved text-white text-lg"></i>
             </div>
-            <span class="text-2xl font-bold tracking-tight text-white">Nex<span class="gradient-text">Call</span></span>
+            <span class="text-2xl font-bold tracking-tight text-white">Nex<span class="text-indigo-400">Call Pro</span></span>
         </div>
-        <div class="flex items-center gap-2 text-xs md:text-sm bg-gray-900/60 border border-gray-800 px-4 py-2 rounded-full text-gray-400">
-            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> GitHub Pages Ready
+        <div class="flex items-center gap-2 text-xs md:text-sm bg-gray-900/60 border border-gray-800 px-4 py-2 rounded-full font-semibold text-indigo-400">
+            <span class="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span> GOPAL
         </div>
     </header>
 
-    <!-- Main Content Grid -->
-    <main id="main-interface" class="w-full max-w-md my-auto">
-        <div class="glass-panel p-8 rounded-3xl shadow-2xl relative overflow-hidden transition-all duration-500">
+    <!-- Main Container -->
+    <main class="w-full max-w-5xl my-auto flex flex-col items-center justify-center">
+        
+        <!-- Main Dashboard Panel -->
+        <div id="dashboard-panel" class="w-full max-w-4xl grid md:grid-cols-2 gap-6 transition-all duration-500">
             
-            <!-- Floating Decorative Blob -->
-            <div class="absolute -top-10 -right-10 w-32 height-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
-
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold tracking-tight text-white mb-2">Welcome Screen</h2>
-                <p class="text-gray-400 text-sm">Instant, secure & encrypted audio/video calling</p>
-            </div>
-
-            <!-- Error Notification Alert Box -->
-            <div id="error-box" class="hidden mb-5 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm flex items-start gap-3 animate-fade-in">
-                <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
-                <span id="error-message">Error message text goes here.</span>
-            </div>
-
-            <!-- Configuration Form -->
-            <div class="space-y-6">
-                <!-- User Name Input -->
+            <!-- Host Panel -->
+            <div class="glass-panel p-8 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col justify-between">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 tracking-wider uppercase mb-2" for="username">Your Name</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500">
-                            <i class="fa-regular fa-user"></i>
-                        </span>
-                        <input type="text" id="username" placeholder="Enter your full name" 
-                            class="w-full bg-gray-900/50 border border-gray-800 rounded-xl py-3.5 pl-11 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-sm font-medium">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="h-12 w-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 text-xl border border-indigo-500/20">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">Host a Meeting</h2>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6">Create a meeting, get host access, and kick or manage participants anytime.</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Host Name</label>
+                            <input type="text" id="host-name" placeholder="Your Name" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Meeting Code (1 - 50000)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="host-code" min="1" max="50000" placeholder="e.g. 12345" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 text-sm">
+                                <button id="gen-code-btn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 rounded-xl border border-gray-700 text-xs transition-colors cursor-pointer">Auto</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Action Tabs / Option Toggle -->
-                <div class="grid grid-cols-2 p-1.5 bg-gray-950/80 rounded-xl border border-gray-900">
-                    <button id="tab-host" onclick="switchTab('host')" 
-                        class="py-2.5 text-sm font-medium rounded-lg transition-all duration-300 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md">
-                        <i class="fa-solid fa-satellite-dish mr-2"></i>Host Call
-                    </button>
-                    <button id="tab-join" onclick="switchTab('join')" 
-                        class="py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-400 hover:text-white">
-                        <i class="fa-solid fa-right-to-bracket mr-2"></i>Join Call
-                    </button>
-                </div>
-
-                <!-- Dynamic Code Input Section -->
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="block text-xs font-semibold text-gray-400 tracking-wider uppercase" id="code-label" for="call-code">Custom Call Code</label>
-                        <span class="text-[11px] text-gray-500" id="code-hint">Range: 2-5 digits</span>
-                    </div>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500">
-                            <i class="fa-solid fa-key"></i>
-                        </span>
-                        <input type="text" id="call-code" placeholder="Example: 786, 9924" maxlength="5"
-                            class="w-full bg-gray-900/50 border border-gray-800 rounded-xl py-3.5 pl-11 pr-24 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all tracking-wider font-mono text-sm">
-                        
-                        <!-- Auto Generate Button for Host -->
-                        <button id="btn-generate" onclick="generateRandomCode()" 
-                            class="absolute inset-y-1.5 right-1.5 px-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg text-xs font-medium border border-gray-700 transition-colors flex items-center gap-1.5">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Launch Action Button -->
-                <button id="btn-action" onclick="processCallRequest()" 
-                    class="gradient-btn w-full text-white font-semibold py-4 px-6 rounded-xl text-sm tracking-wide flex items-center justify-center gap-2 cursor-pointer">
-                    <span id="btn-text">Initialize Host Room</span>
-                    <i class="fa-solid fa-arrow-right text-xs" id="btn-icon"></i>
+                <button id="start-host-btn" class="w-full gradient-btn-indigo btn-hover text-white font-medium py-3.5 px-4 rounded-xl mt-6 flex items-center justify-center gap-2 text-sm cursor-pointer shadow-lg shadow-indigo-500/25">
+                    <i class="fa-solid fa-video"></i> Create & Launch Call
                 </button>
             </div>
+
+            <!-- Join Panel -->
+            <div class="glass-panel p-8 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="h-12 w-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-xl border border-purple-500/20">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">Join Meeting</h2>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6">Enter the exact code shared by your host to instantly secure-join their room.</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Your Name</label>
+                            <input type="text" id="user-name" placeholder="Enter full name" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-purple-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Enter Code</label>
+                            <input type="number" id="join-code" min="1" max="50000" placeholder="e.g. 12345" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-purple-500 text-sm">
+                        </div>
+                    </div>
+                </div>
+                <button id="start-join-btn" class="w-full gradient-btn-purple btn-hover text-white font-medium py-3.5 px-4 rounded-xl mt-6 flex items-center justify-center gap-2 text-sm cursor-pointer shadow-lg shadow-purple-500/25">
+                    <i class="fa-solid fa-right-to-bracket"></i> Join Secure Call
+                </button>
+            </div>
+
         </div>
+
+        <!-- Video Display Container -->
+        <div id="video-wrapper" class="hidden w-full max-w-5xl flex flex-col gap-3">
+            <div class="w-full flex justify-between items-center bg-gray-900/80 border border-gray-800 px-4 py-2.5 rounded-xl text-xs md:text-sm">
+                <span class="text-gray-400"><i class="fa-solid fa-hashtag text-indigo-400 mr-1.5"></i>Active Code: <strong id="active-code-lbl" class="text-white"></strong></span>
+                <span id="role-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
+            </div>
+            <div id="jitsi-container" class="w-full h-[600px] glass-panel rounded-3xl overflow-hidden shadow-2xl relative"></div>
+        </div>
+
     </main>
 
-    <!-- Fullscreen Video Call Screen container -->
-    <div id="call-screen" class="hidden fixed inset-0 z-50 bg-black flex flex-col">
-        <!-- Live Call Top Status Bar -->
-        <div class="absolute top-0 inset-x-0 p-4 bg-gradient-to-b from-black/80 to-transparent z-10 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="bg-indigo-600/80 px-3 py-1.5 rounded-lg border border-indigo-400/20 text-xs font-bold tracking-widest text-white flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-red-500 animate-ping"></span> LIVE
-                </div>
-                <div class="text-sm font-medium text-gray-200">
-                    Room Code: <span id="display-room-code" class="font-mono bg-white/10 px-2 py-0.5 rounded border border-white/10 text-white font-bold ml-1"></span>
-                </div>
-            </div>
-            <button onclick="exitActiveCall()" class="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white px-4 py-2 rounded-xl text-xs font-semibold border border-red-500/30 transition-all flex items-center gap-2">
-                <i class="fa-solid fa-phone-slash"></i> Leave Session
-            </button>
-        </div>
-        
-        <!-- Video Stream Jitsi Frame Container -->
-        <div id="jitsi-iframe-wrapper" class="w-full h-full flex-grow"></div>
-    </div>
-
-    <!-- Footer Disclaimer -->
-    <footer class="w-full text-center text-gray-600 text-xs mt-8">
-        <p>&copy; 2026 NexCall. Serverless peer-to-peer streaming technology via Jitsi Network.</p>
+    <!-- Footer -->
+    <footer class="w-full max-w-6xl text-center text-xs text-gray-500 mt-6">
+        Powered by Jitsi WebRTC &bull; Enterprise Grade Moderation Active
     </footer>
 
-    <!-- Main Application Core logic JavaScript -->
+    <!-- logic javascript -->
     <script>
-        let currentMode = 'host'; // Default tracking state
-        let jitsiAPIInstance = null; // Container for the external player iframe object
-
-        // Switch layout tab interface between Host Call and Join Call options
-        function switchTab(mode) {
-            currentMode = mode;
-            hideError();
-            
-            const tabHost = document.getElementById('tab-host');
-            const tabJoin = document.getElementById('tab-join');
-            const btnText = document.getElementById('btn-text');
-            const btnIcon = document.getElementById('btn-icon');
-            const btnGenerate = document.getElementById('btn-generate');
-            const codeLabel = document.getElementById('code-label');
-            const codeInput = document.getElementById('call-code');
-
-            if (mode === 'host') {
-                tabHost.className = "py-2.5 text-sm font-medium rounded-lg transition-all duration-300 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md";
-                tabJoin.className = "py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-400 hover:text-white";
-                btnText.innerText = "Initialize Host Room";
-                btnIcon.className = "fa-solid fa-satellite-dish text-xs";
-                btnGenerate.classList.remove('hidden');
-                codeLabel.innerText = "Custom Call Code";
-                codeInput.placeholder = "Example: 786, 9924";
-            } else {
-                tabJoin.className = "py-2.5 text-sm font-medium rounded-lg transition-all duration-300 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md";
-                tabHost.className = "py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-400 hover:text-white";
-                btnText.innerText = "Connect to Call Session";
-                btnIcon.className = "fa-solid fa-right-to-bracket text-xs";
-                btnGenerate.classList.add('hidden');
-                codeLabel.innerText = "Enter Shared Room Code";
-                codeInput.placeholder = "Enter the 2-5 digit code";
-            }
-        }
-
-        // Generate dynamic cryptographically isolated room code for structural integrity
-        function generateRandomCode() {
-            // Generate a random length between 2 and 5 digits
-            const digits = Math.floor(Math.random() * (5 - 2 + 1)) + 2;
-            const min = Math.pow(10, digits - 1);
-            const max = Math.pow(10, digits) - 1;
-            const uniqueCode = Math.floor(Math.random() * (max - min + 1)) + min;
-            
-            document.getElementById('call-code').value = uniqueCode;
-            hideError();
-        }
-
-        // Notification utility triggers
-        function showError(message) {
-            const errorBox = document.getElementById('error-box');
-            document.getElementById('error-message').innerText = message;
-            errorBox.classList.remove('hidden');
-        }
-
-        function hideError() {
-            document.getElementById('error-box').add('hidden');
-        }
+        const dashboardPanel = document.getElementById('dashboard-panel');
+        const videoWrapper = document.getElementById('video-wrapper');
+        const jitsiContainer = document.getElementById('jitsi-container');
+        const activeCodeLbl = document.getElementById('active-code-lbl');
+        const roleBadge = document.getElementById('role-badge');
         
-        // Overridden version of standard hide class string mutation logic safely
-        function hideError() {
-            document.getElementById('error-box').classList.add('hidden');
-        }
+        let api = null;
 
-        // Core procedural engine for validations and signaling mapping simulate
-        function processCallRequest() {
-            hideError();
+        // Auto Generate Code Helper (1 to 50000)
+        document.getElementById('gen-code-btn').addEventListener('click', () => {
+            const randomCode = Math.floor(Math.random() * 50000) + 1;
+            document.getElementById('host-code').value = randomCode;
+        });
+
+        // Main Function to launch call
+        function launchConference(roomCode, displayName, isHost) {
+            dashboardPanel.classList.add('hidden');
+            videoWrapper.classList.remove('hidden');
+            jitsiContainer.innerHTML = '';
             
-            const nameInput = document.getElementById('username').value.trim();
-            const codeInput = document.getElementById('call-code').value.trim();
-
-            // 1. Structural Identity Presence Validation
-            if (!nameInput) {
-                showError("à¤à¥à¤ªà¤¯à¤¾ à¤à¤à¥ à¤¬à¥à¤¨à¥ à¤à¥ à¤²à¤¿à¤ à¤à¤ªà¤¨à¤¾ à¤¨à¤¾à¤® (Your Name) à¤¦à¤°à¥à¤ à¤à¤°à¥à¤à¥¤");
-                return;
-            }
-
-            // 2. Format / Digit Constraints boundaries validation [2, 5]
-            if (!codeInput) {
-                showError("à¤à¥à¤ªà¤¯à¤¾ à¤°à¥à¤® à¤à¥à¤¡ à¤¦à¤°à¥à¤ à¤à¤°à¥à¤ à¤¯à¤¾ Auto à¤à¤¨à¤°à¥à¤ à¤à¤°à¥à¤à¥¤");
-                return;
-            }
-
-            if (!/^\d+$/.test(codeInput)) {
-                showError("à¤à¥à¤¡ à¤à¥à¤µà¤² à¤¨à¤à¤¬à¤°à¥à¤¸ (digits) à¤®à¥à¤ à¤¹à¥à¤¨à¤¾ à¤à¤¾à¤¹à¤¿à¤à¥¤");
-                return;
-            }
-
-            if (codeInput.length < 2 || codeInput.length > 5) {
-                showError("à¤à¥à¤¡ à¤à¥ à¤²à¤à¤¬à¤¾à¤ à¤à¤® à¤¸à¥ à¤à¤® 2 à¤à¤° à¤à¤§à¤¿à¤à¤¤à¤® 5 à¤à¤à¤à¥à¤ (2 to 5 digits) à¤à¥ à¤¹à¥à¤¨à¥ à¤à¤¾à¤¹à¤¿à¤à¥¤");
-                return;
-            }
-
-            // Simulated Tracking Database Engine using LocalStorage to emulate server collision validation 
-            // since this application is completely serverless and designed exclusively for GitHub Pages.
-            const storedRoomsKey = "nexcall_registered_active_rooms";
-            let activeRooms = JSON.parse(localStorage.getItem(storedRoomsKey) || "{}");
-
-            // Timestamp cleanup strategy to remove simulated rooms older than 3 hours
-            const currentTimestamp = Date.now();
-            for (const key in activeRooms) {
-                if (currentTimestamp - activeRooms[key].created > 3 * 60 * 60 * 1000) {
-                    delete activeRooms[key];
-                }
-            }
-
-            if (currentMode === 'host') {
-                // If Host checks if the precise custom structural index exists inside local engine
-                if (activeRooms[codeInput]) {
-                    showError(`à¤¤à¥à¤°à¥à¤à¤¿: à¤à¥à¤¡ "${codeInput}" à¤ªà¤¹à¤²à¥ à¤¸à¥ à¤¹à¥ à¤à¤¿à¤¸à¥ à¤à¥à¤² à¤®à¥à¤ à¤à¤ªà¤¯à¥à¤ à¤¹à¥ à¤°à¤¹à¤¾ à¤¹à¥! à¤à¥à¤ªà¤¯à¤¾ à¤¦à¥à¤¸à¤°à¤¾ à¤à¥à¤¨à¥à¤à¥¤`);
-                    return;
-                }
-                
-                // Book and write record entry
-                activeRooms[codeInput] = {
-                    creator: nameInput,
-                    created: currentTimestamp
-                };
-                localStorage.setItem(storedRoomsKey, JSON.stringify(activeRooms));
-                
-                // Boot Call Window Engine
-                launchVideoRoomFrame(codeInput, nameInput);
-
+            activeCodeLbl.textContent = roomCode;
+            if(isHost) {
+                roleBadge.textContent = "HOST ACCESS ACTIVE";
+                roleBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30";
             } else {
-                // Join Mode processing loop logic
-                if (!activeRooms[codeInput]) {
-                    showError(`à¤¤à¥à¤°à¥à¤à¤¿: à¤°à¥à¤® à¤à¥à¤¡ "${codeInput}" à¤à¤à¥à¤à¤¿à¤µ à¤¨à¤¹à¥à¤ à¤¹à¥à¥¤ à¤à¥à¤ªà¤¯à¤¾ à¤¸à¤¹à¥ à¤à¥à¤¡ à¤¡à¤¾à¤²à¥à¤ à¤¯à¤¾ à¤¹à¥à¤¸à¥à¤ à¤¸à¥ à¤¬à¥à¤²à¥à¤à¥¤`);
-                    return;
-                }
-                
-                // Connect caller to the target structural room frame matching code ID
-                launchVideoRoomFrame(codeInput, nameInput);
+                roleBadge.textContent = "PARTICIPANT";
+                roleBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/30";
             }
-        }
 
-        // Initialize and fire up the external Jitsi Frame WebRTC layer onto the view panel
-        function launchVideoRoomFrame(roomCode, clientDisplayName) {
-            document.getElementById('display-room-code').innerText = roomCode;
+            const domain = 'meet.jit.si';
             
-            // Generate uniform secure hashing string structure for the Global Jitsi Meet cluster namespace
-            const structuralGlobalRoomId = "NexCall_SecureClusterRoom_Prod_" + roomCode;
-            
-            const domain = "meet.jit.si";
+            // à¤¯à¥à¤¨à¤¿à¤ à¤°à¥à¤® à¤¸à¥à¤à¥à¤°à¤à¥à¤à¤° à¤¬à¤¨à¤¾à¤¨à¥ à¤à¥ à¤²à¤¿à¤ à¤ªà¥à¤°à¤¿à¤«à¤¿à¤à¥à¤¸ à¤à¥à¤¡à¤¼à¤¾ à¤à¤¯à¤¾
+            const uniqueRoomId = `nexcall_secure_room_prefix_${roomCode}`;
+
             const options = {
-                roomName: structuralGlobalRoomId,
-                width: "100%",
-                height: "100%",
-                parentNode: document.getElementById('jitsi-iframe-wrapper'),
+                roomName: uniqueRoomId,
+                width: '100%',
+                height: '100%',
+                parentNode: jitsiContainer,
                 userInfo: {
-                    displayName: clientDisplayName
+                    displayName: displayName
                 },
                 configOverwrite: {
                     startWithAudioMuted: false,
                     startWithVideoMuted: false,
-                    enableWelcomePage: false,
-                    prejoinPageEnabled: false, // Bypass prejoin screen directly inside app UI flow
-                    disableDeepLinking: true
+                    prejoinPageEnabled: false
                 },
                 interfaceConfigOverwrite: {
-                    BRAND_APP_NAME: 'NexCall',
                     SHOW_JITSI_WATERMARK: false,
-                    HIDE_DEEP_LINKING_LOGO: true,
-                    TOOLBAR_BUTTONS: [
-                        'microphone', 'camera', 'desktop', 'fullscreen', 
-                        'fittowindow', 'hangup', 'chat', 'raisehand', 
-                        'videoquality', 'tileview', 'settings', 'mute-everyone'
+                    BRAND_WATERMARK_LINK: '',
+                    TOOLBAR_BUTTONS: isHost ? [
+                        'microphone', 'camera', 'closedcaptions', 'desktop', 'embedmeeting', 'fullscreen',
+                        'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+                        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+                        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
+                        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
+                        'mute-video-everyone', 'security'
+                    ] : [
+                        'microphone', 'camera', 'fullscreen', 'hangup', 'profile', 'chat', 
+                        'settings', 'raisehand', 'videoquality', 'filmstrip', 'tileview'
                     ]
                 }
             };
 
-            // Inject full structural view block frame layers
-            document.getElementById('call-screen').classList.remove('hidden');
-            
-            // Build real-time stream communication overlay bridge hook safely
-            jitsiAPIInstance = new JitsiMeetExternalAPI(domain, options);
+            api = new JitsiMeetExternalAPI(domain, options);
 
-            // Add auto listener mapping cleanly to monitor user click interactions inside Jitsi window element
-            jitsiAPIInstance.addEventListener('videoConferenceLeft', () => {
-                exitActiveCall();
+            // à¤à¥à¤² à¤à¤ (Hangup) à¤¹à¥à¤¤à¥ à¤¹à¥ à¤¸à¤¾à¤°à¤¾ à¤¡à¥à¤à¤¾ Reserved à¤²à¤¿à¤¸à¥à¤ à¤à¤° à¤¸à¥à¤à¥à¤°à¥à¤¨ à¤¸à¥ à¤¡à¤¿à¤²à¥à¤
+            api.addEventListener('readyToClose', () => {
+                api.dispose();
+                videoWrapper.classList.add('hidden');
+                dashboardPanel.classList.remove('hidden');
+                jitsiContainer.innerHTML = '';
+                
+                document.getElementById('host-code').value = '';
+                document.getElementById('join-code').value = '';
             });
         }
 
-        // Destructor routine to safely detach iframe instances and restore visibility stack arrays
-        function exitActiveCall() {
-            if (jitsiAPIInstance) {
-                jitsiAPIInstance.dispose();
-                jitsiAPIInstance = null;
-            }
-            document.getElementById('jitsi-iframe-wrapper').innerHTML = "";
-            document.getElementById('call-screen').classList.add('hidden');
-        }
+        // Host Trigger Event
+        document.getElementById('start-host-btn').addEventListener('click', () => {
+            const name = document.getElementById('host-name').value.trim();
+            const code = parseInt(document.getElementById('host-code').value);
+
+            if(!name) { alert('Please enter your Host Name.'); return; }
+            if(!code || code < 1 || code > 50000) { alert('Please enter or generate a code between 1 and 50000.'); return; }
+
+            launchConference(code, name, true);
+        });
+
+        // Join Trigger Event
+        document.getElementById('start-join-btn').addEventListener('click', () => {
+            const name = document.getElementById('user-name').value.trim();
+            const code = parseInt(document.getElementById('join-code').value);
+
+            if(!name) { alert('Please enter your name to Join.'); return; }
+            if(!code || code < 1 || code > 50000) { alert('Please enter a valid meeting code.'); return; }
+
+            launchConference(code, name, false);
+        });
     </script>
 </body>
 </html>
