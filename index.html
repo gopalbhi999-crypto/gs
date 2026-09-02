@@ -3,34 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCall Pro - Premium Video Conferencing</title>
+    <title>NexCall - GOPAL</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://jsdelivr.net"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cloudflare.com">
-    <!-- Google Font (Inter) -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent), radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.15), transparent), #0b0f19;
-            min-height: 100vh;
+            background: #0b0f19;
             color: #f3f4f6;
-        }
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .gradient-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .gradient-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-col: flex;
+            flex-direction: column;
         }
         .gradient-text {
             background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
@@ -39,123 +25,24 @@
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-between p-4 md:p-8 min-h-screen">
+<body>
 
-    <!-- Header -->
-    <header id="app-header" class="w-full max-w-6xl flex justify-between items-center mb-6">
-        <div class="flex items-center gap-3">
-            <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <i class="fa-solid fa-video text-white text-lg"></i>
-            </div>
-            <span class="text-2xl font-bold tracking-tight text-white">Nex<span class="gradient-text">Call</span></span>
-        </div>
-        <div class="flex items-center gap-2 text-xs md:text-sm bg-gray-900/60 border border-gray-800 px-4 py-2 rounded-full font-semibold text-indigo-400">
-            <span class="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span> GOPAL
+    <!-- Top Bar with GOPAL Name -->
+    <header class="w-full bg-gray-900/80 border-b border-gray-800 px-6 py-4 flex justify-between items-center z-10">
+        <span class="text-xl font-bold tracking-tight text-white">Nex<span class="gradient-text">Call</span></span>
+        <div class="text-sm font-bold tracking-wider text-indigo-400 bg-gray-950/60 border border-gray-800 px-4 py-1.5 rounded-full">
+            <span class="h-2 w-2 inline-block rounded-full bg-indigo-500 animate-pulse mr-2"></span>GOPAL
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="w-full max-w-5xl my-auto flex flex-col items-center justify-center">
-        
-        <!-- Input Dashboard (Brave Style Single Box) -->
-        <div id="setup-panel" class="w-full max-w-md glass-panel p-8 rounded-3xl shadow-2xl relative overflow-hidden transition-all duration-500">
-            <!-- Decorative Blob -->
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/15 rounded-full blur-2xl"></div>
-            
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold tracking-tight text-white mb-2">Brave Engine Call</h2>
-                <p class="text-gray-400 text-sm">Enter a number code to Host or Join instantly</p>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Meeting Code (1 - 50000)</label>
-                    <div class="relative flex gap-2">
-                        <div class="relative flex-1">
-                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
-                                <i class="fa-solid fa-hashtag"></i>
-                            </span>
-                            <input type="number" id="room-code" min="1" max="50000" placeholder="e.g. 12345" class="w-full pl-11 pr-4 py-3.5 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm">
-                        </div>
-                        <button id="auto-gen-btn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 rounded-xl border border-gray-700 text-xs transition-colors cursor-pointer">Auto</button>
-                    </div>
-                </div>
-                
-                <button id="launch-btn" class="w-full gradient-btn text-white font-medium py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 text-sm cursor-pointer">
-                    <i class="fa-solid fa-bolt"></i> Start / Join Call
-                </button>
-            </div>
-        </div>
-
-        <!-- Brave Screen Wrapper (Hidden Initially) -->
-        <div id="video-wrapper" class="hidden w-full max-w-5xl flex flex-col gap-3">
-            <div class="w-full flex justify-between items-center bg-gray-900/80 border border-gray-800 px-4 py-2 rounded-xl text-xs md:text-sm">
-                <span class="text-gray-400"><i class="fa-solid fa-hashtag text-indigo-400 mr-1.5"></i>Active Code: <strong id="active-code-lbl" class="text-white"></strong></span>
-                <button id="exit-btn" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 px-3 py-1 rounded-lg border border-red-500/30 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer">
-                    <i class="fa-solid fa-phone-slash"></i> Exit Call & Free Code
-                </button>
-            </div>
-            <!-- Brave Custom Iframe Area -->
-            <div class="w-full h-[620px] glass-panel rounded-3xl overflow-hidden shadow-2xl relative">
-                <iframe id="brave-frame" allow="camera; microphone; display-capture; autoplay; clipboard-write" class="w-full h-full border-none bg-black"></iframe>
-            </div>
-        </div>
-
+    <!-- Full Screen Brave Talk Display Area -->
+    <main class="flex-1 w-full relative bg-black">
+        <iframe 
+            src="https://brave.com" 
+            allow="camera; microphone; display-capture; autoplay; clipboard-write" 
+            class="absolute top-0 left-0 w-full h-full border-none">
+        </iframe>
     </main>
 
-    <!-- Footer -->
-    <footer id="app-footer" class="w-full max-w-6xl text-center text-xs text-gray-500 mt-6">
-        Powered by Brave Talk Engine &bull; Private Peer-to-Peer Encrypted
-    </footer>
-
-    <script>
-        const setupPanel = document.getElementById('setup-panel');
-        const videoWrapper = document.getElementById('video-wrapper');
-        const braveFrame = document.getElementById('brave-frame');
-        const activeCodeLbl = document.getElementById('active-code-lbl');
-        const appHeader = document.getElementById('app-header');
-        const appFooter = document.getElementById('app-footer');
-        
-        // Auto Generate Code Button
-        document.getElementById('auto-gen-btn').addEventListener('click', () => {
-            document.getElementById('room-code').value = Math.floor(Math.random() * 50000) + 1;
-        });
-
-        // Launch Call Button (Host / Join same button)
-        document.getElementById('launch-btn').addEventListener('click', () => {
-            const code = parseInt(document.getElementById('room-code').value);
-            
-            if (!code || code < 1 || code > 50000) {
-                alert('Please enter a valid code between 1 and 50000.');
-                return;
-            }
-
-            // कोड के पीछे Brave का यूआरएल मैप करना
-            const braveRoomUrl = `https://brave.com{code}`;
-            
-            // इंटरफेस स्विच करें
-            setupPanel.classList.add('hidden');
-            appHeader.classList.add('hidden'); // वीडियो के समय हेडर छुपाएं ताकि पूरी स्क्रीन मिले
-            appFooter.classList.add('hidden');
-            videoWrapper.classList.remove('hidden');
-            
-            activeCodeLbl.textContent = code;
-            
-            // आईफ्रेम में सीधे Brave टॉक लोड करना
-            braveFrame.src = braveRoomUrl;
-        });
-
-        // Exit / Red Cut Button
-        document.getElementById('exit-btn').addEventListener('click', () => {
-            braveFrame.src = "about:blank"; // आईफ्रेम को तुरंत खाली करें ताकि कैमरा/माइक बंद हो जाए
-            videoWrapper.classList.add('hidden');
-            setupPanel.classList.remove('hidden');
-            appHeader.classList.remove('hidden');
-            appFooter.classList.remove('hidden');
-            
-            // कोड बॉक्स खाली करें ताकि कोड फ्री (Unreserved) हो जाए
-            document.getElementById('room-code').value = '';
-        });
-    </script>
 </body>
 </html>
