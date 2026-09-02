@@ -3,32 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title GOPAL Talk Video Call</title>
+    <title>Join Brave Talk</title>
     <style>
-        /* Pura page cover karne ke liye styling */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
+        body {
+            margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center;
+            background: #111; font-family: sans-serif; color: #fff; text-align: center;
         }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        .card {
+            background: #222; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
+        .btn {
+            display: inline-block; background: #ff5a00; color: #fff; text-decoration: none;
+            padding: 15px 30px; font-weight: bold; border-radius: 30px; margin-top: 20px;
+            transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 90, 0, 0.4);
+        }
+        .btn:hover { background: #e04f00; transform: scale(1.05); }
     </style>
 </head>
 <body>
 
-    <!-- Brave Talk ko load karne ke liye iframe -->
-    <!-- allow attribute camera aur microphone permissions ke liye zaroori hai -->
-    <iframe 
-        src="https://talk.brave.com" 
-        allow="camera; microphone; display-capture; fullscreen">
-    </iframe>
+    <div class="card">
+        <h2>Brave Talk Meeting Room</h2>
+        <p>Click the button below to join the secure conversation.</p>
+        <!-- Aap apna specific room link bhi paste kar sakte hain -->
+        <a href="https://talk.brave.com" target="_blank" class="btn">Launch Brave Talk</a>
+    </div>
 
 </body>
 </html>
