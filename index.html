@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCall Pro - Premium Video Conferencing</title>
+    <title>NexCall Pro - Instant Video Conferencing</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- FontAwesome Icons -->
@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Jitsi API -->
+    <!-- Jitsi External API Script -->
     <script src="https://meet.jit.si/external_api.js"></script>
     <style>
         body {
@@ -26,15 +26,18 @@
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .gradient-btn-indigo {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        .gradient-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .gradient-btn-purple {
-            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
-        }
-        .btn-hover:hover {
+        .gradient-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
@@ -44,130 +47,115 @@
     <header class="w-full max-w-6xl flex justify-between items-center mb-6">
         <div class="flex items-center gap-3">
             <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <i class="fa-solid fa-shield-halved text-white text-lg"></i>
+                <i class="fa-solid fa-video text-white text-lg"></i>
             </div>
-            <span class="text-2xl font-bold tracking-tight text-white">Nex<span class="text-indigo-400">Call Pro</span></span>
+            <span class="text-2xl font-bold tracking-tight text-white">Nex<span class="gradient-text">Call Pro</span></span>
         </div>
-        <div class="flex items-center gap-2 text-xs md:text-sm bg-gray-900/60 border border-gray-800 px-4 py-2 rounded-full font-semibold text-indigo-400">
+        <div class="flex items-center gap-2 text-xs md:text-sm bg-gray-900/60 border border-gray-800 px-4 py-2 rounded-full font-semibold tracking-wider text-indigo-400">
             <span class="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span> GOPAL
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="w-full max-w-5xl my-auto flex flex-col items-center justify-center">
+    <main class="w-full max-w-md my-auto flex flex-col items-center justify-center">
         
-        <!-- Main Dashboard Panel -->
-        <div id="dashboard-panel" class="w-full max-w-4xl grid md:grid-cols-2 gap-6 transition-all duration-500">
+        <!-- Welcome & Join/Host Form Dashboard -->
+        <div id="setup-panel" class="w-full glass-panel p-8 rounded-3xl shadow-2xl relative overflow-hidden transition-all duration-500">
+            <!-- Floating Decorative Blob -->
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/15 rounded-full blur-2xl"></div>
             
-            <!-- Host Panel -->
-            <div class="glass-panel p-8 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="h-12 w-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 text-xl border border-indigo-500/20">
-                            <i class="fa-solid fa-crown"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-white">Host a Meeting</h2>
-                    </div>
-                    <p class="text-gray-400 text-sm mb-6">Create a room, authenticate as the true Host, and get full access to kick or mute anyone.</p>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Host Name</label>
-                            <input type="text" id="host-name" placeholder="Your Name" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Meeting Code (1 - 50000)</label>
-                            <div class="flex gap-2">
-                                <input type="number" id="host-code" min="1" max="50000" placeholder="e.g. 12345" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 text-sm">
-                                <button id="gen-code-btn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 rounded-xl border border-gray-700 text-xs transition-colors cursor-pointer">Auto</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button id="start-host-btn" class="w-full gradient-btn-indigo btn-hover text-white font-medium py-3.5 px-4 rounded-xl mt-6 flex items-center justify-center gap-2 text-sm cursor-pointer shadow-lg shadow-indigo-500/25">
-                    <i class="fa-solid fa-video"></i> Create & Launch Call
-                </button>
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold tracking-tight text-white mb-2">Brave-Style Call</h2>
+                <p class="text-gray-400 text-sm">Enter a room code to host or join instantly</p>
             </div>
 
-            <!-- Join Panel -->
-            <div class="glass-panel p-8 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="h-12 w-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-xl border border-purple-500/20">
-                            <i class="fa-solid fa-right-to-bracket"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-white">Join Meeting</h2>
-                    </div>
-                    <p class="text-gray-400 text-sm mb-6">Enter the exact code shared by your host to instantly secure-join their room.</p>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Your Name</label>
-                            <input type="text" id="user-name" placeholder="Enter full name" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-purple-500 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Enter Code</label>
-                            <input type="number" id="join-code" min="1" max="50000" placeholder="e.g. 12345" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-purple-500 text-sm">
-                        </div>
-                    </div>
-                </div>
-                <button id="start-join-btn" class="w-full gradient-btn-purple btn-hover text-white font-medium py-3.5 px-4 rounded-xl mt-6 flex items-center justify-center gap-2 text-sm cursor-pointer shadow-lg shadow-purple-500/25">
-                    <i class="fa-solid fa-right-to-bracket"></i> Join Secure Call
-                </button>
+            <!-- Error Box -->
+            <div id="error-box" class="hidden mb-5 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm">
+                <span id="error-text">Please enter valid details.</span>
             </div>
 
+            <!-- Single Uniform Form (Brave Style) -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Your Name</label>
+                    <input type="text" id="user-name" placeholder="Enter your name" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Meeting Code (1 - 50000)</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="room-code" min="1" max="50000" placeholder="Enter code to Host or Join" class="w-full px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 text-sm">
+                        <button id="gen-code-btn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 rounded-xl border border-gray-700 text-xs transition-colors cursor-pointer">Auto</button>
+                    </div>
+                </div>
+                
+                <button id="launch-btn" class="w-full gradient-btn text-white font-medium py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 text-sm cursor-pointer mt-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> Connect to Meeting
+                </button>
+            </div>
         </div>
 
-        <!-- Video Display Container -->
-        <div id="video-wrapper" class="hidden w-full max-w-5xl flex flex-col gap-3">
+        <!-- Video Wrapper Container -->
+        <div id="video-wrapper" class="hidden w-full max-w-5xl flex flex-col gap-3 fixed inset-0 z-50 p-4 bg-[#0b0f19]">
             <div class="w-full flex justify-between items-center bg-gray-900/80 border border-gray-800 px-4 py-2.5 rounded-xl text-xs md:text-sm">
-                <span class="text-gray-400"><i class="fa-solid fa-hashtag text-indigo-400 mr-1.5"></i>Active Code: <strong id="active-code-lbl" class="text-white"></strong></span>
-                <span id="role-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
+                <span class="text-gray-400"><i class="fa-solid fa-hashtag text-indigo-400 mr-1.5"></i>Secure Code: <strong id="active-code-lbl" class="text-white"></strong></span>
+                <button id="leave-btn" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer">
+                    <i class="fa-solid fa-phone-slash mr-1"></i> Exit Call
+                </button>
             </div>
-            <div id="jitsi-container" class="w-full h-[600px] glass-panel rounded-3xl overflow-hidden shadow-2xl relative"></div>
+            <div id="jitsi-container" class="w-full flex-1 glass-panel rounded-3xl overflow-hidden shadow-2xl relative"></div>
         </div>
 
     </main>
 
     <!-- Footer -->
     <footer class="w-full max-w-6xl text-center text-xs text-gray-500 mt-6">
-        Powered by Jitsi WebRTC &bull; Enterprise Grade Moderation Active
+        Powered by Jitsi WebRTC &bull; Secure Encrypted Communication Active
     </footer>
 
     <!-- logic javascript -->
     <script>
-        const dashboardPanel = document.getElementById('dashboard-panel');
+        const setupPanel = document.getElementById('setup-panel');
         const videoWrapper = document.getElementById('video-wrapper');
         const jitsiContainer = document.getElementById('jitsi-container');
         const activeCodeLbl = document.getElementById('active-code-lbl');
-        const roleBadge = document.getElementById('role-badge');
+        const errorBox = document.getElementById('error-box');
+        const errorText = document.getElementById('error-text');
         
         let api = null;
 
         // Auto Generate Code Helper (1 to 50000)
         document.getElementById('gen-code-btn').addEventListener('click', () => {
             const randomCode = Math.floor(Math.random() * 50000) + 1;
-            document.getElementById('host-code').value = randomCode;
+            document.getElementById('room-code').value = randomCode;
         });
 
-        // Main Function to launch call
-        function launchConference(roomCode, displayName, isHost) {
-            dashboardPanel.classList.add('hidden');
+        // Main Function to Connect to Call
+        document.getElementById('launch-btn').addEventListener('click', () => {
+            const name = document.getElementById('user-name').value.trim();
+            const code = parseInt(document.getElementById('room-code').value);
+
+            if(!name) { 
+                showError('Please enter your name.'); 
+                return; 
+            }
+            if(!code || code < 1 || code > 50000) { 
+                showError('Please enter a valid code between 1 and 50000.'); 
+                return; 
+            }
+
+            errorBox.classList.add('hidden');
+            setupPanel.classList.add('hidden');
             videoWrapper.classList.remove('hidden');
             jitsiContainer.innerHTML = '';
             
-            activeCodeLbl.textContent = roomCode;
-            if(isHost) {
-                roleBadge.textContent = "HOST MODE (AUTHENTICATION REQUIRED)";
-                roleBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30";
-            } else {
-                roleBadge.textContent = "PARTICIPANT MODE";
-                roleBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/30";
-            }
+            activeCodeLbl.textContent = code;
 
+            // Jitsi Open Server Domain (No Authentication Required / Brave Style)
             const domain = 'meet.jit.si';
-            // à¤°à¥à¤® à¤à¥ à¤¯à¥à¤¨à¤¿à¤ à¤¬à¤¨à¤¾à¤¨à¥ à¤à¥ à¤²à¤¿à¤ à¤à¤ à¤¸à¤¿à¤à¥à¤¯à¥à¤° à¤¸à¥à¤à¥à¤°à¤¿à¤à¤ à¤à¤¾ à¤à¤ªà¤¯à¥à¤
-            const uniqueRoomId = `nexcall_gopal_secure_${roomCode}`;
+            
+            // à¤à¥à¤¡ à¤à¥ à¤¬à¥à¤à¤à¥à¤°à¤¾à¤à¤à¤¡ à¤®à¥à¤ à¤à¤ à¤¸à¤¿à¤à¥à¤¯à¥à¤° à¤¯à¥à¤¨à¤¿à¤ à¤¯à¥à¤à¤°à¤à¤² à¤à¤¡à¥à¤°à¥à¤¸ / à¤°à¥à¤® à¤à¤à¤¡à¥ à¤®à¥à¤ à¤¬à¤¦à¤²à¤¾ à¤à¤¯à¤¾ à¤¹à¥
+            // à¤¤à¤¾à¤à¤¿ à¤²à¤¿à¤à¤ à¤¶à¥à¤¯à¤°à¤¿à¤à¤ à¤à¥ à¤à¥à¤ à¤à¤°à¥à¤°à¤¤ à¤¨ à¤ªà¤¡à¤¼à¥, à¤à¥à¤µà¤² à¤à¤¸ à¤à¥à¤¡ à¤¸à¤à¤à¥à¤¯à¤¾ à¤¸à¥ à¤¹à¥ à¤²à¥à¤ à¤à¤ªà¤¸ à¤®à¥à¤ à¤à¤¨à¥à¤à¥à¤ à¤¹à¥à¤à¤à¥à¥¤
+            const uniqueRoomId = `nexcall_gopal_brave_sync_room_${code}`;
 
             const options = {
                 roomName: uniqueRoomId,
@@ -175,19 +163,20 @@
                 height: '100%',
                 parentNode: jitsiContainer,
                 userInfo: {
-                    displayName: displayName
+                    displayName: name
                 },
                 configOverwrite: {
                     startWithAudioMuted: false,
                     startWithVideoMuted: false,
-                    // à¤ªà¥à¤°à¥-à¤à¥à¤à¤¨ à¤¸à¥à¤à¥à¤°à¥à¤¨ à¤à¥ à¤à¤¨à¥à¤¬à¤² à¤à¤¿à¤¯à¤¾ à¤¤à¤¾à¤à¤¿ à¤¹à¥à¤¸à¥à¤ à¤²à¥à¤à¤¿à¤¨ à¤µà¤¿à¤à¤¡à¥ à¤ªà¤° à¤à¤¾ à¤¸à¤à¥
-                    prejoinPageEnabled: true,
-                    // à¤®à¥à¤¡à¤°à¥à¤à¤° à¤¸à¥à¤à¤¿à¤à¤à¥à¤¸
-                    hosts: { muted_by_default: false }
+                    prejoinPageEnabled: false, // Brave à¤à¥ à¤¤à¤°à¤¹ à¤¸à¥à¤§à¤¾ à¤¡à¤¾à¤¯à¤°à¥à¤à¥à¤ à¤à¤à¤à¥à¤°à¥
+                    requireDisplayName: true,
+                    // à¤ªà¤¹à¤²à¤¾ à¤µà¥à¤¯à¤à¥à¤¤à¤¿ à¤à¤à¥-à¤®à¥à¤¡à¤°à¥à¤à¤° (Host) à¤¬à¤¨ à¤à¤¾à¤¤à¤¾ à¤¹à¥
+                    apiEveryoneModerator: true 
                 },
                 interfaceConfigOverwrite: {
                     SHOW_JITSI_WATERMARK: false,
                     BRAND_WATERMARK_LINK: '',
+                    // à¤à¤¨à¤µà¤¾à¤à¤ à¤à¤° à¤²à¤¿à¤à¤ à¤¶à¥à¤¯à¤°à¤¿à¤à¤ à¤¬à¤à¤¨ à¤¹à¤à¤¾ à¤¦à¤¿à¤ à¤à¤ à¤¹à¥à¤ à¤¤à¤¾à¤à¤¿ à¤à¥à¤ à¤¯à¥à¤à¤°à¤à¤² à¤¶à¥à¤¯à¤° à¤¨ à¤à¤° à¤¸à¤à¥
                     TOOLBAR_BUTTONS: [
                         'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
                         'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand',
@@ -198,40 +187,32 @@
 
             api = new JitsiMeetExternalAPI(domain, options);
 
-            // à¤à¥à¤² à¤à¤ (Hangup) à¤¹à¥à¤¤à¥ à¤¹à¥ à¤¸à¤¾à¤°à¤¾ à¤¡à¥à¤à¤¾ à¤«à¥à¤°à¥ (Unreserved) à¤à¤°à¥à¤
+            // à¤à¥à¤² à¤à¤ à¤¯à¤¾ à¤¬à¤à¤¦ à¤¹à¥à¤¨à¥ à¤ªà¤° à¤°à¥à¤® à¤à¤° à¤à¥à¤¡ à¤à¥ à¤«à¥à¤°à¥ (Unreserved) à¤à¤°à¤¨à¥ à¤à¥ à¤²à¤¿à¤ à¤°à¥à¤¸à¥à¤ à¤²à¥à¤à¤¿à¤
             api.addEventListener('readyToClose', () => {
-                api.dispose();
-                videoWrapper.classList.add('hidden');
-                dashboardPanel.classList.remove('hidden');
-                jitsiContainer.innerHTML = '';
-                
-                // à¤à¤¨à¤ªà¥à¤ à¤«à¥à¤²à¥à¤¡à¥à¤¸ à¤°à¥à¤¸à¥à¤
-                document.getElementById('host-code').value = '';
-                document.getElementById('join-code').value = '';
+                resetInterface();
             });
+        });
+
+        // à¤à¤¸à¥à¤à¤® à¤²à¥à¤µ à¤¬à¤à¤¨ à¤à¥à¤°à¤¿à¤à¤°
+        document.getElementById('leave-btn').addEventListener('click', () => {
+            resetInterface();
+        });
+
+        function showError(message) {
+            errorBox.classList.remove('hidden');
+            errorText.textContent = message;
         }
 
-        // Host Trigger Event
-        document.getElementById('start-host-btn').addEventListener('click', () => {
-            const name = document.getElementById('host-name').value.trim();
-            const code = parseInt(document.getElementById('host-code').value);
-
-            if(!name) { alert('Please enter your Host Name.'); return; }
-            if(!code || code < 1 || code > 50000) { alert('Please enter or generate a code between 1 and 50000.'); return; }
-
-            launchConference(code, name, true);
-        });
-
-        // Join Trigger Event
-        document.getElementById('start-join-btn').addEventListener('click', () => {
-            const name = document.getElementById('user-name').value.trim();
-            const code = parseInt(document.getElementById('join-code').value);
-
-            if(!name) { alert('Please enter your name to Join.'); return; }
-            if(!code || code < 1 || code > 50000) { alert('Please enter a valid meeting code.'); return; }
-
-            launchConference(code, name, false);
-        });
+        function resetInterface() {
+            if(api) {
+                api.dispose();
+                api = null;
+            }
+            videoWrapper.classList.add('hidden');
+            setupPanel.classList.remove('hidden');
+            jitsiContainer.innerHTML = '';
+            document.getElementById('room-code').value = '';
+        }
     </script>
 </body>
 </html>
