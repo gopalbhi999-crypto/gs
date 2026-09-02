@@ -68,7 +68,7 @@
                         </div>
                         <h2 class="text-2xl font-bold text-white">Host a Meeting</h2>
                     </div>
-                    <p class="text-gray-400 text-sm mb-6">Create a meeting, get host access, and kick or manage participants anytime.</p>
+                    <p class="text-gray-400 text-sm mb-6">Create a room, authenticate as the true Host, and get full access to kick or mute anyone.</p>
                     
                     <div class="space-y-4">
                         <div>
@@ -158,17 +158,16 @@
             
             activeCodeLbl.textContent = roomCode;
             if(isHost) {
-                roleBadge.textContent = "HOST ACCESS ACTIVE";
+                roleBadge.textContent = "HOST MODE (AUTHENTICATION REQUIRED)";
                 roleBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30";
             } else {
-                roleBadge.textContent = "PARTICIPANT";
+                roleBadge.textContent = "PARTICIPANT MODE";
                 roleBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/30";
             }
 
             const domain = 'meet.jit.si';
-            
-            // à¤¯à¥à¤¨à¤¿à¤ à¤°à¥à¤® à¤¸à¥à¤à¥à¤°à¤à¥à¤à¤° à¤¬à¤¨à¤¾à¤¨à¥ à¤à¥ à¤²à¤¿à¤ à¤ªà¥à¤°à¤¿à¤«à¤¿à¤à¥à¤¸ à¤à¥à¤¡à¤¼à¤¾ à¤à¤¯à¤¾
-            const uniqueRoomId = `nexcall_secure_room_prefix_${roomCode}`;
+            // à¤°à¥à¤® à¤à¥ à¤¯à¥à¤¨à¤¿à¤ à¤¬à¤¨à¤¾à¤¨à¥ à¤à¥ à¤²à¤¿à¤ à¤à¤ à¤¸à¤¿à¤à¥à¤¯à¥à¤° à¤¸à¥à¤à¥à¤°à¤¿à¤à¤ à¤à¤¾ à¤à¤ªà¤¯à¥à¤
+            const uniqueRoomId = `nexcall_gopal_secure_${roomCode}`;
 
             const options = {
                 roomName: uniqueRoomId,
@@ -181,34 +180,32 @@
                 configOverwrite: {
                     startWithAudioMuted: false,
                     startWithVideoMuted: false,
-                    prejoinPageEnabled: false
+                    // à¤ªà¥à¤°à¥-à¤à¥à¤à¤¨ à¤¸à¥à¤à¥à¤°à¥à¤¨ à¤à¥ à¤à¤¨à¥à¤¬à¤² à¤à¤¿à¤¯à¤¾ à¤¤à¤¾à¤à¤¿ à¤¹à¥à¤¸à¥à¤ à¤²à¥à¤à¤¿à¤¨ à¤µà¤¿à¤à¤¡à¥ à¤ªà¤° à¤à¤¾ à¤¸à¤à¥
+                    prejoinPageEnabled: true,
+                    // à¤®à¥à¤¡à¤°à¥à¤à¤° à¤¸à¥à¤à¤¿à¤à¤à¥à¤¸
+                    hosts: { muted_by_default: false }
                 },
                 interfaceConfigOverwrite: {
                     SHOW_JITSI_WATERMARK: false,
                     BRAND_WATERMARK_LINK: '',
-                    TOOLBAR_BUTTONS: isHost ? [
-                        'microphone', 'camera', 'closedcaptions', 'desktop', 'embedmeeting', 'fullscreen',
-                        'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
-                        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
-                        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-                        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
-                        'mute-video-everyone', 'security'
-                    ] : [
-                        'microphone', 'camera', 'fullscreen', 'hangup', 'profile', 'chat', 
-                        'settings', 'raisehand', 'videoquality', 'filmstrip', 'tileview'
+                    TOOLBAR_BUTTONS: [
+                        'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+                        'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand',
+                        'videoquality', 'filmstrip', 'tileview', 'security', 'mute-everyone', 'mute-video-everyone'
                     ]
                 }
             };
 
             api = new JitsiMeetExternalAPI(domain, options);
 
-            // à¤à¥à¤² à¤à¤ (Hangup) à¤¹à¥à¤¤à¥ à¤¹à¥ à¤¸à¤¾à¤°à¤¾ à¤¡à¥à¤à¤¾ Reserved à¤²à¤¿à¤¸à¥à¤ à¤à¤° à¤¸à¥à¤à¥à¤°à¥à¤¨ à¤¸à¥ à¤¡à¤¿à¤²à¥à¤
+            // à¤à¥à¤² à¤à¤ (Hangup) à¤¹à¥à¤¤à¥ à¤¹à¥ à¤¸à¤¾à¤°à¤¾ à¤¡à¥à¤à¤¾ à¤«à¥à¤°à¥ (Unreserved) à¤à¤°à¥à¤
             api.addEventListener('readyToClose', () => {
                 api.dispose();
                 videoWrapper.classList.add('hidden');
                 dashboardPanel.classList.remove('hidden');
                 jitsiContainer.innerHTML = '';
                 
+                // à¤à¤¨à¤ªà¥à¤ à¤«à¥à¤²à¥à¤¡à¥à¤¸ à¤°à¥à¤¸à¥à¤
                 document.getElementById('host-code').value = '';
                 document.getElementById('join-code').value = '';
             });
